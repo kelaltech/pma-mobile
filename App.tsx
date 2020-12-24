@@ -12,7 +12,6 @@ const App = () => {
       <SafeAreaView>
           <ScrollView>
             <MainContainer/>
-
           </ScrollView>
       </SafeAreaView> 
     </ApolloClientProvider>

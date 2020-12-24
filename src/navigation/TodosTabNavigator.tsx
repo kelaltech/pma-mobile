@@ -1,12 +1,11 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 // import TabBarIcon from './components/TabBarIcon';
-import PrivateTodos from '../screens/PrivateTodosScreen';
-import PublicTodos from '../screens/PublicTodosScreen';
+import PrivateTodosScreen from '../screens/PrivateTodosScreen';
 import { Text, View } from 'react-native';
 import PublicTodosScreen from '../screens/PublicTodosScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
 // const PrivateTodosStack = createStackNavigator({
 //   Private: PrivateTodos,
@@ -17,14 +16,14 @@ const PrivateTodosStack = createStackNavigator();
 const PrivateTodosStackScreen = () => {
     return (
         <PrivateTodosStack.Navigator>
-            <PrivateTodosStack.Screen name="PrivateTodos" component={PrivateTodos } />
+        <PrivateTodosStack.Screen name="PrivateTodos" component={PrivateTodosScreen} />
         </PrivateTodosStack.Navigator>
     )
 }
 
-PrivateTodosStack.navigationOptions = {
+PrivateTodosStackScreen.navigationOptions = {
   tabBarLabel: 'Private Todos',
-  tabBarIcon: ({ focused }) => (
+  tabBarIcon: () => (
    <View> <Text>  Private Todo </Text> </View>
   ),
   tabBarOptions: {
@@ -38,18 +37,16 @@ const PublicTodosStack = createStackNavigator();
 const PublicTodosStackScreen = () => {
   return(
     <PublicTodosStack.Navigator>
-      <PublicTodosStack.Screen name="Public Todos" component={PublicTodos}/>
+      <PublicTodosStack.Screen name="Public Todos" component={PublicTodosScreen}/>
     </PublicTodosStack.Navigator>
   )
 }
 
-PublicTodosStack.navigationOptions = {
+PublicTodosStackScreen.navigationOptions = {
   tabBarLabel: 'Public Todos',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name="public"
-    />
+  tabBarIcon: () => (
+    <View> <Text>  Private Todo </Text> </View>
+
   ),
   tabBarOptions: {
     activeTintColor: '#392F76',
@@ -57,13 +54,17 @@ PublicTodosStack.navigationOptions = {
   }
 };
 
-const TodosTabNavigator = createBottomTabNavigator({
-  PrivateTodosStack,
-  PublicTodosStack,
-});
+const TodosTabNavigator = createBottomTabNavigator();
 
 
-const TodosTabNavigatorScreen = () =>{
-    
+const TodosTabNavigatorScreen = () => {
+  return (
+    <NavigationContainer independent={true}>
+      <TodosTabNavigator.Navigator>
+        <TodosTabNavigator.Screen name="Private" component={PrivateTodosStackScreen} />
+        <TodosTabNavigator.Screen name="Public" component={PublicTodosStackScreen} />
+      </TodosTabNavigator.Navigator>
+    </NavigationContainer>
+  )
 }
-export default createAppContainer(TodosTabNavigator);
+export default TodosTabNavigatorScreen;

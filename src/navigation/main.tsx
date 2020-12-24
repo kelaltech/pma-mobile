@@ -1,16 +1,17 @@
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import OnlineUsers from '../screens/UsersScreen';
+import UsersScreen from '../screens/UsersScreen';
 import LogoutScreen from '../screens/LogoutScreen';
-import TodosTabs from './TodosTabNavigator';
+import TodosTabNavigatorScreen from './TodosTabNavigator';
 
 const UsersStack = createStackNavigator();
 
 const MyUSerStack = () => {
     return (
         <UsersStack.Navigator>
-            <UsersStack.Screen name="OnlineUsers" component={OnlineUsers} />
+            <UsersStack.Screen name="OnlineUsers" component={UsersScreen} />
         </UsersStack.Navigator>
     )
 }
@@ -52,11 +53,11 @@ const Tab = createDrawerNavigator();
 
 const MainContainer = () => {
     return(
-        <NavigationContainer>
+        <NavigationContainer independent={true}>
             <Tab.Navigator>
-                <Tab.Screen name="Home" component={TodosTabs} />
+                <Tab.Screen name="Home" component={TodosTabNavigatorScreen} />
                 <Tab.Screen name="Settings" component={MyUSerStack} />
-                <Tab.Screen name="Settings" component={LogoutScreen} />
+                <Tab.Screen name="Logout" component={LogoutScreen} />
             </Tab.Navigator>
         </NavigationContainer>
     )
