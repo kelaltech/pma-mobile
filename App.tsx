@@ -2,7 +2,7 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, StatusBar, Text, View } from 'react-native';
 import ApolloClientProvider from './src/app/apollo'
-import MainContainer from './src/navigation/main' 
+import AppNavigatorScreen from './src/navigation/appNavigator' 
 
 
 const App = () => {
@@ -11,7 +11,7 @@ const App = () => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
           <ScrollView>
-            <MainContainer/>
+          <AppNavigatorScreen/> 
           </ScrollView>
       </SafeAreaView> 
     </ApolloClientProvider>

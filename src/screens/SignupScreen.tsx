@@ -2,18 +2,18 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-const UsersScreen = () => {
+const Signup = (props: any) => {
     // return TodoScreen with prop isPublic as false
     return (
         <View>
-            <Text> Public TODOS </Text>
+            <Text> Signup TODOS </Text>
         </View>
     );
 }
 
-UsersScreen.navigationOptions = ({ }) => ({
+Signup.navigationOptions = ({ }) => ({
     headerTitle: 'Private Todos',
 
 });
 
-export default UsersScreen;
+export default Signup;

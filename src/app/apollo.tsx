@@ -25,7 +25,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
                     continue
                 }
                 if (
-                    !AsyncStorage.getItem('auth/token') &&
+                    !AsyncStorage.getItem('auth/token todo') &&
                     err.path &&
                     err.path.join('.') === ['account', 'me'].join('.')
                 ) {
@@ -33,8 +33,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
                     // no further action (such as navigate) is needed in this case
                     continue
                 }
-                AsyncStorage.removeItem('auth/token')
-                AsyncStorage.removeItem('auth/account')
+                AsyncStorage.removeItem('auth/token todo')
+                AsyncStorage.removeItem('auth/account todo')
                 // window.location.href = `/login/?${qs.stringify(
                 //   {
                 //     continue:
@@ -53,7 +53,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 })
 
 const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem('auth/token')
+    const token = AsyncStorage.getItem('auth/token')
     return {
         headers: {
             ...headers,
