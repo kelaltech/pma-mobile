@@ -1,20 +1,20 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LoginScreen from '../screens/LoginScreen';
+import ProjectDetail from '../screens/projectsDetailScreen'
+import MyReports from '../screens/reports/myReportsScreen'
+import CheckIn from '../screens/checkInScreen'
 
-const UsersStack = createBottomTabNavigator();
+const BottomTab = createBottomTabNavigator();
 
 const MainContainer = () => {
     return (
-        <NavigationContainer independent={true}>
-            <UsersStack.Navigator>
-                <UsersStack.Screen name="Project" component={LoginScreen} />
-                <UsersStack.Screen name="Reports" component={LoginScreen} />
-                <UsersStack.Screen name="checkin" component={LoginScreen} />
-            </UsersStack.Navigator>
-        </NavigationContainer>
+        <BottomTab.Navigator initialRouteName="MyReports">
+            <BottomTab.Screen name="Project" component={ProjectDetail} />
+            <BottomTab.Screen name="MyReports" component={MyReports} />
+            <BottomTab.Screen name="CheckIn" component={CheckIn} />
+        </BottomTab.Navigator>
     )
 }
+
 
 export default MainContainer

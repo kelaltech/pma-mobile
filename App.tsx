@@ -1,19 +1,14 @@
 
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { SafeAreaView, ScrollView, StatusBar, Text, View } from 'react-native';
 import ApolloClientProvider from './src/app/apollo'
-import AppNavigatorScreen from './src/navigation/appNavigator' 
-
+import AppNavigatorScreen from './src/navigation/appNavigator'
 
 const App = () => {
-  return ( 
+  return (
     <ApolloClientProvider>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-          <ScrollView>
-          <AppNavigatorScreen/> 
-          </ScrollView>
-      </SafeAreaView> 
+      <AppNavigatorScreen />
     </ApolloClientProvider>
   );
 };

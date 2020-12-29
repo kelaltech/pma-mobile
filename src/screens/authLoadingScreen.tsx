@@ -9,7 +9,7 @@ const AuthLoadingScreen = ({ navigation }: any) => {
                 // TODO
         }
         else {
-            navigation.navigate('Auth')
+            // navigation.navigate('Auth')
         }
     }
 

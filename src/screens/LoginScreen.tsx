@@ -33,7 +33,6 @@ const LoginScreen = (props: any) => {
         props.submit(email.toLowerCase(), password, successCallback, errorCallback)
     }
 
-    const buttonText = props.type === 'signup' ? 'SIGN UP' : 'LOG IN';
 
     return (
         <View style={styles.container}>
@@ -85,7 +84,7 @@ const LoginScreen = (props: any) => {
                     loading ?
                         <Text> Loading </Text>
                         :
-                        <Text style={{ color: 'white', fontWeight: 'bold' }} >{buttonText}</Text>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }} >Log in</Text>
                 }
             </TouchableOpacity>
         </View>

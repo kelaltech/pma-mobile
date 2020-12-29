@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Text, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import jwtDecoder from 'jwt-decode'
 import Login from './LoginScreen'
-import { signup, login, signupProps, loginProps } from '../app/authActions'
+import { login, loginProps } from '../app/authActions'
 import AsyncStorage from '@react-native-community/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -10,23 +10,14 @@ const AuthScreen = () => {
     const [isLoggedIn, setIsloggedIn] = useState(false)
     const [loginProps, setLoginProps] = useState({ email: '', password: '' })
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
-    const [tabIndex, setTabIndex] = useState(0)
+    // const [tabIndex, setTabIndex] = useState(0)
 
-    const performSignup = ({ email, password, succesCb, errorCb }: signupProps) => {
-        const sucessCallback = () => {
-            succesCb();
-            setTabIndex(0)
-            setLoginProps({ email: email, password: password })
-            Alert.alert('Successfully Signed up!')
-        }
-        signup({ email, password, succesCb, errorCb })
-    }
-
+  
     const performLogin = ({ navigation }: any, { email, password, succesCb, errorCb }: loginProps) => {
         const sucessCallback = (response: any) => {
             succesCb();
-            setTabIndex(0)
-            const decodedToken = jwtDecoder(response.token)
+           
+            // const decodedToken = jwtDecoder(response.token)
             AsyncStorage.setItem('Todo', JSON.stringify({
                 token: response.token,
                 // name: decodedToken.name,
@@ -36,53 +27,17 @@ const AuthScreen = () => {
             })
             Alert.alert('Successfully Signed up!')
         }
-        login({ email, password, succesCb, errorCb })
+        login({ email, password, sucessCallback, errorCb })
     }
-
-    const tabs = () => {
-        const displayTab = tabIndex === 0 ? <Login type={'login'} submit={performLogin} {...loginProps} /> : <Login type={'signup'} submit={performSignup} />
-        let loginTabStyle, signupTabStyle, loginTabTextStyle, signupTabTextStyle;
-        if (tabIndex === 0) {
-            loginTabStyle = styles.activeTab;
-            signupTabStyle = styles.tab;
-            loginTabTextStyle = styles.tabHeaderTextActive;
-            signupTabTextStyle = styles.tabHeaderText
-        } else {
-            signupTabStyle = styles.activeTab;
-            loginTabStyle = styles.tab;
-            loginTabTextStyle = styles.tabHeaderText;
-            signupTabTextStyle = styles.tabHeaderTextActive;
-        }
 
         return (
-            <View
-                style={isKeyboardOpen ? styles.koTabContainer : styles.tabContainer}
-            >
-                <View style={styles.tabHeader}>
-                    <TouchableOpacity style={loginTabStyle} onPress={() => setTabIndex(0)}>
-                        <Text style={loginTabTextStyle}>LOG IN</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={signupTabStyle} onPress={() => setTabIndex(1)}>
-                        <Text style={signupTabTextStyle}>SIGN UP</Text>
-                    </TouchableOpacity>
-                </View>
-                <View
-                    style={styles.tabContent}
-                >
-                    {displayTab}
-                </View>
-            </View>
-        )
-    }
-
-    return (
         <KeyboardAvoidingView
             style={styles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             enabled
         >
             {!isKeyboardOpen}
-            {tabs()}
+            <Login type="login" submit={performLogin}/>
         </KeyboardAvoidingView>
     );
 }
