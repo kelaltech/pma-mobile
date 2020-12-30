@@ -29,7 +29,7 @@ const AppNavigatorScreen = () => {
   return (
     <NavigationContainer>
       <AppStackNav.Navigator initialRouteName="Main" headerMode="none">
-        <AppStackNav.Screen name="AddReport" component={AddReports}/>
+        <AppStackNav.Screen name="AddReport" component={AddReports} />
         <AppStackNav.Screen name="ReportDetail" component={ReportDetail} />
         <AppStackNav.Screen name="Main" component={MainContainer} />
         <AppStackNav.Screen name="Loading" component={AuthLoadingScreen} />

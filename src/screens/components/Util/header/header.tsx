@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 const Header = (props: any, { navigation }: any) => {
-    console.log(props.to)
+    // console.log(props.to)
     return (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', backgroundColor: '#0C1A59', height: 75, paddingTop: 25 }}>
             <View>

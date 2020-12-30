@@ -8,7 +8,7 @@ const BottomTab = createBottomTabNavigator();
 
 const MainContainer = () => {
     return (
-        <BottomTab.Navigator initialRouteName="MyReports">
+        <BottomTab.Navigator initialRouteName="CheckIn">
             <BottomTab.Screen name="Project" component={ProjectDetail} />
             <BottomTab.Screen name="MyReports" component={MyReports} />
             <BottomTab.Screen name="CheckIn" component={CheckIn} />
