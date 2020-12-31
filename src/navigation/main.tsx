@@ -3,15 +3,28 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProjectDetail from '../screens/projectsDetailScreen'
 import MyReports from '../screens/reports/myReportsScreen'
 import CheckIn from '../screens/checkInScreen'
+import { Text } from 'react-native';
 
 const BottomTab = createBottomTabNavigator();
 
 const MainContainer = () => {
     return (
-        <BottomTab.Navigator initialRouteName="CheckIn">
-            <BottomTab.Screen name="Project" component={ProjectDetail} />
-            <BottomTab.Screen name="MyReports" component={MyReports} />
-            <BottomTab.Screen name="CheckIn" component={CheckIn} />
+        <BottomTab.Navigator initialRouteName="MyReports" tabBarOptions={{ showLabel: false, activeBackgroundColor: '#F59D31' }} >
+            <BottomTab.Screen name="Project" component={ProjectDetail} options={{
+                tabBarIcon: () => (
+                    <Text style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}> Project </Text>
+                )
+            }} />
+            <BottomTab.Screen name="MyReports" component={MyReports} options={{
+                tabBarIcon: () => (
+                    <Text style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}> My Reports </Text>
+                )
+            }} />
+            <BottomTab.Screen name="CheckIn" component={CheckIn} options={{
+                tabBarIcon: () => (
+                    <Text style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}> Check-in </Text>
+                )
+            }} />
         </BottomTab.Navigator>
     )
 }

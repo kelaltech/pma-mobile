@@ -25,7 +25,7 @@ const CheckIn = () => {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ marginHorizontal: 24, borderRightColor: '#0C1A59', borderRightWidth: 1 }}>
+            <View style={{ marginHorizontal: 24, borderLeftColor: '#0C1A59', borderLeftWidth: 5 }}>
                 <Text> Previous Text </Text>
             </View>
         </>
