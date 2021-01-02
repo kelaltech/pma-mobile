@@ -5,8 +5,8 @@ import AuthLoadingScreen from '../screens/authLoadingScreen';
 import AuthScreen from '../screens/authScreen';
 import MainContainer from './main';
 import { createStackNavigator } from '@react-navigation/stack'
-import ReportDetail from '../screens/reports/reportDetailScreen'
-import AddReports from '../screens/addReportsScreen'
+import ReportDetail from '../screens/reports/report-detail/reportDetailScreen'
+import AddReports from '../screens/reports/add-report/addReportsScreen'
 
 const AppStackNav = createStackNavigator();
 

@@ -16,7 +16,7 @@ console.log('apollo')
 // })
 
 export const apolloClient = new ApolloClient({
-    uri: 'http://10.42.0.69:1337/graphql',
+    uri: 'https://pma-backend.kelalapp.com/graphql',
     // link: errorLink.concat(httpLink),
     cache: new InMemoryCache(),
 })
