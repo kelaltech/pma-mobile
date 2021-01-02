@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, Alert, PermissionsAndroid, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { launchCamera } from 'react-native-image-picker';
-import Header from './components/Util/header/header'
+import Header from '../../components/Util/header/header'
 const AddReports = () => {
     const [allImg, setAllImg] = useState<string[]>([])
     const getImage = async () => {

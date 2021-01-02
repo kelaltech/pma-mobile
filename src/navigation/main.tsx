@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProjectDetail from '../screens/projectsDetailScreen'
-import MyReports from '../screens/reports/myReportsScreen'
+import MyReports from '../screens/reports/my-report/myReportsScreen'
 import CheckIn from '../screens/checkInScreen'
 import { Text } from 'react-native';
 

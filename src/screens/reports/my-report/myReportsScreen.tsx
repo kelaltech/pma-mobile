@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Header from '../components/Util/header/header'
+import Header from '../../components/Util/header/header'
 import { useNavigation } from '@react-navigation/native';
 import { gql } from '@apollo/client'
 import {useQuery} from '@apollo/react-hooks'
