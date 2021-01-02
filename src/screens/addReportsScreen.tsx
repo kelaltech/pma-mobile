@@ -21,9 +21,18 @@ const AddReports = () => {
 
     const removeImg = (id?: string) => {
         if (id) {
-            const updateImgs = allImg.slice(allImg.indexOf(id, 1))
-            setAllImg(updateImgs)
-            AsyncStorage.setItem('new', JSON.stringify(updateImgs))
+
+            if (id !== '0') {
+                const updateImgs = allImg.slice(allImg.indexOf(id, 1))
+                setAllImg(updateImgs)
+
+                AsyncStorage.setItem('new', JSON.stringify(updateImgs))
+            } else {
+                const updateImgs = allImg.slice(1)
+                setAllImg(updateImgs)
+
+                AsyncStorage.setItem('new', JSON.stringify(updateImgs))
+            }
         }
         else {
             AsyncStorage.getAllKeys()
@@ -97,8 +106,9 @@ const AddReports = () => {
                 {allImg && allImg.length !== 0 ? (
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
                         {allImg.map((img, key) => (
-                            <View style={{ flexDirection: 'column' }}>
-                                <Image key={key} source={{ uri: `data:image/jpeg;base64,${img}` }} style={{ width: 140, height: 100, marginLeft: key % 2 === 0 ? 0 : 24 }} />
+                            <View key={key} style={{ flexDirection: 'column' }}>
+                                <Image source={{ uri: `data:image/jpeg;base64,${img}` }} style={{ width: 140, height: 100, marginLeft: key % 2 === 0 ? 0 : 24 }} />
+
                                 <TouchableOpacity onPress={() => removeImg((key).toString())} style={{ marginBottom: 12, width: 140, marginLeft: key % 2 === 0 ? 0 : 24, alignSelf: 'center', height: 30, backgroundColor: '#ff0000' }}>
                                     <Text style={{ alignSelf: 'center', color: 'white', fontSize: 18 }}>DELETE</Text>
                                 </TouchableOpacity>

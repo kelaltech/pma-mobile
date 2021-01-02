@@ -1,0 +1,12 @@
+query reports {
+    report{
+        date
+        classroom{
+            name
+            sectionItem{
+                name
+                unit
+            }
+        }
+    }
+}

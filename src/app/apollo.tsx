@@ -1,76 +1,30 @@
-// import qs from 'qs'
 import React, { PropsWithChildren } from 'react'
-
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloProvider } from '@apollo/react-hooks'
 import { onError } from '@apollo/client/link/error'
-import { createHttpLink } from '@apollo/client/link/http'
-import AsyncStorage from '@react-native-community/async-storage'
-const httpLink = createHttpLink({
-    uri: process.env.REACT_APP_GRAPHQL_URL || `http://localhost:1337/graphql`,
-    fetch,
-})
+// import { createHttpLink } from '@apollo/react-hooks'
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
-        for (const err of graphQLErrors) {
-            if (
-                // no token:
-                err.extensions?.code === 'UNAUTHENTICATED' ||
-                // invalid:
-                (err.extensions?.exception?.name === 'JsonWebTokenError' &&
-                    err.extensions?.exception?.message === 'invalid signature')
-            ) {
-                if (typeof window === 'undefined') {
-                    continue
-                }
-                if (
-                    !AsyncStorage.getItem('auth/token todo') &&
-                    err.path &&
-                    err.path.join('.') === ['account', 'me'].join('.')
-                ) {
-                    // already logged out and the regular account.me is requested
-                    // no further action (such as navigate) is needed in this case
-                    continue
-                }
-                AsyncStorage.removeItem('auth/token todo')
-                AsyncStorage.removeItem('auth/account todo')
-                // window.location.href = `/login/?${qs.stringify(
-                //   {
-                //     continue:
-                //       window.location.pathname.replace(/\/$/, '/') +
-                //       (window.location.search || '') +
-                //       (window.location.hash || ''),
-                //   },
-                //   { addQueryPrefix: false }
-                // )}`
-            }
-        }
-    }
-    if (networkError) {
-        console.error(`[Network error]: ${networkError}`)
-    }
-})
-
-const authLink = setContext((_, { headers }) => {
-    const token = AsyncStorage.getItem('auth/token')
-    return {
-        headers: {
-            ...headers,
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-    }
-})
+// const httpLink = createHttpLink({
+//     uri: `http://localhost:1337/graphql`,
+//     fetch,
+// })
+console.log('apollo')
+// const errorLink = onError(({ networkError }) => {
+//     if (networkError) {
+//         console.error(`[Network error]: ${networkError}`)
+//     }
+// })
 
 export const apolloClient = new ApolloClient({
-    link: authLink.concat(errorLink).concat(httpLink),
+    uri: 'http://10.42.0.69:1337/graphql',
+    // link: errorLink.concat(httpLink),
     cache: new InMemoryCache(),
 })
 
 const ApolloClientProvider = ({ children }: PropsWithChildren<{}>) => {
     return (
         <ApolloProvider client={apolloClient}>
-            <>{children}</>
+            {children}
         </ApolloProvider>
     )
 }
