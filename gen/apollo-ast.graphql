@@ -1,0 +1,382 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+"""Date scalar type"""
+scalar Date
+"""The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
+scalar JSON
+"""The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
+scalar JSONObject
+type Query {
+  """A same query at the root. It echoes what you give it."""
+  _echo(msg: String!): String!
+  """Basic queries from "account" module."""
+  account: AccountQuery!
+  """Privilege queries from "account" module."""
+  privilege: PrivilegeQuery!
+  """Checkin query"""
+  checkin: CheckinsQuery!
+  """Project query"""
+  project: ProjectQuery!
+  """Lot query"""
+  lot: LotQuery!
+  """SectionItem query"""
+  section_item: SectionItemQuery!
+  """Section query"""
+  section: SectionQuery!
+  """Unit query"""
+  Unit: UnitQuery!
+  """Report query"""
+  report: ReportQuery!
+}
+type Mutation {
+  """A same mutation at the root. It echoes what you give it."""
+  _echo(msg: String!): String!
+  """Basic mutations from "account" module."""
+  account: AccountMutation!
+  """Privilege mutations from "account" module."""
+  privilege: PrivilegeMutation!
+  """Checkin Mutation"""
+  checkin: CheckinsMutation!
+  """Project Mutation"""
+  project: ProjectMutation!
+  """Lot Mutation"""
+  lot: LotMutation!
+  """SectionItem Mutation"""
+  section_item: SectionItemMutation!
+  """Section Mutation"""
+  section: SectionMutation!
+  """Unit Mutation"""
+  Unit: UnitMutation!
+  """Report Mutation"""
+  report: ReportMutation!
+}
+type AccountQuery {
+  """
+  Retrieves the logged in account.
+  
+  Requires authentication.
+  """
+  me: AccountPrivateResponse!
+  """Searches accounts."""
+  search(term: String, offset: Int, limit: Int): AccountListResponse!
+  """Retrieves an Account by its ID."""
+  byId(id: ID!): AccountResponse
+}
+type PrivilegeQuery {
+  """Searches privileges."""
+  search(term: String, offset: Int, limit: Int): PrivilegeListResponse!
+  """Retrieves a Privilege by its ID."""
+  byId(id: ID!): PrivilegeResponse
+  """List all permission scopes that can make up a Privilege."""
+  allScopes: [String!]!
+}
+type AccountMutation {
+  """Edits account settings. If no `accountId` is provided, it uses the currently authenticated account."""
+  edit(input: AccountInput!, accountId: ID): AccountPrivateResponse!
+  """Changes account password."""
+  editPassword(input: AccountEditPasswordInput!): AccountLoginResponse!
+  """Registers account and logs in."""
+  signUp(input: AccountInput!, privilegeId: String): AccountLoginResponse!
+  """Logs in and responds with a JWT."""
+  login(input: AccountLoginInput!): AccountLoginResponse!
+  """Sends email for password reset."""
+  resetStart(input: AccountResetStartInput!): Boolean!
+  """Verifies instance, changes account password and logs in."""
+  resetFinish(input: AccountResetFinishInput!): AccountLoginResponse!
+  """Edits the privilege granted for an account."""
+  editAccountPrivilege(accountId: ID!, privilegeId: ID): AccountResponse!
+  """Disables and archives account."""
+  remove(accountId: ID!): Boolean!
+}
+type PrivilegeMutation {
+  """Adds a privilege."""
+  add(input: PrivilegeInput!): PrivilegeResponse!
+  """Edits privilege settings."""
+  edit(id: ID!, input: PrivilegeInput!): PrivilegeResponse!
+  """Disable and archive privilege."""
+  remove(id: ID!): Boolean!
+}
+"""An input model for accounts."""
+input AccountInput {
+  name: String!
+  email: String!
+  password: String
+}
+"""An input model for editing account password."""
+input AccountEditPasswordInput {
+  currentPassword: String
+  newPassword: String
+}
+"""An input model for account login credentials."""
+input AccountLoginInput {
+  email: String!
+  password: String!
+}
+"""An input model for starting account password resets."""
+input AccountResetStartInput {
+  email: String!
+}
+"""An input model for finishing account password resets."""
+input AccountResetFinishInput {
+  token: String!
+  email: String!
+  newPassword: String!
+}
+"""An input model for account registrations."""
+input AccountAddInput {
+  name: String!
+  email: String!
+  password: String!
+  privilege_id: ID
+}
+"""An input model for privileges."""
+input PrivilegeInput {
+  name: String!
+  scopes: [PrivilegeScopeInput!]!
+}
+"""An input model for privilege scopes."""
+input PrivilegeScopeInput {
+  id: ID
+  scope: String!
+}
+"""A response model for accounts (for private/owner use only)."""
+type AccountPrivateResponse {
+  id: ID!
+  created_at: Date!
+  updated_at: Date!
+  name: String!
+  email: String!
+  password_iat: Date!
+  privilege: PrivilegeResponse
+}
+"""A response model for a collection of accounts."""
+type AccountListResponse {
+  total: Int!
+  items: [AccountResponse!]!
+}
+"""A response model for accounts."""
+type AccountResponse {
+  id: ID!
+  created_at: Date!
+  updated_at: Date!
+  name: String!
+  email: String!
+  password_iat: Date!
+  privilege: PrivilegeResponse
+}
+"""A response model for logins (contains JWT & account info)."""
+type AccountLoginResponse {
+  token: String!
+  account: AccountPrivateResponse!
+}
+"""A response model for a collection of privileges."""
+type PrivilegeListResponse {
+  total: Int!
+  items: [PrivilegeResponse!]!
+}
+"""A response model for privileges."""
+type PrivilegeResponse {
+  id: ID!
+  created_at: Date!
+  updated_at: Date!
+  name: String!
+  scopes: [PrivilegeScopeResponse!]!
+  numberOfAccounts: Int
+}
+"""A response model for privilege scopes."""
+type PrivilegeScopeResponse {
+  id: ID!
+  created_at: Date!
+  updated_at: Date!
+  scope: String!
+}
+type CheckinsQuery {
+  """Retrieves list of checkins for a user."""
+  getCheckins(userId: ID!): [Checkin]!
+  """Retrieves an Account by its ID."""
+  getCheckin(id: ID!): Checkin
+}
+type CheckinsMutation {
+  """Create a checkin for a user."""
+  createCheckins(userId: ID!, location: String!): Checkin
+}
+type Checkin {
+  id: ID!
+  location: String!
+  created_at: Date!
+  updated_at: Date!
+}
+type ProjectQuery {
+  """Retrieves a project by its ID."""
+  getProject(id: ID!): Project
+}
+type ProjectMutation {
+  """Create a project for a user."""
+  createProject(input: ProjectCreateInput): Project
+  """Update a Project."""
+  updateProject(input: ProjectUpdateInput): Project
+}
+type Project {
+  id: ID!
+  name: String!
+  contractor: String!
+  location: String!
+  created_at: Date!
+  updated_at: Date!
+}
+input ProjectCreateInput {
+  name: String!
+  contractor: String!
+  location: String!
+}
+input ProjectUpdateInput {
+  name: String
+  contractor: String
+}
+type LotQuery {
+  """Retrieves a Lot by its ID."""
+  getLot(id: ID!): Lot
+}
+type LotMutation {
+  """Create a lot."""
+  createLot(input: LotCreateInput): Lot
+  """Update a lot."""
+  updateLot(input: LotUpdateInput): Lot
+}
+type Lot {
+  id: ID!
+  name: String!
+  created_at: Date!
+  updated_at: Date!
+}
+input LotCreateInput {
+  name: String!
+}
+input LotUpdateInput {
+  name: String
+}
+type SectionItemQuery {
+  """Retrieves a project by its ID."""
+  getSectionItems(projectId: ID!): sectionItem
+}
+type SectionItemMutation {
+  """Create a project for a user."""
+  createProject(input: SectionItemCreateInput): Project
+  """Update a Project."""
+  updateProject(input: SectionItemUpdateInput): Project
+}
+type sectionItem {
+  id: ID!
+  name: String!
+  created_at: Date!
+  updated_at: Date!
+}
+input SectionItemCreateInput {
+  name: String!
+  contractor: String!
+  location: String!
+}
+input SectionItemUpdateInput {
+  name: String
+  contractor: String
+}
+type SectionQuery {
+  """Retrieves a project by its ID."""
+  getProject(id: ID!): Project
+}
+type SectionMutation {
+  """Create a project for a user."""
+  createProject(input: SectionCreateInput): Project
+  """Update a Project."""
+  updateProject(input: SectionUpdateInput): Project
+}
+input SectionCreateInput {
+  name: String!
+  contractor: String!
+  location: String!
+}
+input SectionUpdateInput {
+  name: String
+  contractor: String
+}
+type UnitQuery {
+  """Retrieves a unit by its ID."""
+  getProject(id: ID!): Project
+}
+type UnitMutation {
+  """Create a project for a user."""
+  createProject(input: UnitCreateInput): Unit
+  """Update a Project."""
+  updateProject(input: UnitUpdateInput): Unit
+}
+type Unit {
+  id: ID!
+  name: String!
+  created_at: Date!
+  updated_at: Date!
+}
+input UnitCreateInput {
+  name: String!
+  contractor: String!
+  location: String!
+}
+input UnitUpdateInput {
+  name: String
+  contractor: String
+}
+type ReportQuery {
+  """Retrieves a report by its ID."""
+  getReport(id: ID!): Report
+}
+type ReportMutation {
+  """Create a report."""
+  createReport(input: ReportCreateInput): Report
+  """Update a report."""
+  updateReport(input: ReportUpdateInput): Report
+}
+type Report {
+  id: ID!
+  approved: Boolean!
+  contractor: String!
+  location: String!
+  project: Project
+  files: [File]
+  reportUnits: [ReportUnits]
+  created_at: Date!
+  updated_at: Date!
+}
+type ReportUnits {
+  id: ID!
+  unit: [Unit]
+  executed: Float!
+  planned: Float!
+}
+type File {
+  id: ID!
+  size: Float!
+  url: String
+  type: String
+}
+input ReportCreateInput {
+  id: ID!
+  approved: Boolean!
+  contractor: String!
+  location: String!
+  project_id: ID!
+  files: [Upload]
+}
+input ReportUpdateInput {
+  approved: Boolean
+  contractor: String
+  location: String
+  files: [Upload]
+}
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE

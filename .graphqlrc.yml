@@ -1,0 +1,37 @@
+projects:
+  apollo-ast:
+    extensions:
+      codegen:
+        overwrite: true
+        generates:
+          # apollo ast
+          gen/apollo-ast.graphql:
+            schema:
+              - ${GRAPHQL_URL:"http://localhost:4000/graphql"}
+            plugins:
+              - schema-ast
+            config:
+              includeDirectives: true
+              commentDescriptions: true
+
+  default:
+    extensions:
+      codegen:
+        overwrite: true
+        generates:
+          # apollo types
+          gen/apollo-types.tsx:
+            schema: gen/apollo-ast.graphql
+            documents:
+              - ./src/**/*.graphql
+            plugins:
+              - typescript
+              - typescript-operations
+              - typescript-react-apollo
+            config:
+              skipTypename: true
+              enumsAsTypes: true
+              exportFragmentSpreadSubTypes: true
+              withComponent: false
+              withHOC: false
+              withHooks: true
