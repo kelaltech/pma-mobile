@@ -1,0 +1,7 @@
+query reportDetail {
+    project {
+        getProject(id: 1) {
+            contractor
+        }
+    }
+}
