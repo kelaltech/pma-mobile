@@ -9,7 +9,7 @@ const BottomTab = createBottomTabNavigator();
 
 const MainContainer = () => {
     return (
-        <BottomTab.Navigator initialRouteName="CheckIn" tabBarOptions={{ showLabel: false, activeBackgroundColor: '#F59D31' }} >
+        <BottomTab.Navigator initialRouteName="Project" tabBarOptions={{ showLabel: false, activeBackgroundColor: '#F59D31' }} >
             <BottomTab.Screen name="Project" component={ProjectDetail} options={{
                 tabBarIcon: () => (
                     <Text style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}> Project </Text>
