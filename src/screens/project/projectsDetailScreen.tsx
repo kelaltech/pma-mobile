@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Header from './components/Util/header/header'
+import Header from '../components/Util/header/header'
 const ProjectDetail = () => {
     return (
         <>
