@@ -7,7 +7,7 @@ const ReportDetail = ({ route }: any) => {
     const { reportId } = route.params
     return (
         <>
-            <Header title="Reports" to="MyReports" />
+            <Header title="Reports" to />
             <Text> Report id:  {JSON.stringify(reportId)} </Text>
         </>
     );
