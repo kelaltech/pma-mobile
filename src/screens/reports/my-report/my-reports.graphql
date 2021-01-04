@@ -1,0 +1,22 @@
+query MyReports($projectId: ID!) {
+  report {
+    byProjectId(id: $projectId) {
+      id
+
+      approved
+      project {
+        id
+        name
+        contractor
+        location
+      }
+
+      files {
+        id
+
+        # TODO: name
+        url
+      }
+    }
+  }
+}

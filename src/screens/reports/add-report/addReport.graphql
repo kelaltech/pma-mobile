@@ -1,3 +1,0 @@
-mutation addReport {
-  _echo(msg: "TODO:")
-}

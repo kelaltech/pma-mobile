@@ -21,10 +21,10 @@ const AuthScreen = () => {
 
   const performLogin = (
     { navigation }: any,
-    { email, password, successCb: succesCb, errorCb }: loginProps,
+    { email, password, successCb: successCb, errorCb }: loginProps,
   ) => {
-    const sucessCallback = (response: any) => {
-      succesCb();
+    const successCallback = (response: any) => {
+      successCb();
 
       // const decodedToken = jwtDecoder(response.token)
       AsyncStorage.setItem(
@@ -38,7 +38,7 @@ const AuthScreen = () => {
       });
       Alert.alert('Successfully Signed up!');
     };
-    login({ email, password, sucessCallback, errorCb });
+    login({ email, password, successCb: successCallback, errorCb });
   };
 
   return (

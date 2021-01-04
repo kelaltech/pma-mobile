@@ -1,14 +1,12 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import Header from '../../components/Util/header/header';
+/* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/react-hooks';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Header from '../../components/Util/header/header';
+
 const MyReports = () => {
   const navigation = useNavigation();
-  const { data, error, loading } = useQuery(eportquery);
-  // const { pharmas } = data
-  // console.log('test data: ', data)
+
   return (
     <>
       <Header title="PMA" />
@@ -69,11 +67,3 @@ const MyReports = () => {
 };
 
 export default MyReports;
-
-const eportquery = gql`
-  query rep {
-    pharmas {
-      Name
-    }
-  }
-`;
