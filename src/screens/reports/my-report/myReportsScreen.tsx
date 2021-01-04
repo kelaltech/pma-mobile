@@ -6,7 +6,7 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/react-hooks';
 const MyReports = () => {
   const navigation = useNavigation();
-  const { data, error, loading } = useQuery(eportquery);
+
   // const { pharmas } = data
   // console.log('test data: ', data)
   return (
@@ -69,11 +69,3 @@ const MyReports = () => {
 };
 
 export default MyReports;
-
-const eportquery = gql`
-  query rep {
-    pharmas {
-      Name
-    }
-  }
-`;
