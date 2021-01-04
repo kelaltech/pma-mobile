@@ -29,6 +29,8 @@ type Query {
   Unit: UnitQuery!
   """Report query"""
   report: ReportQuery!
+  """ReportUnit query"""
+  ReportUnit: ReportUnitQuery!
 }
 type Mutation {
   """A same mutation at the root. It echoes what you give it."""
@@ -51,6 +53,8 @@ type Mutation {
   Unit: UnitMutation!
   """Report Mutation"""
   report: ReportMutation!
+  """ReportUnit Mutation"""
+  ReportUnit: ReportUnitMutation!
 }
 type AccountQuery {
   """
@@ -211,6 +215,8 @@ type Checkin {
 type ProjectQuery {
   """Retrieves a project by its ID."""
   getProject(id: ID!): Project
+  """Get project by siteEngineer account Id"""
+  getBySiteEngineer(id: ID!): Project
 }
 type ProjectMutation {
   """Create a project for a user."""
@@ -314,6 +320,8 @@ type UnitMutation {
 type Unit {
   id: ID!
   name: String!
+  quantity: Float
+  rate: Float
   created_at: Date!
   updated_at: Date!
 }
@@ -343,15 +351,9 @@ type Report {
   location: String!
   project: Project
   files: [File]
-  reportUnits: [ReportUnits]
+  reportUnits: [ReportUnit]
   created_at: Date!
   updated_at: Date!
-}
-type ReportUnits {
-  id: ID!
-  unit: [Unit]
-  executed: Float!
-  planned: Float!
 }
 type File {
   id: ID!
@@ -360,18 +362,43 @@ type File {
   type: String
 }
 input ReportCreateInput {
-  id: ID!
-  approved: Boolean!
   contractor: String!
   location: String!
   project_id: ID!
   files: [Upload]
+  reportUnits: [ID]
 }
 input ReportUpdateInput {
   approved: Boolean
   contractor: String
   location: String
+  approved_by: ID!
   files: [Upload]
+}
+type ReportUnitQuery {
+  """Retrieves a report by its ID."""
+  getReportUnit(id: ID!): ReportUnit
+}
+type ReportUnitMutation {
+  """Create a report."""
+  createReportUnit(input: ReportUnitCreateInput): ReportUnit
+  """Update a report."""
+  updateReportUnit(input: ReportUnitUpdateInput): ReportUnit
+}
+type ReportUnit {
+  id: ID!
+  unit: Unit
+  executed: Float!
+  planned: Float!
+}
+input ReportUnitCreateInput {
+  executed: Float!
+  planned: Float!
+}
+input ReportUnitUpdateInput {
+  id: ID!
+  executed: Float!
+  planned: Float!
 }
 enum CacheControlScope {
   PUBLIC

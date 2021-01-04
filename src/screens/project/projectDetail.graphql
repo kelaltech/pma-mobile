@@ -1,0 +1,3 @@
+query ProjectDetail {
+  _echo(msg: "TODO:")
+}
