@@ -28,7 +28,7 @@ const AppStackNav = createStackNavigator();
 const AppNavigatorScreen = () => {
   return (
     <NavigationContainer>
-      <AppStackNav.Navigator initialRouteName="Main" headerMode="none">
+      <AppStackNav.Navigator initialRouteName="Loading" headerMode="none">
         <AppStackNav.Screen name="AddReport" component={AddReports} />
         <AppStackNav.Screen name="ReportDetail" component={ReportDetail} />
         <AppStackNav.Screen name="Main" component={MainContainer} />

@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
+import { useNavigation } from '@react-navigation/native';
 
-const AuthLoadingScreen = ({ navigation }: any) => {
+const AuthLoadingScreen = () => {
+    const navigation = useNavigation()
     const authFunction = async () => {
         const session = await AsyncStorage.getItem('todo')
         if (session) {
-                // TODO
+             navigation.navigate('Main')   
         }
         else {
-            // navigation.navigate('Auth')
+            navigation.navigate('Auth')
         }
     }
 
