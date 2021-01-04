@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 
 type ProgressProps = {
   planned?: Number;
@@ -12,11 +12,14 @@ const ProgressBar = (props: ProgressProps) => {
       <View
         style={[
           style.executedProgress,
-          {width: props.executed?.toString() + '%'},
+          { width: props.executed?.toString() + '%' },
         ]}
       />
       <View
-        style={[style.plannedProgress, {left: props.planned?.toString() + '%'}]}
+        style={[
+          style.plannedProgress,
+          { left: props.planned?.toString() + '%' },
+        ]}
       />
     </View>
   );

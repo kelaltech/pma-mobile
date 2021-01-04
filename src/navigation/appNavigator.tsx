@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import AuthLoadingScreen from '../screens/authLoadingScreen';
 import AuthScreen from '../screens/authScreen';
 import MainContainer from './main';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import ReportDetail from '../screens/reports/report-detail/reportDetailScreen';
 import AddReports from '../screens/reports/add-report/addReportsScreen';
 

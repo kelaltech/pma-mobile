@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Text,
@@ -9,19 +9,19 @@ import {
 } from 'react-native';
 import jwtDecoder from 'jwt-decode';
 import Login from './LoginScreen';
-import {login, loginProps} from '../app/authActions';
+import { login, loginProps } from '../app/authActions';
 import AsyncStorage from '@react-native-community/async-storage';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const AuthScreen = () => {
   const [isLoggedIn, setIsloggedIn] = useState(false);
-  const [loginProps, setLoginProps] = useState({email: '', password: ''});
+  const [loginProps, setLoginProps] = useState({ email: '', password: '' });
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   // const [tabIndex, setTabIndex] = useState(0)
 
   const performLogin = (
-    {navigation}: any,
-    {email, password, succesCb, errorCb}: loginProps,
+    { navigation }: any,
+    { email, password, successCb: succesCb, errorCb }: loginProps,
   ) => {
     const sucessCallback = (response: any) => {
       succesCb();
@@ -38,14 +38,15 @@ const AuthScreen = () => {
       });
       Alert.alert('Successfully Signed up!');
     };
-    login({email, password, sucessCallback, errorCb});
+    login({ email, password, sucessCallback, errorCb });
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      enabled>
+      enabled
+    >
       {!isKeyboardOpen}
       <Login type="login" submit={performLogin} />
     </KeyboardAvoidingView>

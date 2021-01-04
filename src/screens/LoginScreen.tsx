@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Text,
@@ -76,11 +76,12 @@ const LoginScreen = (props: any) => {
       <TouchableOpacity
         style={styles.buttonWrapper}
         onPress={handleSubmit}
-        disabled={loading}>
+        disabled={loading}
+      >
         {loading ? (
           <Text> Loading </Text>
         ) : (
-          <Text style={{color: 'white', fontWeight: 'bold'}}>Log in</Text>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Log in</Text>
         )}
       </TouchableOpacity>
     </View>

@@ -1,7 +1,7 @@
-import {ApolloClient, InMemoryCache} from '@apollo/client';
-import {onError} from '@apollo/client/link/error';
-import {ApolloProvider, createHttpLink} from '@apollo/react-hooks';
-import React, {PropsWithChildren} from 'react';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { ApolloProvider, createHttpLink } from '@apollo/react-hooks';
+import React, { PropsWithChildren } from 'react';
 import Config from 'react-native-config';
 
 const httpLink = createHttpLink({
@@ -9,7 +9,7 @@ const httpLink = createHttpLink({
   fetch,
 });
 
-const errorLink = onError(({networkError}) => {
+const errorLink = onError(({ networkError }) => {
   if (networkError) {
     console.error(`[Network error]: ${networkError}`);
   }
@@ -20,7 +20,7 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const ApolloClientProvider = ({children}: PropsWithChildren<{}>) => {
+const ApolloClientProvider = ({ children }: PropsWithChildren<{}>) => {
   return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
 };
 

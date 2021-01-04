@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 type HeaderProps = {
   to?: boolean;
@@ -32,12 +32,14 @@ const Header = (props: HeaderProps) => {
             <Text style={[header.title]}> {props.title} </Text>
           </View>
           <View style={[header.displayRow]}>
-            <Text style={{fontSize: 16, color: 'white', paddingHorizontal: 12}}>
+            <Text
+              style={{ fontSize: 16, color: 'white', paddingHorizontal: 12 }}
+            >
               {' '}
               Site 2{' '}
             </Text>
             <TouchableOpacity>
-              <Text style={{fontSize: 16, color: 'white'}}>Logout </Text>
+              <Text style={{ fontSize: 16, color: 'white' }}>Logout </Text>
             </TouchableOpacity>
           </View>
         </View>

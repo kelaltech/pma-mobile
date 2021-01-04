@@ -1,11 +1,11 @@
 export type loginProps = {
   email: string;
   password: string;
-  succesCb: Function;
+  successCb: Function;
   errorCb: Function;
 };
 
-export const login = ({email, password, succesCb, errorCb}: loginProps) => {
+export const login = ({ email, password, successCb, errorCb }: loginProps) => {
   fetch('http://localhost:1337/login', {
     method: 'POST',
     headers: {
@@ -19,7 +19,7 @@ export const login = ({email, password, succesCb, errorCb}: loginProps) => {
     .then((resp) => {
       resp.json().then((respObj) => {
         if (resp.status === 200) {
-          succesCb(respObj);
+          successCb(respObj);
           return;
         }
         if (respObj.error) {
@@ -48,4 +48,4 @@ let logout;
 export const setLogout = (l) => {
   logout = l;
 };
-export {logout};
+export { logout };

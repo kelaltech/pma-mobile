@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,10 @@ import {
   PermissionsAndroid,
   Image,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {launchCamera} from 'react-native-image-picker';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { launchCamera } from 'react-native-image-picker';
 import Header from '../../components/Util/header/header';
-import {ProjectPlanSection} from '../data';
+import { ProjectPlanSection } from '../data';
 
 const AddReports = () => {
   const [allImg, setAllImg] = useState<string[]>([]);
@@ -76,7 +76,7 @@ const AddReports = () => {
       ) {
         // console.log("Camera permission given");
         launchCamera(
-          {mediaType: 'photo', saveToPhotos: true, includeBase64: true},
+          { mediaType: 'photo', saveToPhotos: true, includeBase64: true },
           (res: any) => {
             if (res.base64) {
               const vat = [...allImg, res.base64];
@@ -108,8 +108,9 @@ const AddReports = () => {
             height: 210,
             paddingTop: 48,
             paddingLeft: 24,
-          }}>
-          <Text style={{color: 'white', fontSize: 28, fontWeight: '700'}}>
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
             Thu, Dec 20, 2012
           </Text>
         </View>
@@ -123,8 +124,9 @@ const AddReports = () => {
             borderRadius: 8,
             paddingHorizontal: 24,
             paddingVertical: 32,
-          }}>
-          <Text style={{fontSize: 14, fontWeight: '400', color: '#5A5A5A'}}>
+          }}
+        >
+          <Text style={{ fontSize: 14, fontWeight: '400', color: '#5A5A5A' }}>
             For “Project Roobee” in “Lot 1: Bale, East Bale Robe”
           </Text>
           <View
@@ -140,11 +142,12 @@ const AddReports = () => {
                 flexDirection: 'row',
                 flexWrap: 'wrap',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               {allImg.map((img, key) => (
-                <View key={key} style={{flexDirection: 'column'}}>
+                <View key={key} style={{ flexDirection: 'column' }}>
                   <Image
-                    source={{uri: `data:image/jpeg;base64,${img}`}}
+                    source={{ uri: `data:image/jpeg;base64,${img}` }}
                     style={{
                       width: 140,
                       height: 100,
@@ -161,13 +164,15 @@ const AddReports = () => {
                       alignSelf: 'center',
                       height: 30,
                       backgroundColor: '#ff0000',
-                    }}>
+                    }}
+                  >
                     <Text
                       style={{
                         alignSelf: 'center',
                         color: 'white',
                         fontSize: 18,
-                      }}>
+                      }}
+                    >
                       DELETE
                     </Text>
                   </TouchableOpacity>
@@ -192,7 +197,7 @@ const AddReports = () => {
                         Report Metric Name {each.name} : {each.unit}{' '}
                       </Text>
                       <Text> Amount {each.quantity * each.rate} </Text>
-                      <View style={{flexDirection: 'row'}}>
+                      <View style={{ flexDirection: 'row' }}>
                         <TextInput
                           value={each.planned}
                           placeholder={'Planned'}
