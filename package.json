@@ -11,7 +11,7 @@
     "android": "run-s codegen \"react-native run-android\"",
     "ios": "run-s codegen \"react-native run-ios\"",
     "test": "jest",
-    "lint": "eslint . --fix"
+    "lint": "prettier --write src && eslint . --fix"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
