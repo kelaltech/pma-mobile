@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Text, View, StyleSheet } from 'react-native';
 // import jwtDecoder from 'jwt-decode'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'
 import Login from './LoginScreen';
 import { login, loginProps } from '../app/authActions';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -12,15 +12,10 @@ const AuthScreen = () => {
 
   const navigation = useNavigation();
 
-  const performLogin = ({
-    email,
-    password,
-    successCb,
-    errorCb,
-  }: loginProps) => {
+  const performLogin = ({ email, password, succesCb, errorCb }: loginProps) => {
     console.log(email, '&', password);
-    const successCallback = (response: any) => {
-      successCb();
+    const sucessCallback = (response: any) => {
+      succesCb();
 
       // const decodedToken = jwtDecoder(response.token)
       AsyncStorage.setItem(
@@ -37,12 +32,7 @@ const AuthScreen = () => {
     const errorCallback = () => {
       errorCb;
     };
-    login({
-      email,
-      password,
-      successCb: successCallback,
-      errorCb: errorCallback,
-    });
+    login({ email, password, sucessCallback, errorCallback });
   };
 
   return (
