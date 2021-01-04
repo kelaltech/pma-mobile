@@ -19,34 +19,34 @@ export const login = ({ email, password, succesCb, errorCb }: loginProps) => {
             })
         }
     )
-    .then(resp => {
-        resp.json()
-            .then(respObj => {
-                if (resp.status === 200) {
-                    succesCb(respObj);
-                    return;
-                }
-                if (respObj.error) {
+        .then(resp => {
+            resp.json()
+                .then(respObj => {
+                    if (resp.status === 200) {
+                        succesCb(respObj);
+                        return;
+                    }
+                    if (respObj.error) {
+                        errorCb({
+                            title: 'Error',
+                            message: respObj.error
+                        });
+                        return;
+                    }
                     errorCb({
-                        title: 'Error',
-                        message: respObj.error
-                    });
-                    return;
-                }
-                errorCb({
-                    title: 'Unknown Error',
-                    message: 'Please try again'
+                        title: 'Unknown Error',
+                        message: 'Please try again'
+                    })
                 })
+        }
+        )
+        .catch(err => {
+            console.log(err);
+            errorCb({
+                title: 'Unexpected',
+                message: 'Please try again'
             })
-    }
-    )
-    .catch(err => {
-        console.log(err);
-        errorCb({
-            title: 'Unexpected',
-            message: 'Please try again'
         })
-    })
 };
 
 // let logout;

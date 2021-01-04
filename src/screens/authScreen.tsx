@@ -28,8 +28,8 @@ const AuthScreen = () => {
             })
             Alert.alert('Successfully Signed up!')
         }
-        const errorCallback = () => {
-            errorCb()
+        const errorCallback = ()=>{
+            errorCb
         }
         login({ email, password, sucessCallback, errorCallback })
     }

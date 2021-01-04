@@ -14,16 +14,17 @@ const AuthLoadingScreen = () => {
             navigation.navigate('Auth')
         }
     }
+  };
 
-    React.useEffect(() => {
-        authFunction()
-    },[])
+//   React.useEffect(() => {
+//     authFunction();
+//   }, []);
 
-    return (
-        <View>
-            <Text> Loading Auth </Text>
-        </View>
-    );
-}
+  return (
+    <View>
+      <Text> Loading Auth </Text>
+    </View>
+  );
+};
 
 export default AuthLoadingScreen;

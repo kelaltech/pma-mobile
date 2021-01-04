@@ -11,7 +11,7 @@
     "android": "run-s codegen \"react-native run-android\"",
     "ios": "run-s codegen \"react-native run-ios\"",
     "test": "jest",
-    "lint": "eslint . --fix"
+    "lint": "prettier --write src && eslint . --fix"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
@@ -33,6 +33,7 @@
     "react": "16.13.1",
     "react-apollo": "^3.1.5",
     "react-native": "0.63.4",
+    "react-native-config": "1.4.1",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-image-picker": "^3.1.2",
     "react-native-reanimated": "^1.13.2",
