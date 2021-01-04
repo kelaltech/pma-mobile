@@ -44,8 +44,8 @@ export const login = ({ email, password, successCb, errorCb }: loginProps) => {
     });
 };
 
-let logout;
-export const setLogout = (l: any) => {
-  logout = l;
-};
-export { logout };
+// let logout;
+// export const setLogout = (l: any) => {
+//     logout = l
+// };
+// export { logout };

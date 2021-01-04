@@ -5,11 +5,9 @@ import {
   View,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
+  Button,
+  Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
-const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const LoginScreen = (props: any) => {
   const [email, setEmail] = useState('');
@@ -17,19 +15,11 @@ const LoginScreen = (props: any) => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
-    if (!emailRegex.test(email.toLowerCase())) {
-      Alert.alert('Invalid email', 'Please enter a valid email address');
-      return;
-    }
     if (!email || !password) {
       Alert.alert('Email or password cannot be empty');
       return;
     }
     const successCallback = () => {
-      if (props.type === 'login') {
-        setEmail('');
-        setPassword('');
-      }
       setLoading(false);
     };
     const errorCallback = (e: any) => {
@@ -41,95 +31,71 @@ const LoginScreen = (props: any) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.textboxWrapper}>
-        <View style={styles.labelWrapper}>
-          <Icon name="mail-outline" size={14} style={styles.labelIcon} />
-          <Text style={styles.labelText}> Email </Text>
-        </View>
+    <View style={loginStlye.container}>
+      <Image
+        source={require('../assets/image/ECO.png')}
+        style={loginStlye.img}
+      />
+      <View style={loginStlye.textboxWrapper}>
+        <Text style={{ color: '#5A5A5A', fontSize: 14 }}> Username</Text>
         <TextInput
-          style={styles.textbox}
-          placeholder="Email"
+          style={loginStlye.textbox}
           placeholderTextColor="#808389"
           value={email}
           onChangeText={(val) => {
             setEmail(val);
           }}
         />
-      </View>
-      <View style={styles.textboxWrapper}>
-        <View style={styles.labelWrapper}>
-          <Icon name="lock-outline" size={13} style={styles.labelIcon} />
-          <Text style={styles.labelText}> Password </Text>
-        </View>
+        <View style={{ paddingTop: 24 }} />
+        <Text style={{ color: '#5A5A5A', fontSize: 14 }}> Password</Text>
         <TextInput
-          style={styles.textbox}
-          placeholder="Password"
+          style={loginStlye.textbox}
+          secureTextEntry={true}
           placeholderTextColor="#808389"
-          secureTextEntry
           value={password}
           onChangeText={(pass) => {
             setPassword(pass);
           }}
         />
       </View>
-      <TouchableOpacity
-        style={styles.buttonWrapper}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? (
-          <Text> Loading </Text>
-        ) : (
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>Log in</Text>
-        )}
-      </TouchableOpacity>
+      <View style={loginStlye.logBtn}>
+        <Button
+          onPress={handleSubmit}
+          title="Login"
+          disabled={loading}
+          color="#F59D31"
+        />
+      </View>
     </View>
   );
 };
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({
+const loginStlye = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20,
+    backgroundColor: 'white',
+    width: '89%',
+    alignSelf: 'center',
+    borderRadius: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 48,
+  },
+  img: {
+    width: 120,
+    height: 120,
+    alignSelf: 'center',
   },
   textboxWrapper: {
-    height: 60,
-    width: 340,
-    fontSize: 50,
-    marginBottom: 20,
+    paddingVertical: 48,
   },
   textbox: {
-    backgroundColor: '#D5CEE7',
-    borderRadius: 7,
-    padding: 5,
-    paddingHorizontal: 10,
-    fontSize: 13,
-    height: 40,
+    backgroundColor: '#EFF1F1',
+    height: 36,
+    borderRadius: 6,
   },
-  buttonWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
-    width: 340,
-    backgroundColor: '#39235A',
-    marginBottom: 30,
-    borderRadius: 20,
-  },
-  labelWrapper: {
-    flexDirection: 'row',
-    marginBottom: 5,
-    alignItems: 'center',
-  },
-  labelText: {
-    fontSize: 13,
-  },
-  labelIcon: {
-    marginRight: 5,
+  logBtn: {
+    borderRadius: 8,
+    backgroundColor: 'red',
   },
 });
