@@ -21,8 +21,7 @@ const MainContainer = () => {
             <Text
               style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}
             >
-              {' '}
-              Project{' '}
+              PROJECT
             </Text>
           ),
         }}
@@ -35,8 +34,7 @@ const MainContainer = () => {
             <Text
               style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}
             >
-              {' '}
-              My Reports{' '}
+              MY REPORTS
             </Text>
           ),
         }}
@@ -49,8 +47,7 @@ const MainContainer = () => {
             <Text
               style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}
             >
-              {' '}
-              Check-in{' '}
+              CHECK-INS
             </Text>
           ),
         }}

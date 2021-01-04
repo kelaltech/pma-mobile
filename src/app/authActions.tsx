@@ -45,7 +45,7 @@ export const login = ({ email, password, succesCb, errorCb }: loginProps) => {
 };
 
 // let logout;
-// export const setLogout = (l) => {
+// export const setLogout = (l: any) => {
 //     logout = l
 // };
 // export { logout };

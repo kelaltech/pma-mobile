@@ -1,0 +1,13 @@
+# query ReportAddProject($projectId: String) {
+#   report {
+#     # TODO: continue here...
+#   }
+# }
+
+mutation ReportAdd($input: ReportCreateInput) {
+  report {
+    createReport(input: $input) {
+      id
+    }
+  }
+}

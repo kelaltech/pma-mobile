@@ -21,7 +21,7 @@ const project = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
-  diplayRow: {
+  displayRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },

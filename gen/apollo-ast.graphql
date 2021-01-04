@@ -229,6 +229,17 @@ type Project {
   name: String!
   contractor: String!
   location: String!
+  contract_signature_date: Date!
+  site_engineer: AccountResponse!
+  contractValueMainAgreement: Float!
+  variationOrder: Float!
+  contractTime: Int!
+  mobilizationTime: Int!
+  intendedCommencementDate: Date!
+  siteHandoverDate: Date!
+  ActualCommencementDate: Date!
+  extensionTimeApproved: Int!
+  sections: [Section]
   created_at: Date!
   updated_at: Date!
 }
@@ -276,6 +287,7 @@ type SectionItemMutation {
 type sectionItem {
   id: ID!
   name: String!
+  units: [Unit]!
   created_at: Date!
   updated_at: Date!
 }
@@ -307,6 +319,10 @@ input SectionUpdateInput {
   name: String
   contractor: String
 }
+type Section {
+  name: String!
+  sectionItems: [sectionItem]
+}
 type UnitQuery {
   """Retrieves a unit by its ID."""
   getProject(id: ID!): Project
@@ -320,8 +336,10 @@ type UnitMutation {
 type Unit {
   id: ID!
   name: String!
-  quantity: Float
-  rate: Float
+  quantity: Float!
+  rate: Float!
+  toDate: Float!
+  unit: String
   created_at: Date!
   updated_at: Date!
 }
@@ -337,6 +355,8 @@ input UnitUpdateInput {
 type ReportQuery {
   """Retrieves a report by its ID."""
   getReport(id: ID!): Report
+  """Get report by project id"""
+  byProjectId(id: ID!): [Report!]!
 }
 type ReportMutation {
   """Create a report."""
@@ -347,9 +367,7 @@ type ReportMutation {
 type Report {
   id: ID!
   approved: Boolean!
-  contractor: String!
-  location: String!
-  project: Project
+  project: Project!
   files: [File]
   reportUnits: [ReportUnit]
   created_at: Date!
@@ -357,32 +375,33 @@ type Report {
 }
 type File {
   id: ID!
+  name: String
   size: Float!
   url: String
   type: String
 }
 input ReportCreateInput {
-  contractor: String!
-  location: String!
   project_id: ID!
-  files: [Upload]
-  reportUnits: [ID]
+  files: [Upload!]!
+  photos: [Upload!]!
+  reportUnits: [ReportUnitCreateInput!]!
 }
 input ReportUpdateInput {
-  approved: Boolean
-  contractor: String
-  location: String
   approved_by: ID!
-  files: [Upload]
+  newFiles: [Upload!]!
+  removedFiles: [ID]
+  newPhotos: [Upload!]!
+  removedPhotos: [ID]
+  reportUnits: [ReportUnitCreateInput!]!
 }
 type ReportUnitQuery {
   """Retrieves a report by its ID."""
   getReportUnit(id: ID!): ReportUnit
 }
 type ReportUnitMutation {
-  """Create a report."""
-  createReportUnit(input: ReportUnitCreateInput): ReportUnit
-  """Update a report."""
+  """Create a reportUnit."""
+  createReportUnit(input: [ReportUnitCreateInput]): ReportUnit
+  """Update a reportUnit."""
   updateReportUnit(input: ReportUnitUpdateInput): ReportUnit
 }
 type ReportUnit {
@@ -392,6 +411,7 @@ type ReportUnit {
   planned: Float!
 }
 input ReportUnitCreateInput {
+  unitId: ID!
   executed: Float!
   planned: Float!
 }

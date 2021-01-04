@@ -1,9 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, Text } from 'react-native';
-import Header from '../components/Util/header/header';
-import project from './projectDetailStyle';
-import ProgressBar from '../components/Util/progressBar/progressBar';
+import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import Header from '../components/Util/header/header';
+import ProgressBar from '../components/Util/progressBar/progressBar';
+import project from './projectDetailStyle';
 
 const ProjectDetail = () => {
   return (
@@ -19,11 +20,11 @@ const ProjectDetail = () => {
 
           {/* name & location */}
           <View style={{ paddingVertical: 12 }}>
-            <View style={[project.diplayRow, { paddingTop: 20 }]}>
+            <View style={[project.displayRow, { paddingTop: 20 }]}>
               <Text style={project.name}>Project Name:</Text>
               <Text>Roobee</Text>
             </View>
-            <View style={[project.diplayRow, { paddingTop: 20 }]}>
+            <View style={[project.displayRow, { paddingTop: 20 }]}>
               <Text style={project.name}>Location:</Text>
               <Text>Roobee</Text>
             </View>
@@ -39,15 +40,15 @@ const ProjectDetail = () => {
 
           {/* Contractor info */}
           <View style={{ paddingVertical: 12 }}>
-            <View style={[project.diplayRow, { paddingTop: 20 }]}>
+            <View style={[project.displayRow, { paddingTop: 20 }]}>
               <Text style={project.name}>Contractor:</Text>
               <Text>Girma G/silase</Text>
             </View>
-            <View style={[project.diplayRow, { paddingTop: 20 }]}>
+            <View style={[project.displayRow, { paddingTop: 20 }]}>
               <Text style={project.name}>Contract Signature Date:</Text>
               <Text>Oct 19, 2020</Text>
             </View>
-            <View style={[project.diplayRow, { paddingTop: 20 }]}>
+            <View style={[project.displayRow, { paddingTop: 20 }]}>
               <Text style={project.name}>
                 Contract Value Main Agreement (Before VAT):
               </Text>
