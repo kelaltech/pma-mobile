@@ -12,6 +12,7 @@ import {
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { launchCamera } from 'react-native-image-picker';
 import Header from '../_shared/header/header';
+import FileUploader from './components/file-uploader/fileUpload';
 
 const AddReports = () => {
   const [allImg, setAllImg] = useState<string[]>([]);
@@ -111,7 +112,8 @@ const AddReports = () => {
           }}
         >
           <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
-            Thu, Dec 20, 2012
+            {new Date().getMonth()} {new Date().getDate()},{' '}
+            {new Date().getFullYear()}
           </Text>
         </View>
 
@@ -225,6 +227,7 @@ const AddReports = () => {
           title="Submit"
           color="#F59D31"
         />
+        <FileUploader />
       </ScrollView>
     </>
   );
