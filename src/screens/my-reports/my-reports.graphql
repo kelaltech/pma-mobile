@@ -4,11 +4,18 @@ query MyReports($projectId: ID!) {
       id
 
       created_at
+
       project {
+        id
+
         name
       }
+
       reportUnits {
+        id
+
         executed
+        planned
       }
     }
   }

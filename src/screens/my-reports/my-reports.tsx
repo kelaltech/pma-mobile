@@ -27,7 +27,7 @@ const MyReports = () => {
 
       <View
         style={{
-          backgroundColor: '#0C1A59',
+          backgroundColor: colors.primary,
           height: 'auto',
           minHeight: 210,
           paddingTop: 48,
@@ -92,7 +92,7 @@ const MyReports = () => {
           <Pressable
             key={report.id}
             android_ripple={{ color: colors.accent }}
-            onPressOut={() =>
+            onPress={() =>
               navigation.navigate('ReportDetail', { reportId: report.id })
             }
             style={{ marginBottom: 24 }}
@@ -119,10 +119,15 @@ const MyReports = () => {
               EXECUTED:{' '}
               <Text style={{ color: colors.dark0 }}>
                 {Math.round(
-                  (report.reportUnits || []).reduce(
-                    (p, c) => (p += c?.executed || 0),
+                  ((report.reportUnits || []).reduce(
+                    (p, c) => p + (c?.executed || 0),
                     0
-                  ) / (report.reportUnits?.length || 1)
+                  ) /
+                    (report.reportUnits || []).reduce(
+                      (p, c) => p + (c?.planned || 0),
+                      0
+                    )) *
+                    100
                 )}
                 %
               </Text>

@@ -3,12 +3,14 @@ query ReportDetail($reportId: ID!) {
     byId: getReport(id: $reportId) {
       id
 
-      approved
+      created_at
 
       project {
         id
 
         sections {
+          id
+
           name
           sectionItems {
             id
@@ -34,6 +36,19 @@ query ReportDetail($reportId: ID!) {
         }
         executed
         planned
+      }
+
+      photos {
+        id
+
+        url
+      }
+
+      files {
+        id
+
+        name
+        url
       }
     }
   }
