@@ -1,7 +1,55 @@
-query reportDetail {
+query ReportDetail($reportId: ID!) {
   report {
-    getReport(id: "TODO") {
+    byId: getReport(id: $reportId) {
       id
+
+      created_at
+
+      project {
+        id
+
+        sections {
+          id
+
+          name
+          sectionItems {
+            id
+
+            name
+            units {
+              id
+
+              name
+              unit
+              quantity
+              rate
+              toDate
+            }
+          }
+        }
+      }
+      reportUnits {
+        id
+
+        unit {
+          id
+        }
+        executed
+        planned
+      }
+
+      photos {
+        id
+
+        url
+      }
+
+      files {
+        id
+
+        name
+        url
+      }
     }
   }
 }

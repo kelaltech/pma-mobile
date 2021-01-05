@@ -1,21 +1,21 @@
 query MyReports($projectId: ID!) {
   report {
-    byProjectId(id: $projectId) {
+    myReports: byProjectId(id: $projectId) {
       id
 
-      approved
+      created_at
+
       project {
         id
+
         name
-        contractor
-        location
       }
 
-      files {
+      reportUnits {
         id
 
-        # TODO: name
-        url
+        executed
+        planned
       }
     }
   }

@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { launchCamera } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
-import { View, Text, Button, PermissionsAndroid, Image } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  PermissionsAndroid,
+  Image,
+  Pressable,
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { colors } from '../../../../assets/styles/colors';
 
 const PhotoUploader = () => {
   useEffect(() => {
@@ -111,8 +119,9 @@ const PhotoUploader = () => {
                 }}
               />
 
-              <TouchableOpacity
-                onPress={() => removeImg(key.toString())}
+              <Pressable
+                android_ripple={{ color: colors.accent }}
+                onPressOut={() => removeImg(key.toString())}
                 style={{
                   marginBottom: 12,
                   width: 140,
@@ -131,7 +140,7 @@ const PhotoUploader = () => {
                 >
                   DELETE
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ))}
         </View>

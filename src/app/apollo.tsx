@@ -18,6 +18,11 @@ const errorLink = onError(({ networkError }) => {
 export const apolloClient = new ApolloClient({
   link: errorLink.concat(httpLink),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    query: { fetchPolicy: 'no-cache' },
+    mutate: { fetchPolicy: 'no-cache' },
+    watchQuery: { fetchPolicy: 'no-cache' },
+  },
 });
 
 const ApolloClientProvider = ({ children }: PropsWithChildren<{}>) => {

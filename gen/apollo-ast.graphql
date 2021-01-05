@@ -287,7 +287,7 @@ type SectionItemMutation {
 type sectionItem {
   id: ID!
   name: String!
-  units: [Unit]!
+  units: [Unit]
   created_at: Date!
   updated_at: Date!
 }
@@ -320,6 +320,7 @@ input SectionUpdateInput {
   contractor: String
 }
 type Section {
+  id: ID!
   name: String!
   sectionItems: [sectionItem]
 }
@@ -368,6 +369,7 @@ type Report {
   id: ID!
   approved: Boolean!
   project: Project!
+  photos: [File]
   files: [File]
   reportUnits: [ReportUnit]
   created_at: Date!

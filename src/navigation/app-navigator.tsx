@@ -26,7 +26,29 @@ const AppStackNav = createStackNavigator();
 const AppNavigatorScreen = () => {
   return (
     <NavigationContainer>
-      <AppStackNav.Navigator initialRouteName="Main" headerMode="none">
+      <AppStackNav.Navigator
+        initialRouteName="Main"
+        headerMode="none"
+        screenOptions={{
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          cardStyle: { elevation: 6 },
+          cardStyleInterpolator: ({ current, layouts }) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateX: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.width, 0],
+                    }),
+                  },
+                ],
+              },
+            };
+          },
+        }}
+      >
         <AppStackNav.Screen name="AddReport" component={AddReports} />
         <AppStackNav.Screen name="ReportDetail" component={ReportDetail} />
         <AppStackNav.Screen name="Main" component={MainContainer} />

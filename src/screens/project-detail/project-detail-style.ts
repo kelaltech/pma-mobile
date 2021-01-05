@@ -1,16 +1,18 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../assets/styles/colors';
+import { textStyles } from '../../assets/styles/text-styles';
 
 const project = StyleSheet.create({
   titleContainer: {
     backgroundColor: '#0C1A59',
     height: 210,
     paddingTop: 48,
-    paddingLeft: 24,
+    paddingHorizontal: 24,
   },
   title: {
-    color: 'white',
-    fontSize: 36,
-    fontWeight: 'bold',
+    overflow: 'hidden',
+    ...textStyles.h1,
+    color: colors.light0,
   },
   container: {
     marginTop: -84,

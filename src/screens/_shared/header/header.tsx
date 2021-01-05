@@ -1,7 +1,10 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+/* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import BackButton from '../../../assets/icons/back-button.svg';
+import { colors } from '../../../assets/styles/colors';
+import { textStyles } from '../../../assets/styles/text-styles';
 
 type HeaderProps = {
   to?: boolean;
@@ -10,39 +13,39 @@ type HeaderProps = {
 
 const Header = (props: HeaderProps) => {
   const navigation = useNavigation();
-  return (
+
+  const handleLogout = useCallback(() => {
+    // TODO: initiate logout
+  }, []);
+
+  return props.to ? (
+    <View style={[header.container, { elevation: 3 }]}>
+      <Pressable
+        android_ripple={{ color: colors.light0, borderless: true }}
+        onPressOut={() => navigation.goBack()}
+      >
+        <BackButton style={header.icon} />
+      </Pressable>
+
+      <Text style={header.title}>{props.title}</Text>
+    </View>
+  ) : (
     <View style={header.container}>
-      {props.to ? (
-        <View style={header.displayRow}>
-          <Icon
-            name="arrow-left"
-            size={25}
-            color="white"
-            onPress={() => navigation.goBack()}
-          />
-          <Text style={[header.title]}> {props.title} </Text>
-        </View>
-      ) : (
-        <View style={header.displayRow}>
-          <View style={header.displayRow}>
-            <Image
-              source={require('../../../assets/image/ECO.png')}
-              style={header.img}
-            />
-            <Text style={[header.title]}> {props.title} </Text>
-          </View>
-          <View style={[header.displayRow]}>
-            <Text
-              style={{ fontSize: 16, color: 'white', paddingHorizontal: 12 }}
-            >
-              Site 2
-            </Text>
-            <TouchableOpacity>
-              <Text style={{ fontSize: 16, color: 'white' }}>Logout </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+      <Image
+        source={require('../../../assets/images/logo.png')}
+        style={header.icon}
+      />
+      <Text style={header.wordMark}>{props.title}</Text>
+
+      <View style={header.space} />
+
+      <Text style={header.actions}>{/*TODO: username*/}</Text>
+      <Pressable
+        android_ripple={{ color: colors.light0, borderless: true }}
+        onPressOut={handleLogout}
+      >
+        <Text style={header.actions}>Logout</Text>
+      </Pressable>
     </View>
   );
 };
@@ -51,23 +54,34 @@ export default Header;
 
 const header = StyleSheet.create({
   container: {
-    backgroundColor: '#0C1A59',
-    height: 64,
-    paddingTop: 25,
-    paddingHorizontal: 24,
-  },
-  displayRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: colors.primary,
   },
-  title: {
-    fontWeight: '700',
-    fontSize: 28,
-    color: 'white',
-    paddingHorizontal: 12,
-  },
-  img: {
+  icon: {
     width: 32,
     height: 32,
+  },
+  wordMark: {
+    ...textStyles.h3,
+    marginLeft: 16,
+    lineHeight: 32,
+    color: colors.light0,
+  },
+  title: {
+    ...textStyles.h5,
+    marginLeft: 16,
+    lineHeight: 32,
+    color: colors.light0,
+  },
+  space: {
+    flex: 1,
+  },
+  actions: {
+    ...textStyles.medium,
+    lineHeight: 32,
+    marginLeft: 24,
+    color: colors.light0,
   },
 });
