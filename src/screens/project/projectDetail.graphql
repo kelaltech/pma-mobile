@@ -2,7 +2,7 @@ query ProjectDetail {
   project {
     getBySiteEngineer(id: "613ba210-651a-469c-a690-ad6ecc76a6d5") {
       id
-
+      
       contractor
       location
 

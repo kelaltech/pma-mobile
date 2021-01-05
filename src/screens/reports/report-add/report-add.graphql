@@ -7,7 +7,16 @@
 mutation ReportAdd($input: ReportCreateInput) {
   report {
     createReport(input: $input) {
-      id
+      id      
+      files {
+        id
+        url
+      }
+      reportUnits {
+        id
+        executed 
+        planned
+      }
     }
   }
 }

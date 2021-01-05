@@ -13,7 +13,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { launchCamera } from 'react-native-image-picker';
 import Header from '../../components/Util/header/header';
 import { ProjectPlanSection } from '../data';
-
+import FileUploader  from './components/file-uploader/fileUpload' 
 const AddReports = () => {
   const [allImg, setAllImg] = useState<string[]>([]);
   const getImage = async () => {
@@ -99,6 +99,7 @@ const AddReports = () => {
     }
   };
 
+ 
   return (
     <>
       <Header title="Add Report" to />
@@ -112,7 +113,7 @@ const AddReports = () => {
           }}
         >
           <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
-            Thu, Dec 20, 2012
+           {new Date().getMonth()} {new Date().getDate()}, {new Date().getFullYear()}  
           </Text>
         </View>
 
@@ -181,8 +182,8 @@ const AddReports = () => {
               ))}
             </View>
           ) : (
-            <Text> Add Image </Text>
-          )}
+              <Text> Add Image </Text>
+            )}
 
           <Button onPress={openCamera} title="+ Add Photo" color="#F59D31" />
           {ProjectPlanSection.map((section, key) => (
@@ -202,12 +203,12 @@ const AddReports = () => {
                         <TextInput
                           value={each.planned}
                           placeholder={'Planned'}
-                          onChange={() => {}}
+                          onChange={() => { }}
                         />
                         <TextInput
                           value={each.planned}
                           placeholder={'Executed'}
-                          onChange={() => {}}
+                          onChange={() => { }}
                         />
                       </View>
                     </View>
@@ -225,6 +226,7 @@ const AddReports = () => {
           title="Submit"
           color="#F59D31"
         />
+        <FileUploader/>
       </ScrollView>
     </>
   );
