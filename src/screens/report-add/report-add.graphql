@@ -17,28 +17,28 @@ mutation ReportAdd($input: ReportCreateInput) {
         executed
         planned
       }
-      photos{
+      photos {
         id
         url
       }
     }
   }
 }
-query ReportGet($projectId: ID!){
-  section{
-    getProject(id: $projectId ){
+query ReportGet($projectId: ID!) {
+  section {
+    getProject(id: $projectId) {
       name
-      sections{
-        sectionItems{
+      sections {
+        sectionItems {
           id
           name
-          units{
+          units {
             id
             name
             quantity
             rate
             unit
-            toDate            
+            toDate
           }
         }
       }
