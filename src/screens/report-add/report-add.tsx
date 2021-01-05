@@ -1,19 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
 import AsyncStorage from '@react-native-community/async-storage';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import {
-  View,
+  Button,
+  Image,
+  PermissionsAndroid,
+  Pressable,
   Text,
   TextInput,
-  Button,
-  PermissionsAndroid,
-  Image,
+  View,
 } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { launchCamera } from 'react-native-image-picker';
+import { colors } from '../../assets/styles/colors';
+import { textStyles } from '../../assets/styles/text-styles';
 import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/fileUpload';
-import dayjs from 'dayjs';
 
 const AddReports = () => {
   const [allImg, setAllImg] = useState<string[]>([]);
@@ -112,8 +115,8 @@ const AddReports = () => {
             paddingLeft: 24,
           }}
         >
-          <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
-            {dayjs().format('DDD, MMM dd, YYYY')}
+          <Text style={[textStyles.h1, { color: colors.light0 }]}>
+            {dayjs().format('ddd, MMM DD, YYYY')}
           </Text>
         </View>
 
@@ -157,8 +160,9 @@ const AddReports = () => {
                     }}
                   />
 
-                  <TouchableOpacity
-                    onPress={() => removeImg(key.toString())}
+                  <Pressable
+                    android_ripple={{ color: colors.secondary }}
+                    onPressOut={() => removeImg(key.toString())}
                     style={{
                       marginBottom: 12,
                       width: 140,
@@ -177,7 +181,7 @@ const AddReports = () => {
                     >
                       DELETE
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               ))}
             </View>

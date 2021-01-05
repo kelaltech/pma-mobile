@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../../../assets/icons/back-button.svg';
 import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
@@ -20,9 +20,12 @@ const Header = (props: HeaderProps) => {
 
   return props.to ? (
     <View style={[header.container, { elevation: 1 }]}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Pressable
+        android_ripple={{ color: colors.secondary }}
+        onPressOut={() => navigation.goBack()}
+      >
         <BackButton style={header.icon} />
-      </TouchableOpacity>
+      </Pressable>
 
       <Text style={[header.title]}>{props.title}</Text>
     </View>
@@ -37,9 +40,12 @@ const Header = (props: HeaderProps) => {
       <View style={header.space} />
 
       <Text style={header.actions}>{/*TODO: username*/}</Text>
-      <TouchableOpacity onPress={handleLogout}>
+      <Pressable
+        android_ripple={{ color: colors.secondary }}
+        onPressOut={handleLogout}
+      >
         <Text style={header.actions}>Logout</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

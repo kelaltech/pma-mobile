@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Header from '../_shared/header/header';
 import Geolocation from '@react-native-community/geolocation';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import checkInStyle from './check-in-style';
+import { colors } from '../../assets/styles/colors';
 
 const CheckIn = () => {
   return (
@@ -14,8 +14,9 @@ const CheckIn = () => {
         <Text style={checkInStyle.title}>My check-ins</Text>
       </View>
       <View style={checkInStyle.checkInBtn}>
-        <TouchableOpacity
-          onPress={() =>
+        <Pressable
+          android_ripple={{ color: colors.secondary }}
+          onPressOut={() =>
             Geolocation.getCurrentPosition((info) => console.log(info))
           }
         >
@@ -31,7 +32,7 @@ const CheckIn = () => {
               CHECK-IN NOW RIGHT HERE
             </Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View style={checkInStyle.oldCheckIn}>

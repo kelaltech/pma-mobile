@@ -368,6 +368,7 @@ type Report {
   id: ID!
   approved: Boolean!
   project: Project!
+  photos: [File]
   files: [File]
   reportUnits: [ReportUnit]
   created_at: Date!
