@@ -7,4 +7,5 @@ export const colors = {
   dark1: '#5A5A5A',
   dark0: '#000000',
   warn: '#EA1B66',
+  statusBar: '#12205D',
 } as const;

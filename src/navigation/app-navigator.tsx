@@ -6,6 +6,7 @@ import MainContainer from './main';
 import { createStackNavigator } from '@react-navigation/stack';
 import ReportDetail from '../screens/report-detail/report-detail';
 import AddReports from '../screens/report-add/report-add';
+import { StatusBar } from 'react-native';
 
 const AppStackNav = createStackNavigator();
 

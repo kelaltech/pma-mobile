@@ -1,9 +1,11 @@
-import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProjectDetail from '../screens/project-detail/project-detail';
-import MyReports from '../screens/my-reports/my-reports';
-import CheckIn from '../screens/check-in/check-in';
+import * as React from 'react';
 import { Text } from 'react-native';
+import { colors } from '../assets/styles/colors';
+import { textStyles } from '../assets/styles/text-styles';
+import CheckIn from '../screens/check-in/check-in';
+import MyReports from '../screens/my-reports/my-reports';
+import ProjectDetail from '../screens/project-detail/project-detail';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -11,15 +13,24 @@ const MainContainer = () => {
   return (
     <BottomTab.Navigator
       initialRouteName="MyReports"
-      tabBarOptions={{ showLabel: false, activeBackgroundColor: '#F59D31' }}
+      tabBarOptions={{
+        showLabel: false,
+        activeBackgroundColor: colors.secondary,
+        inactiveBackgroundColor: colors.light0,
+        style: { height: 69 },
+        tabStyle: { height: 69 },
+      }}
     >
       <BottomTab.Screen
         name="Project"
         component={ProjectDetail}
         options={{
-          tabBarIcon: () => (
+          tabBarIcon: ({ focused }) => (
             <Text
-              style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}
+              style={[
+                textStyles.small,
+                { color: focused ? colors.light0 : colors.dark1 },
+              ]}
             >
               PROJECT
             </Text>
@@ -30,9 +41,12 @@ const MainContainer = () => {
         name="MyReports"
         component={MyReports}
         options={{
-          tabBarIcon: () => (
+          tabBarIcon: ({ focused }) => (
             <Text
-              style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}
+              style={[
+                textStyles.small,
+                { color: focused ? colors.light0 : colors.dark1 },
+              ]}
             >
               MY REPORTS
             </Text>
@@ -43,9 +57,12 @@ const MainContainer = () => {
         name="CheckIn"
         component={CheckIn}
         options={{
-          tabBarIcon: () => (
+          tabBarIcon: ({ focused }) => (
             <Text
-              style={{ color: '#5A5A5A', alignSelf: 'center', fontSize: 16 }}
+              style={[
+                textStyles.small,
+                { color: focused ? colors.light0 : colors.dark1 },
+              ]}
             >
               CHECK-INS
             </Text>

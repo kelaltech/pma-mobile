@@ -13,6 +13,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { launchCamera } from 'react-native-image-picker';
 import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/fileUpload';
+import dayjs from 'dayjs';
 
 const AddReports = () => {
   const [allImg, setAllImg] = useState<string[]>([]);
@@ -112,8 +113,7 @@ const AddReports = () => {
           }}
         >
           <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
-            {new Date().getMonth()} {new Date().getDate()},{' '}
-            {new Date().getFullYear()}
+            {dayjs().format('DDD, MMM dd, YYYY')}
           </Text>
         </View>
 

@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Button, Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '../../assets/styles/colors';
 import Header from '../_shared/header/header';
 
 const MyReports = () => {
@@ -15,15 +16,21 @@ const MyReports = () => {
           backgroundColor: '#0C1A59',
           height: 210,
           paddingTop: 48,
-          paddingLeft: 24,
+          paddingHorizontal: 24,
           flexDirection: 'row',
         }}
       >
-        <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
+        <Text
+          style={{ color: 'white', flex: 1, fontSize: 28, fontWeight: '700' }}
+        >
           Project: Roobee
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('AddReport')}>
-          <Text style={{ color: 'white', fontSize: 18 }}> + Report</Text>
+        <TouchableOpacity>
+          <Button
+            onPress={() => navigation.navigate('AddReport')}
+            title="+ Report"
+            color={colors.secondary}
+          />
         </TouchableOpacity>
       </View>
 
