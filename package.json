@@ -13,7 +13,8 @@
     "test": "jest",
     "lint": "prettier --write src",
     "type-check": "tsc --noEmit",
-    "type-check:watch": "tsc --noEmit --watch --preserveWatchOutput"
+    "type-check:watch": "tsc --noEmit --watch --preserveWatchOutput",
+    "apk": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
