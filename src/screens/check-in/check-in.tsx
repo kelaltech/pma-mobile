@@ -10,7 +10,8 @@ import { colors } from '../../assets/styles/colors';
 const CheckIn = () => {
   return (
     <>
-      <Header title="Check in" />
+      <Header title="PMA" />
+
       <View style={checkInStyle.titleContainer}>
         <Text style={checkInStyle.title}>Check-ins</Text>
       </View>

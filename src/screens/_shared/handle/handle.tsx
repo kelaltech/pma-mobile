@@ -11,18 +11,10 @@ type HandleProps = React.PropsWithChildren<{
   error: ApolloError | undefined;
   data: any;
 
-  refreshing?: boolean;
-  onRefresh?: () => void;
+  refetch?: () => Promise<unknown>;
 }>;
 
-function Handle({
-  loading,
-  error,
-  data,
-  refreshing,
-  onRefresh,
-  children,
-}: HandleProps) {
+function Handle({ loading, error, data, refetch, children }: HandleProps) {
   return loading ? (
     <Loading />
   ) : !data || error ? (
@@ -43,8 +35,8 @@ function Handle({
   ) : (
     <ScrollView
       refreshControl={
-        refreshing === undefined || !onRefresh ? undefined : (
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        !refetch ? undefined : (
+          <RefreshControl refreshing={loading} onRefresh={refetch} />
         )
       }
       style={{ flex: 1 }}
