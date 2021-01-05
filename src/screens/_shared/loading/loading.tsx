@@ -14,10 +14,7 @@ function Loading() {
       }}
     >
       <Text
-        style={[
-          textStyles.h6,
-          { alignSelf: 'center', color: colors.secondary },
-        ]}
+        style={[textStyles.h6, { alignSelf: 'center', color: colors.accent }]}
       >
         Loading...
       </Text>

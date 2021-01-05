@@ -15,7 +15,7 @@ const CheckIn = () => {
       </View>
       <View style={checkInStyle.checkInBtn}>
         <Pressable
-          android_ripple={{ color: colors.secondary }}
+          android_ripple={{ color: colors.accent }}
           onPressOut={() =>
             Geolocation.getCurrentPosition((info) => console.log(info))
           }

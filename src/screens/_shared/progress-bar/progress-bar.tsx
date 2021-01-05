@@ -42,7 +42,7 @@ const style = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.accent,
     borderRadius: 15,
   },
   plannedProgress: {

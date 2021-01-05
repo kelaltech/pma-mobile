@@ -15,7 +15,7 @@ const MainContainer = () => {
       initialRouteName="MyReports"
       tabBarOptions={{
         showLabel: false,
-        activeBackgroundColor: colors.secondary,
+        activeBackgroundColor: colors.accent,
         inactiveBackgroundColor: colors.light0,
         style: { height: 69 },
         tabStyle: { height: 69 },

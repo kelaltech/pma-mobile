@@ -21,7 +21,7 @@ const Header = (props: HeaderProps) => {
   return props.to ? (
     <View style={[header.container, { elevation: 1 }]}>
       <Pressable
-        android_ripple={{ color: colors.secondary }}
+        android_ripple={{ color: colors.light0, borderless: true }}
         onPressOut={() => navigation.goBack()}
       >
         <BackButton style={header.icon} />
@@ -41,7 +41,7 @@ const Header = (props: HeaderProps) => {
 
       <Text style={header.actions}>{/*TODO: username*/}</Text>
       <Pressable
-        android_ripple={{ color: colors.secondary, borderless: true }}
+        android_ripple={{ color: colors.light0, borderless: true }}
         onPressOut={handleLogout}
       >
         <Text style={header.actions}>Logout</Text>

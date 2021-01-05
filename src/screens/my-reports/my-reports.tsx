@@ -1,13 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Button, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useMyReportsQuery } from '../../../gen/apollo-types';
 import { colors } from '../../assets/styles/colors';
 import Header from '../_shared/header/header';
 import Handle from '../_shared/handle/handle';
 import { textStyles } from '../../assets/styles/text-styles';
 import dayjs from 'dayjs';
+import Button from '../_shared/button/button';
 
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; // TODO: get from global context
 
@@ -45,13 +46,13 @@ const MyReports = () => {
         >
           My Reports
         </Text>
-        <Pressable android_ripple={{ color: colors.secondary }}>
-          {/* TODO: refactor button style and improve it */}
-          <Button
-            onPress={() => navigation.navigate('AddReport')}
-            title="+ Report"
-            color={colors.secondary}
-          />
+        <Pressable
+          android_ripple={{ color: colors.accent }}
+          style={{ marginTop: 7 }}
+        >
+          <Button onPress={() => navigation.navigate('AddReport')}>
+            + Report
+          </Button>
         </Pressable>
       </View>
 
@@ -90,7 +91,7 @@ const MyReports = () => {
         {(data?.report.myReports || []).map((report) => (
           <Pressable
             key={report.id}
-            android_ripple={{ color: colors.secondary }}
+            android_ripple={{ color: colors.accent }}
             onPressOut={() =>
               navigation.navigate('ReportDetail', { reportId: report.id })
             }

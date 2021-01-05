@@ -161,7 +161,7 @@ const AddReports = () => {
                   />
 
                   <Pressable
-                    android_ripple={{ color: colors.secondary }}
+                    android_ripple={{ color: colors.accent }}
                     onPressOut={() => removeImg(key.toString())}
                     style={{
                       marginBottom: 12,
