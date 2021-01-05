@@ -55,6 +55,7 @@
     "@react-native-community/eslint-config": "^1.1.0",
     "@types/react": "^17.0.0",
     "@types/react-native": "^0.63.42",
+    "@types/react-native-document-picker": "^2.0.1",
     "babel-jest": "^25.1.0",
     "dotenv": "^8.2.0",
     "dotenv-cli": "^4.0.0",

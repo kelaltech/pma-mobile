@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState } from 'react';
-import { Button, View, Text } from 'react-native';
+import { Button, View } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 
 const FileUploader = () => {
