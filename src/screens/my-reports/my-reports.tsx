@@ -19,7 +19,7 @@ const MyReports = () => {
   });
 
   return (
-    <>
+    <Handle {...{ loading, error, data }}>
       <Header title="PMA" />
 
       <View
@@ -53,81 +53,79 @@ const MyReports = () => {
         </Pressable>
       </View>
 
-      <Handle {...{ loading, error, data }}>
-        <View
+      <View
+        style={{
+          marginTop: -(108 - 24),
+          marginHorizontal: 24,
+          marginBottom: 48,
+          paddingTop: 32,
+          paddingHorizontal: 24,
+          paddingBottom: 8,
+          borderRadius: 8,
+          backgroundColor: colors.light0,
+        }}
+      >
+        <Text
           style={{
-            marginTop: -(108 - 24),
-            marginHorizontal: 24,
-            marginBottom: 48,
-            paddingTop: 32,
-            paddingHorizontal: 24,
-            paddingBottom: 8,
-            borderRadius: 8,
-            backgroundColor: colors.light0,
+            marginBottom: 24,
+            ...textStyles.small,
+            textTransform: 'uppercase',
+            color: colors.dark1,
           }}
         >
-          <Text
-            style={{
-              marginBottom: 24,
-              ...textStyles.small,
-              textTransform: 'uppercase',
-              color: colors.dark1,
-            }}
+          {data?.report.myReports.length || 0} STATUS REPORT
+          {data?.report.myReports.length === 1 ? '' : 'S'} AVAILABLE
+        </Text>
+
+        <View
+          style={{
+            marginBottom: 24,
+            borderBottomColor: colors.light2,
+            borderBottomWidth: 1,
+          }}
+        />
+
+        {(data?.report.myReports || []).map((report) => (
+          <Pressable
+            key={report.id}
+            android_ripple={{ color: colors.secondary }}
+            onPressOut={() =>
+              navigation.navigate('ReportDetail', { reportId: report.id })
+            }
+            style={{ marginBottom: 24 }}
           >
-            {data?.report.myReports.length || 0} STATUS REPORT
-            {data?.report.myReports.length === 1 ? '' : 'S'} AVAILABLE
-          </Text>
-
-          <View
-            style={{
-              marginBottom: 24,
-              borderBottomColor: colors.light2,
-              borderBottomWidth: 1,
-            }}
-          />
-
-          {(data?.report.myReports || []).map((report) => (
-            <Pressable
-              key={report.id}
-              android_ripple={{ color: colors.secondary }}
-              onPressOut={() =>
-                navigation.navigate('ReportDetail', { reportId: report.id })
-              }
-              style={{ marginBottom: 24 }}
+            <Text
+              style={{
+                ...textStyles.h6,
+                textTransform: 'uppercase',
+                color: colors.primary,
+                marginBottom: 8,
+              }}
             >
-              <Text
-                style={{
-                  ...textStyles.h6,
-                  textTransform: 'uppercase',
-                  color: colors.primary,
-                  marginBottom: 8,
-                }}
-              >
-                {dayjs(report.created_at).format('ddd, MMM DD, YYYY')}
-              </Text>
+              {dayjs(report.created_at).format('ddd, MMM DD, YYYY')}
+            </Text>
 
-              <Text style={{ marginBottom: 8, color: colors.dark1 }}>
-                Report for{' '}
-                <Text style={{ color: colors.dark0 }}>
-                  “{report.project.name}”
-                </Text>
+            <Text style={{ marginBottom: 8, color: colors.dark1 }}>
+              Report for{' '}
+              <Text style={{ color: colors.dark0 }}>
+                “{report.project.name}”
               </Text>
+            </Text>
 
-              <Text style={{ color: colors.dark1 }}>
-                EXECUTED:{' '}
-                <Text style={{ color: colors.dark0 }}>
-                  {(report.reportUnits || []).reduce(
-                    (p, c) => (p += c?.executed || 0),
-                    0
-                  ) / (report.reportUnits?.length || 1)}
-                  %
-                </Text>
+            <Text style={{ color: colors.dark1 }}>
+              EXECUTED:{' '}
+              <Text style={{ color: colors.dark0 }}>
+                {(report.reportUnits || []).reduce(
+                  (p, c) => (p += c?.executed || 0),
+                  0
+                ) / (report.reportUnits?.length || 1)}
+                %
               </Text>
-            </Pressable>
-          ))}
-        </View>
-      </Handle>
-    </>
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </Handle>
   );
 };
 
