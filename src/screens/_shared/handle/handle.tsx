@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { ApolloError } from '@apollo/react-hooks';
 import React from 'react';
-import { ScrollView, Text } from 'react-native';
+import { RefreshControl, ScrollView, Text } from 'react-native';
 import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
 import Loading from '../loading/loading';
@@ -10,9 +10,19 @@ type HandleProps = React.PropsWithChildren<{
   loading: boolean;
   error: ApolloError | undefined;
   data: any;
+
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }>;
 
-function Handle({ loading, error, data, children }: HandleProps) {
+function Handle({
+  loading,
+  error,
+  data,
+  refreshing,
+  onRefresh,
+  children,
+}: HandleProps) {
   return loading ? (
     <Loading />
   ) : !data || error ? (
@@ -31,7 +41,16 @@ function Handle({ loading, error, data, children }: HandleProps) {
       </Text>
     </ScrollView>
   ) : (
-    <ScrollView style={{ flex: 1 }}>{children}</ScrollView>
+    <ScrollView
+      refreshControl={
+        refreshing === undefined || !onRefresh ? undefined : (
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        )
+      }
+      style={{ flex: 1 }}
+    >
+      {children}
+    </ScrollView>
   );
 }
 

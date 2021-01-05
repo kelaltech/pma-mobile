@@ -14,12 +14,14 @@ const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; // TODO: get from glob
 const MyReports = () => {
   const navigation = useNavigation();
 
-  const { loading, error, data } = useMyReportsQuery({
+  const { loading, error, data, refetch } = useMyReportsQuery({
     variables: { projectId },
   });
 
   return (
-    <Handle {...{ loading, error, data }}>
+    <Handle
+      {...{ loading, error, data, refreshing: loading, onRefresh: refetch }}
+    >
       <Header title="PMA" />
 
       <View
@@ -115,10 +117,12 @@ const MyReports = () => {
             <Text style={{ color: colors.dark1 }}>
               EXECUTED:{' '}
               <Text style={{ color: colors.dark0 }}>
-                {(report.reportUnits || []).reduce(
-                  (p, c) => (p += c?.executed || 0),
-                  0
-                ) / (report.reportUnits?.length || 1)}
+                {Math.round(
+                  (report.reportUnits || []).reduce(
+                    (p, c) => (p += c?.executed || 0),
+                    0
+                  ) / (report.reportUnits?.length || 1)
+                )}
                 %
               </Text>
             </Text>

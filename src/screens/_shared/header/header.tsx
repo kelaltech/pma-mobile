@@ -41,7 +41,7 @@ const Header = (props: HeaderProps) => {
 
       <Text style={header.actions}>{/*TODO: username*/}</Text>
       <Pressable
-        android_ripple={{ color: colors.secondary }}
+        android_ripple={{ color: colors.secondary, borderless: true }}
         onPressOut={handleLogout}
       >
         <Text style={header.actions}>Logout</Text>
