@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
 
 type HeaderProps = {
@@ -18,14 +19,14 @@ const Header = (props: HeaderProps) => {
   }, []);
 
   return props.to ? (
-    <View style={header.container}>
+    <View style={[header.container, { elevation: 1 }]}>
       <Icon
         name="arrow-left"
         size={25}
         color="white"
         onPress={() => navigation.goBack()}
       />
-      <Text style={[header.title]}> {props.title} </Text>
+      <Text style={[header.title]}>{props.title}</Text>
     </View>
   ) : (
     <View style={header.container}>
@@ -52,7 +53,7 @@ const header = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 16,
     paddingHorizontal: 24,
-    backgroundColor: '#0C1A59',
+    backgroundColor: colors.primary,
   },
   img: {
     width: 32,
@@ -62,7 +63,7 @@ const header = StyleSheet.create({
     ...textStyles.h3,
     marginLeft: 16,
     lineHeight: 32,
-    color: 'white',
+    color: colors.light0,
   },
   space: {
     flex: 1,
@@ -71,6 +72,6 @@ const header = StyleSheet.create({
     ...textStyles.medium,
     lineHeight: 32,
     marginLeft: 24,
-    color: 'white',
+    color: colors.light0,
   },
 });

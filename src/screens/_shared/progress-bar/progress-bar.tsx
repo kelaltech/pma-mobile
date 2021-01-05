@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { colors } from '../../../assets/styles/colors';
 
 type ProgressProps = {
   planned?: Number;
@@ -31,9 +32,8 @@ const style = StyleSheet.create({
   container: {
     height: 26,
     width: '100%',
-    backgroundColor: '#EFF1F1',
-    borderColor: '#000',
-    // borderWidth: 1,
+    backgroundColor: colors.light2,
+    borderColor: colors.dark0,
     borderRadius: 15,
   },
   executedProgress: {
@@ -42,7 +42,7 @@ const style = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: '#F59D31',
+    backgroundColor: colors.secondary,
     borderRadius: 15,
   },
   plannedProgress: {
@@ -50,7 +50,7 @@ const style = StyleSheet.create({
     width: 8,
     top: -5,
     bottom: -5,
-    backgroundColor: '#0C1A59',
+    backgroundColor: colors.primary,
     borderRadius: 4,
   },
 });
