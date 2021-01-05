@@ -1,10 +1,25 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState } from 'react';
-import { Button, View } from 'react-native';
+import { Button, View, Text } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const FileUploader = () => {
   const [allFile, setAllFile] = useState<string[]>([]);
+
+  const removeFile = async (id?: string) => {
+    if (id) {
+      if (id !== '0') {
+        const updateFile = allFile.slice(allFile.indexOf(id, 1));
+        setAllFile(updateFile);
+        AsyncStorage.setItem('files', JSON.stringify(updateFile));
+      } else {
+        const updateFile = allFile.slice(1);
+        setAllFile(updateFile);
+        AsyncStorage.setItem('files', JSON.stringify(updateFile));
+      }
+    }
+  };
 
   const getFile = async () => {
     try {
@@ -15,7 +30,7 @@ const FileUploader = () => {
         file.map((val) => {
           const data = [...allFile, val.uri];
           setAllFile(data);
-
+          console.log(data);
           try {
             AsyncStorage.setItem('', JSON.stringify(data));
           } catch (err) {
@@ -34,18 +49,25 @@ const FileUploader = () => {
     <View>
       {allFile && allFile.length !== 0 ? (
         <View>
-          {allFile.map((data, key) => (
-            <View>{/* <Text> {data.}  </Text> */}</View>
+          {allFile.map((upload, key) => (
+            <View key={key}>
+              <Text>{upload}</Text>
+              <TouchableOpacity onPress={() => removeFile(key.toString())}>
+                <Text>Remove</Text>
+              </TouchableOpacity>
+            </View>
           ))}
         </View>
       ) : (
-        <View></View>
+        <View>
+          <Text> Add Files </Text>
+        </View>
       )}
       <Button
         onPress={() => {
           getFile();
         }}
-        title="getFile"
+        title="+ Add Files "
         color="#F59D31"
       />
     </View>
