@@ -15,6 +15,8 @@ target 'PMA' do
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'PMATests' do
     inherit! :complete
     # Pods for testing

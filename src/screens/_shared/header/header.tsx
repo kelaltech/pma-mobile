@@ -2,7 +2,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import BackButton from '../../../assets/icons/back-button.svg';
 import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
 
@@ -20,19 +20,17 @@ const Header = (props: HeaderProps) => {
 
   return props.to ? (
     <View style={[header.container, { elevation: 1 }]}>
-      <Icon
-        name="arrow-left"
-        size={25}
-        color="white"
-        onPress={() => navigation.goBack()}
-      />
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <BackButton style={header.icon} />
+      </TouchableOpacity>
+
       <Text style={[header.title]}>{props.title}</Text>
     </View>
   ) : (
     <View style={header.container}>
       <Image
-        source={require('../../../assets/image/ECO.png')}
-        style={header.img}
+        source={require('../../../assets/images/logo.png')}
+        style={header.icon}
       />
       <Text style={[header.title]}>{props.title}</Text>
 
@@ -55,7 +53,7 @@ const header = StyleSheet.create({
     paddingHorizontal: 24,
     backgroundColor: colors.primary,
   },
-  img: {
+  icon: {
     width: 32,
     height: 32,
   },
