@@ -18,13 +18,13 @@ import {
   ReportCreateInput,
   useReportAddMutation,
 } from '../../../gen/apollo-types';
-// import useReportGetQuery from '../../../gen/apollo-types'
+import { useReportGetQuery } from '../../../gen/apollo-types';
 import { addReportStyle } from './report-add-style';
 
 const AddReports = () => {
   const [submitForm] = useReportAddMutation();
-  //TODO GET PROJECT ID FROM GLOBAL STATE
-  // const { data } = useReportGetQuery({ variables: { projectId } })
+  const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
+  const { data } = useReportGetQuery({ variables: { projectId } });
 
   const [submitData, setSubmitData] = useState<ReportCreateInput[]>([]);
   return (
@@ -39,9 +39,7 @@ const AddReports = () => {
         </View>
 
         <View style={addReportStyle.formContainer}>
-          {[
-            /*data*/
-          ].map((section: any, key: any) => (
+          {[data].map((section: any, key: any) => (
             <View key={key}>
               <Text
                 style={{
