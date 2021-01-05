@@ -7,11 +7,13 @@
     "codegen": "dotenv \"graphql codegen --project default --overwrite\"",
     "codegen:watch": "dotenv \"graphql codegen --project default  --overwrite --watch --errors-only\"",
     "react-native": "react-native",
-    "start": "run-p codegen:watch \"react-native start\"",
+    "start": "run-p codegen:watch type-check:watch \"react-native start\"",
     "android": "run-s codegen \"react-native run-android\"",
     "ios": "run-s codegen \"react-native run-ios\"",
     "test": "jest",
-    "lint": "prettier --write src && eslint . --fix"
+    "lint": "prettier --write src",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
@@ -58,7 +60,9 @@
     "eslint": "^6.5.1",
     "graphql-cli": "4.1.0",
     "graphql-config": "3.2.0",
+    "husky": "4.3.6",
     "jest": "^25.1.0",
+    "lint-staged": "10.5.3",
     "metro-react-native-babel-preset": "^0.59.0",
     "npm-run-all": "4.1.5",
     "react-native-typescript-transformer": "^1.2.13",
@@ -67,5 +71,15 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "prettier": {
+    "endOfLine": "lf",
+    "semi": true,
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

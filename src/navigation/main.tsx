@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProjectDetail from '../screens/project/projectsDetailScreen';
-import MyReports from '../screens/reports/my-report/myReportsScreen';
-import CheckIn from '../screens/checkin/checkInScreen';
+import ProjectDetail from '../screens/project-detail/project-detail';
+import MyReports from '../screens/my-reports/my-reports';
+import CheckIn from '../screens/check-in/check-in';
 import { Text } from 'react-native';
 
 const BottomTab = createBottomTabNavigator();

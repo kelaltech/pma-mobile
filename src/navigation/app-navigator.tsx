@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthLoadingScreen from '../screens/authLoadingScreen';
-import AuthScreen from '../screens/authScreen';
+import AuthLoadingScreen from '../screens/_shared/auth-loading/auth-loading-screen';
+import AuthScreen from '../screens/login/auth-screen';
 import MainContainer from './main';
 import { createStackNavigator } from '@react-navigation/stack';
-import ReportDetail from '../screens/reports/report-detail/reportDetailScreen';
-import AddReports from '../screens/reports/report-add/report-add';
+import ReportDetail from '../screens/report-detail/report-detail';
+import AddReports from '../screens/report-add/report-add';
 
 const AppStackNav = createStackNavigator();
 

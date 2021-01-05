@@ -33,7 +33,7 @@ const LoginScreen = (props: any) => {
   return (
     <View style={loginStlye.container}>
       <Image
-        source={require('../assets/image/ECO.png')}
+        source={require('../../assets/image/ECO.png')}
         style={loginStlye.img}
       />
       <View style={loginStlye.textboxWrapper}>

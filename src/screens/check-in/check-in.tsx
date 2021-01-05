@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Header from '../components/Util/header/header';
+import Header from '../_shared/header/header';
 import Geolocation from '@react-native-community/geolocation';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import checkInStyle from './checkInStyle';
+import checkInStyle from './check-in-style';
 
 const CheckIn = () => {
   return (

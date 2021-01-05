@@ -2,7 +2,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import Header from '../../components/Util/header/header';
+import Header from '../_shared/header/header';
 
 const MyReports = () => {
   const navigation = useNavigation();

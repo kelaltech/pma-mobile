@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import Header from '../../components/Util/header/header';
+import Header from '../_shared/header/header';
 
 const ReportDetail = ({ route }: any) => {
   const { reportId } = route.params;

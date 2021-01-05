@@ -11,8 +11,7 @@ import {
 } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { launchCamera } from 'react-native-image-picker';
-import Header from '../../components/Util/header/header';
-import { ProjectPlanSection } from '../data';
+import Header from '../_shared/header/header';
 
 const AddReports = () => {
   const [allImg, setAllImg] = useState<string[]>([]);
@@ -60,7 +59,7 @@ const AddReports = () => {
           message: 'App needs access to your camera ',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
-        },
+        }
       );
       const storeGranted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -69,7 +68,7 @@ const AddReports = () => {
           message: 'App needs access to your Files ',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
-        },
+        }
       );
       if (
         cameraGranted === PermissionsAndroid.RESULTS.GRANTED &&
@@ -89,7 +88,7 @@ const AddReports = () => {
                 console.log('Set image Error', err);
               }
             }
-          },
+          }
         );
       } else {
         console.error('Camera permission denied');
@@ -185,16 +184,17 @@ const AddReports = () => {
           )}
 
           <Button onPress={openCamera} title="+ Add Photo" color="#F59D31" />
-          {ProjectPlanSection.map((section, key) => (
+          {[
+            /* TODO: continue here... */
+          ].map((section: any, key) => (
             <View key={key}>
               <Text>{section.name}</Text>
-              {section.sectionItems.map((items, key) => (
-                <View key={key}>
+              {section.sectionItems.map((items: any, key2: number) => (
+                <View key={key2}>
                   <Text>{items.name}</Text>
-                  {items.units.map((each, key) => (
-                    <View key={key}>
+                  {items.units.map((each: any, key3: number) => (
+                    <View key={key3}>
                       <Text>
-                        {' '}
                         Report Metric Name {each.name} : {each.unit}{' '}
                       </Text>
                       <Text> Amount {each.quantity * each.rate} </Text>

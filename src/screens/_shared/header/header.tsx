@@ -26,7 +26,7 @@ const Header = (props: HeaderProps) => {
         <View style={header.displayRow}>
           <View style={header.displayRow}>
             <Image
-              source={require('../../../../assets/image/ECO.png')}
+              source={require('../../../assets/image/ECO.png')}
               style={header.img}
             />
             <Text style={[header.title]}> {props.title} </Text>
@@ -35,8 +35,7 @@ const Header = (props: HeaderProps) => {
             <Text
               style={{ fontSize: 16, color: 'white', paddingHorizontal: 12 }}
             >
-              {' '}
-              Site 2{' '}
+              Site 2
             </Text>
             <TouchableOpacity>
               <Text style={{ fontSize: 16, color: 'white' }}>Logout </Text>

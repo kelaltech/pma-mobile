@@ -2,9 +2,9 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Header from '../components/Util/header/header';
-import ProgressBar from '../components/Util/progressBar/progressBar';
-import project from './projectDetailStyle';
+import Header from '../_shared/header/header';
+import ProgressBar from '../_shared/progress-bar/progress-bar';
+import project from './project-detail-style';
 
 const ProjectDetail = () => {
   return (
