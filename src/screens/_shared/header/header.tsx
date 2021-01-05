@@ -19,7 +19,7 @@ const Header = (props: HeaderProps) => {
   }, []);
 
   return props.to ? (
-    <View style={[header.container, { elevation: 1 }]}>
+    <View style={[header.container, { elevation: 3 }]}>
       <Pressable
         android_ripple={{ color: colors.light0, borderless: true }}
         onPressOut={() => navigation.goBack()}
@@ -27,7 +27,7 @@ const Header = (props: HeaderProps) => {
         <BackButton style={header.icon} />
       </Pressable>
 
-      <Text style={[header.title]}>{props.title}</Text>
+      <Text style={header.title}>{props.title}</Text>
     </View>
   ) : (
     <View style={header.container}>
@@ -35,7 +35,7 @@ const Header = (props: HeaderProps) => {
         source={require('../../../assets/images/logo.png')}
         style={header.icon}
       />
-      <Text style={[header.title]}>{props.title}</Text>
+      <Text style={header.wordMark}>{props.title}</Text>
 
       <View style={header.space} />
 
@@ -63,8 +63,14 @@ const header = StyleSheet.create({
     width: 32,
     height: 32,
   },
-  title: {
+  wordMark: {
     ...textStyles.h3,
+    marginLeft: 16,
+    lineHeight: 32,
+    color: colors.light0,
+  },
+  title: {
+    ...textStyles.h5,
     marginLeft: 16,
     lineHeight: 32,
     color: colors.light0,
