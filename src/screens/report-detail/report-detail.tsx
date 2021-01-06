@@ -23,9 +23,7 @@ const ReportDetail = ({ route }: any) => {
     <>
       <Header title="Reports" to />
 
-      <Handle
-        {...{ loading, error, data, refreshing: loading, onRefresh: refetch }}
-      >
+      <Handle {...{ loading, error, data, refetch }}>
         <View
           style={{
             backgroundColor: colors.primary,

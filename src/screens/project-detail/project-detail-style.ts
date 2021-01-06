@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { color } from 'react-native-reanimated';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
 
@@ -15,22 +16,26 @@ const project = StyleSheet.create({
     color: colors.light0,
   },
   container: {
-    marginTop: -84,
+    marginTop: -(108 - 24),
     marginHorizontal: 24,
-    backgroundColor: 'white',
+    paddingVertical: 32,
+    paddingHorizontal: 24,
     height: 'auto',
     borderRadius: 8,
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    backgroundColor: colors.light0,
   },
   displayRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   name: {
-    color: '#5A5A5A',
-    fontSize: 14,
-    paddingHorizontal: 12,
+    ...textStyles.small,
+    color: colors.dark1,
+    paddingRight: 8,
+  },
+  value: {
+    ...textStyles.small,
+    color: colors.dark0,
   },
 });
 

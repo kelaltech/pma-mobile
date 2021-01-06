@@ -1,11 +1,23 @@
-query ProjectDetail {
+query ProjectDetail($accountId: ID!) {
   project {
-    getBySiteEngineer(id: "613ba210-651a-469c-a690-ad6ecc76a6d5") {
+    getBySiteEngineer(id: $accountId) {
       id
 
-      contractor
+      name
       location
 
+      contractor
+      contract_signature_date
+      contractValueMainAgreement
+      variationOrder
+
+      contractTime
+      mobilizationTime
+      intendedCommencementDate
+      siteHandoverDate
+      extensionTimeApproved
+
+      created_at
       # TODO: continue here...
     }
   }

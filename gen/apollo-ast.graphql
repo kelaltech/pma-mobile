@@ -361,7 +361,7 @@ type ReportQuery {
 }
 type ReportMutation {
   """Create a report."""
-  createReport(input: ReportCreateInput): Report
+  createReport(input: ReportCreateInput!): Report
   """Update a report."""
   updateReport(input: ReportUpdateInput): Report
 }

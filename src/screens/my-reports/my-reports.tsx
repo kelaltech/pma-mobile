@@ -20,9 +20,7 @@ const MyReports = () => {
   });
 
   return (
-    <Handle
-      {...{ loading, error, data, refreshing: loading, onRefresh: refetch }}
-    >
+    <Handle {...{ loading, error, data, refetch }}>
       <Header title="PMA" />
 
       <View
