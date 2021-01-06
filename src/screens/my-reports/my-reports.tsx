@@ -48,7 +48,7 @@ const MyReports = () => {
           android_ripple={{ color: colors.accent }}
           style={{ marginTop: 7 }}
         >
-          <Button onPress={() => navigation.navigate('AddReport')}>
+          <Button onPress={() => navigation.navigate('ReportAdd')}>
             + Report
           </Button>
         </Pressable>

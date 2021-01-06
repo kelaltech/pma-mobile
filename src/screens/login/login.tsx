@@ -1,101 +1,184 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import {
   Alert,
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  Button,
   Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
+import { useLoginMutation } from '../../../gen/apollo-types';
+import { useAuth } from '../../app/contexts/auth-context';
+import { colors } from '../../assets/styles/colors';
+import { textStyles } from '../../assets/styles/text-styles';
+import Button from '../_shared/button/button';
 
-const LoginScreen = (props: any) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    if (!email || !password) {
-      Alert.alert('Email or password cannot be empty');
+  const [tryLogin] = useLoginMutation();
+  const [{}, { login }] = useAuth();
+
+  const handleLogin = () => {
+    if (!email) {
+      Alert.alert('Validation Error', 'Email is required to login');
       return;
     }
-    const successCallback = () => {
-      setLoading(false);
-    };
-    const errorCallback = (e: any) => {
-      setLoading(false);
-      Alert.alert(e.title, e.message);
-    };
-    setLoading(true);
-    props.submit(email.toLowerCase(), password, successCallback, errorCallback);
+    if (!password) {
+      Alert.alert('Validation Error', 'Password is required to login');
+      return;
+    }
+
+    tryLogin({ variables: { loginInput: { email, password } } })
+      .then(({ data, errors }) => {
+        const { token, account } = data?.account.login || {};
+
+        if (errors?.length) {
+          Alert.alert(
+            errors
+              .map((e) => e?.name)
+              .filter((n) => !!n)
+              .join('|') || 'Error',
+            errors
+              .map((e) => e?.message)
+              .filter((n) => !!n)
+              .join('\n') || 'Unknown error'
+          );
+          return;
+        }
+
+        if (!account || !token) {
+          console.error('Response is missing either token or account info');
+          return;
+        }
+
+        login(token, account);
+      })
+      .catch((error) => {
+        Alert.alert(error?.name || 'Error', error?.message || 'Unknown error');
+      });
   };
 
   return (
-    <View style={loginStlye.container}>
-      <Image
-        source={require('../../assets/images/logo.png')}
-        style={loginStlye.img}
-      />
-      <View style={loginStlye.textboxWrapper}>
-        <Text style={{ color: '#5A5A5A', fontSize: 14 }}> Username</Text>
+    <ScrollView style={styles.screen}>
+      <View style={styles.bg} />
+
+      <View style={styles.card}>
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+        />
+
+        <View style={styles.line} />
+
+        <Text style={styles.label}>Email *</Text>
         <TextInput
-          style={loginStlye.textbox}
+          style={styles.input}
           placeholderTextColor="#808389"
           value={email}
-          onChangeText={(val) => {
-            setEmail(val);
-          }}
+          onChangeText={setEmail}
+          textContentType={'emailAddress'}
+          autoCompleteType={'email'}
+          keyboardType={'email-address'}
         />
-        <View style={{ paddingTop: 24 }} />
-        <Text style={{ color: '#5A5A5A', fontSize: 14 }}> Password</Text>
+
+        <Text style={styles.label}>Password *</Text>
         <TextInput
-          style={loginStlye.textbox}
+          style={styles.input}
           secureTextEntry={true}
-          placeholderTextColor="#808389"
           value={password}
-          onChangeText={(pass) => {
-            setPassword(pass);
+          onChangeText={setPassword}
+          textContentType={'password'}
+          autoCompleteType={'password'}
+        />
+
+        <View style={styles.line} />
+
+        <Button onPress={handleLogin}>Login</Button>
+      </View>
+
+      <View style={styles.copyright}>
+        <Text
+          style={{
+            ...textStyles.small,
+            color: colors.primary,
           }}
-        />
+        >
+          2020 © Engineering Corporation of Oromia (ECO).
+        </Text>
+        <Pressable android_ripple={{ color: colors.accent, borderless: true }}>
+          <Text
+            style={{
+              ...textStyles.small,
+              color: colors.primary,
+            }}
+          >
+            App is developed and powered by Kelal Tech
+          </Text>
+        </Pressable>
       </View>
-      <View style={loginStlye.logBtn}>
-        <Button
-          onPress={handleSubmit}
-          title="Login"
-          disabled={loading}
-          color="#F59D31"
-        />
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
-export default LoginScreen;
+export default Login;
 
-const loginStlye = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    width: '89%',
-    alignSelf: 'center',
-    borderRadius: 8,
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
+  bg: {
+    backgroundColor: colors.primary,
+    height: 'auto',
+    minHeight: 350,
+    paddingTop: 48,
     paddingHorizontal: 24,
-    paddingVertical: 48,
+    flexDirection: 'row',
   },
-  img: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-  },
-  textboxWrapper: {
-    paddingVertical: 48,
-  },
-  textbox: {
-    backgroundColor: '#EFF1F1',
-    height: 36,
-    borderRadius: 6,
-  },
-  logBtn: {
+  card: {
+    marginTop: -(350 - 48),
+    marginHorizontal: 24,
+    marginBottom: 24,
+    paddingVertical: 64,
+    paddingHorizontal: 24,
     borderRadius: 8,
-    backgroundColor: 'red',
+    backgroundColor: colors.light0,
+  },
+  logo: {
+    alignSelf: 'center',
+    marginBottom: 24,
+    width: 140,
+    height: 140,
+  },
+  label: {
+    marginBottom: 4,
+    ...textStyles.small,
+    color: colors.dark1,
+  },
+  input: {
+    marginBottom: 24,
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    height: 36,
+    borderRadius: 8,
+    ...textStyles.medium,
+    lineHeight: 24,
+    backgroundColor: colors.light2,
+    elevation: 1,
+  },
+  line: {
+    marginTop: 8,
+    marginBottom: 32,
+    borderBottomColor: colors.light2,
+    borderBottomWidth: 1,
+  },
+  copyright: {
+    alignSelf: 'center',
+    marginHorizontal: 24,
+    marginBottom: 48,
   },
 });

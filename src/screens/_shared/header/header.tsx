@@ -2,6 +2,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useAuth } from '../../../app/contexts/auth-context';
 import BackButton from '../../../assets/icons/back-button.svg';
 import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
@@ -14,9 +15,11 @@ type HeaderProps = {
 const Header = (props: HeaderProps) => {
   const navigation = useNavigation();
 
+  const [{ account }, { logout }] = useAuth();
+
   const handleLogout = useCallback(() => {
-    // TODO: initiate logout
-  }, []);
+    logout().then(() => navigation.navigate('Index'));
+  }, [logout, navigation]);
 
   return props.to ? (
     <View style={[header.container, { elevation: 3 }]}>
@@ -39,7 +42,7 @@ const Header = (props: HeaderProps) => {
 
       <View style={header.space} />
 
-      <Text style={header.actions}>{/*TODO: username*/}</Text>
+      <Text style={header.actions}>{account?.name}</Text>
       <Pressable
         android_ripple={{ color: colors.light0, borderless: true }}
         onPressOut={handleLogout}

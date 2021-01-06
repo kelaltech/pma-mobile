@@ -1,33 +1,19 @@
-import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthLoadingScreen from '../screens/_shared/auth-loading/auth-loading-screen';
-import AuthScreen from '../screens/login/auth-screen';
-import MainContainer from './main';
 import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
+import Index from '../screens/index';
+import Login from '../screens/login/login';
+import ReportAdd from '../screens/report-add/report-add';
 import ReportDetail from '../screens/report-detail/report-detail';
-import AddReports from '../screens/report-add/report-add';
+import MainNavigator from './main-navigator';
 
-const AppStackNav = createStackNavigator();
+export const Stack = createStackNavigator();
 
-// const AppNavigator = createSwitchNavigator(
-//   {
-//     // For authentication
-//     Auth: AuthScreen,
-//     // For fetching and validating session
-//     Loading: AuthLoadingScreen,
-//     // Main app
-//     Main: App
-//   },
-//   {
-//     initialRouteName: 'Main'
-//   }
-// );
-
-const AppNavigatorScreen = () => {
+const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <AppStackNav.Navigator
-        initialRouteName="Main"
+      <Stack.Navigator
+        initialRouteName="Loading"
         headerMode="none"
         screenOptions={{
           gestureEnabled: true,
@@ -49,13 +35,22 @@ const AppNavigatorScreen = () => {
           },
         }}
       >
-        <AppStackNav.Screen name="AddReport" component={AddReports} />
-        <AppStackNav.Screen name="ReportDetail" component={ReportDetail} />
-        <AppStackNav.Screen name="Main" component={MainContainer} />
-        <AppStackNav.Screen name="Loading" component={AuthLoadingScreen} />
-        <AppStackNav.Screen name="Auth" component={AuthScreen} />
-      </AppStackNav.Navigator>
+        <Stack.Screen
+          name="Index"
+          component={Index}
+          options={{ cardStyleInterpolator: () => ({}) }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ cardStyleInterpolator: () => ({}) }}
+        />
+        <Stack.Screen name="Main" component={MainNavigator} />
+        <Stack.Screen name="ReportAdd" component={ReportAdd} />
+        <Stack.Screen name="ReportDetail" component={ReportDetail} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
-export default AppNavigatorScreen;
+
+export default AppNavigator;

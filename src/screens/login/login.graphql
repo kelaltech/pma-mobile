@@ -1,0 +1,35 @@
+mutation Login($loginInput: AccountLoginInput!) {
+  account {
+    login(input: $loginInput) {
+      token
+
+      account {
+        id
+        created_at
+        updated_at
+
+        name
+        email
+
+        password_iat
+
+        privilege {
+          id
+          created_at
+          updated_at
+
+          name
+          numberOfAccounts
+
+          scopes {
+            id
+            created_at
+            updated_at
+
+            scope
+          }
+        }
+      }
+    }
+  }
+}
