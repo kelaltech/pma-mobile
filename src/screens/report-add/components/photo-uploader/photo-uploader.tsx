@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { launchCamera } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
   Button,
-  PermissionsAndroid,
   Image,
+  PermissionsAndroid,
   Pressable,
+  Text,
+  View,
 } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { launchCamera } from 'react-native-image-picker';
 import { colors } from '../../../../assets/styles/colors';
 
 const PhotoUploader = () => {

@@ -1,46 +1,45 @@
 /* eslint-disable react-native/no-inline-styles */
-import AsyncStorage from '@react-native-community/async-storage';
-import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import React from 'react';
+import { Text, TextInput, View } from 'react-native';
 import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  PermissionsAndroid,
-  Image,
-} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
+  useReportAddMutation,
+  useReportGetQuery,
+} from '../../../gen/apollo-types';
+import { colors } from '../../assets/styles/colors';
+import { textStyles } from '../../assets/styles/text-styles';
+import Button from '../_shared/button/button';
+import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
-import {
-  ReportCreateInput,
-  useReportAddMutation,
-} from '../../../gen/apollo-types';
-import { useReportGetQuery } from '../../../gen/apollo-types';
 import { addReportStyle } from './report-add-style';
 
-const AddReports = () => {
-  const [submitForm] = useReportAddMutation();
-  const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
-  const { data } = useReportGetQuery({ variables: { projectId } });
+const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
 
-  const [submitData, setSubmitData] = useState<ReportCreateInput[]>([]);
+const AddReports = () => {
+  const { error, loading, data, refetch } = useReportGetQuery({
+    variables: { projectId },
+  });
+
+  const sections = data?.section.getProject?.sections;
+
+  const [] = useReportAddMutation();
+
   return (
     <>
       <Header title="Add Report" to />
-      <ScrollView>
+
+      <Handle {...{ error, loading, data, refetch }}>
         <View style={addReportStyle.topPart}>
-          <Text style={{ color: 'white', fontSize: 28, fontWeight: '700' }}>
-            {new Date().getMonth()} {new Date().getDate()},{' '}
-            {new Date().getFullYear()}
+          <Text style={{ ...textStyles.h1, color: colors.light0 }}>
+            {dayjs().format('ddd, MMM DD, YYYY')}
           </Text>
         </View>
 
         <View style={addReportStyle.formContainer}>
-          {[data].map((section: any, key: any) => (
-            <View key={key}>
+          {(sections || []).map((section) => (
+            <View key={section?.id}>
               <Text
                 style={{
                   fontSize: 14,
@@ -49,7 +48,7 @@ const AddReports = () => {
                   paddingBottom: 12,
                 }}
               >
-                For {section.name}
+                For {section?.name}
               </Text>
               <View
                 style={{
@@ -58,18 +57,24 @@ const AddReports = () => {
                 }}
               />
               <Text style={{ paddingVertical: 12 }}> Photos </Text>
+
               <PhotoUploader />
+
               <FileUploader />
-              {section.sectionItems.map((items: any, key2: number) => (
-                <View key={key2}>
-                  <Text>{items.name}</Text>
-                  {items.units.map((each: any, key3: number) => (
-                    <View key={key3}>
+
+              {(section?.sectionItems || []).map((item) => (
+                <View key={item?.id}>
+                  <Text>{item?.name}</Text>
+
+                  {(item?.units || []).map((unit) => (
+                    <View key={unit?.id}>
                       <Text>
-                        Report Metric Name {each.name} : {each.unit}{' '}
+                        {unit?.name} [{unit?.unit}]:
                       </Text>
-                      <Text> Amount {each.quantity * each.rate} </Text>
-                      <Text> Todate {each.toDate} </Text>
+                      <Text>
+                        Amount: {(unit?.quantity || 0) * (unit?.rate || 0)}
+                      </Text>
+                      <Text>To-Date: {unit?.toDate}</Text>
                       <View style={{ flexDirection: 'row' }}>
                         <TextInput placeholder={'Planned'} />
                         <TextInput
@@ -84,13 +89,17 @@ const AddReports = () => {
             </View>
           ))}
         </View>
-        <Button
-          onPress={() => {}}
-          // onPress={() => submitForm(submitData)}
-          title="Submit"
-          color="#F59D31"
-        />
-      </ScrollView>
+
+        <View style={{ margin: 24 }}>
+          <Button
+            pressableProps={{ style: { alignSelf: 'flex-end' } }}
+            onPress={() => {}}
+            // onPress={() => submitForm(submitData)}
+          >
+            Submit
+          </Button>
+        </View>
+      </Handle>
     </>
   );
 };
