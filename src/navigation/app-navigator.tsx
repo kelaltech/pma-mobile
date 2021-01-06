@@ -45,7 +45,11 @@ const AppNavigator = () => {
           component={Login}
           options={{ cardStyleInterpolator: () => ({}) }}
         />
-        <Stack.Screen name="Main" component={MainNavigator} />
+        <Stack.Screen
+          name="Main"
+          component={MainNavigator}
+          options={{ cardStyleInterpolator: () => ({}) }}
+        />
         <Stack.Screen name="ReportAdd" component={ReportAdd} />
         <Stack.Screen name="ReportDetail" component={ReportDetail} />
       </Stack.Navigator>

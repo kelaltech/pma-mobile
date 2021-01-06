@@ -18,7 +18,9 @@ const Header = (props: HeaderProps) => {
   const [{ account }, { logout }] = useAuth();
 
   const handleLogout = useCallback(() => {
-    logout().then(() => navigation.navigate('Index'));
+    logout().then(() =>
+      navigation.reset({ index: 0, routes: [{ name: 'Login' }], history: [] })
+    );
   }, [logout, navigation]);
 
   return props.to ? (

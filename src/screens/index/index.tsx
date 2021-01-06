@@ -12,9 +12,9 @@ const Index = () => {
     if (account === undefined) {
       return;
     } else if (account === null) {
-      navigation.navigate('Login');
+      navigation.reset({ index: 0, routes: [{ name: 'Login' }], history: [] });
     } else {
-      navigation.navigate('Main');
+      navigation.reset({ index: 0, routes: [{ name: 'Main' }], history: [] });
     }
   }, [account, navigation]);
 

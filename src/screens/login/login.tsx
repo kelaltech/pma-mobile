@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -22,6 +23,7 @@ const Login = () => {
 
   const [tryLogin] = useLoginMutation();
   const [{}, { login }] = useAuth();
+  const navigation = useNavigation();
 
   const handleLogin = () => {
     if (!email) {
@@ -56,7 +58,20 @@ const Login = () => {
           return;
         }
 
-        login(token, account);
+        login(token, account)
+          .then(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Main' }],
+              history: [],
+            });
+          })
+          .catch((error) => {
+            Alert.alert(
+              error?.name || 'Error',
+              error?.message || 'Unknown error'
+            );
+          });
       })
       .catch((error) => {
         Alert.alert(error?.name || 'Error', error?.message || 'Unknown error');
