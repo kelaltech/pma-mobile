@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
 import React from 'react';
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Image, Linking, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useReportDetailQuery } from '../../../gen/apollo-types';
 import { colors } from '../../assets/styles/colors';
@@ -576,7 +576,29 @@ const ReportDetail = ({ route }: any) => {
             }}
           />
 
-          {/* TODO: continue here... */}
+          <View
+            style={{ flexDirection: 'row', flexWrap: 'wrap', marginRight: -24 }}
+          >
+            {(report?.photos || []).map((photo) => (
+              <View
+                key={photo?.id}
+                style={{ width: '33%', paddingRight: 24, paddingBottom: 24 }}
+              >
+                <Pressable
+                  key={photo?.id}
+                  android_ripple={{ color: colors.accent }}
+                  onPress={() => {
+                    Linking.openURL(photo?.url!);
+                  }}
+                >
+                  <Image
+                    source={{ uri: photo?.url! }}
+                    style={{ height: 80, backgroundColor: colors.light2 }}
+                  />
+                </Pressable>
+              </View>
+            ))}
+          </View>
         </View>
 
         <View

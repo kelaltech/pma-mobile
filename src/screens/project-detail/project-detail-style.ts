@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { color } from 'react-native-reanimated';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
 
