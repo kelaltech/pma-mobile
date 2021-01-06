@@ -1,10 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
 
 function Loading() {
+  const [visible, setVisible] = useState(true);
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => setVisible(true), 300);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <View
       style={{
@@ -13,11 +27,13 @@ function Loading() {
         backgroundColor: colors.light1,
       }}
     >
-      <Text
-        style={[textStyles.h6, { alignSelf: 'center', color: colors.accent }]}
-      >
-        Loading...
-      </Text>
+      {!visible ? null : (
+        <Text
+          style={[textStyles.h6, { alignSelf: 'center', color: colors.accent }]}
+        >
+          Loading...
+        </Text>
+      )}
     </View>
   );
 }

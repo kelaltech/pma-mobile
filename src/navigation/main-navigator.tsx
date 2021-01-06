@@ -9,7 +9,7 @@ import ProjectDetail from '../screens/project-detail/project-detail';
 
 const BottomTab = createBottomTabNavigator();
 
-const MainContainer = () => {
+const MainNavigator = () => {
   return (
     <BottomTab.Navigator
       initialRouteName="MyReports"
@@ -73,4 +73,4 @@ const MainContainer = () => {
   );
 };
 
-export default MainContainer;
+export default MainNavigator;

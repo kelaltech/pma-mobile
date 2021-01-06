@@ -18,7 +18,7 @@ import { ReportUnitCreateInput } from '../../../gen/apollo-types';
 
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
 
-const AddReports = () => {
+const ReportAdd = () => {
   const { error, loading, data, refetch } = useReportGetQuery({
     variables: { projectId },
   });
@@ -153,4 +153,4 @@ const AddReports = () => {
   );
 };
 
-export default AddReports;
+export default ReportAdd;

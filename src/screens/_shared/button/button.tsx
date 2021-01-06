@@ -43,6 +43,7 @@ function Button({ onPress, pressableProps, textProps, children }: ButtonProps) {
         style={[
           {
             ...textStyles.h6,
+            textAlign: 'center',
             color: colors.light1,
           },
           (textProps?.style as TextStyle) || {},

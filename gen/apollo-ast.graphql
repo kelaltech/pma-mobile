@@ -31,6 +31,8 @@ type Query {
   report: ReportQuery!
   """ReportUnit query"""
   ReportUnit: ReportUnitQuery!
+  """comment query"""
+  comment: CommentQuery!
 }
 type Mutation {
   """A same mutation at the root. It echoes what you give it."""
@@ -55,6 +57,8 @@ type Mutation {
   report: ReportMutation!
   """ReportUnit Mutation"""
   ReportUnit: ReportUnitMutation!
+  """comment Mutation"""
+  comment: CommentMutation!
 }
 type AccountQuery {
   """
@@ -421,6 +425,35 @@ input ReportUnitUpdateInput {
   id: ID!
   executed: Float!
   planned: Float!
+}
+type CommentQuery {
+  """Retrieves a report by its ID."""
+  getComment(id: ID!): Comment!
+  """Get report by project id"""
+  byReportId(id: ID!): [Comment!]!
+}
+type CommentMutation {
+  """Create a report."""
+  createComment(input: CommentCreateInput!): Comment
+  """Update a report."""
+  updateComment(input: CommentUpdateInput): Comment
+}
+type Comment {
+  id: ID!
+  content: String!
+  report: Report!
+  user: AccountResponse!
+  created_at: Date!
+  updated_at: Date!
+}
+input CommentCreateInput {
+  content: String!
+  reportId: ID!
+  userId: ID!
+}
+input CommentUpdateInput {
+  id: ID!
+  content: String!
 }
 enum CacheControlScope {
   PUBLIC
