@@ -1,6 +1,6 @@
 query CheckIn($siteEngineerId: ID!) {
-  checkin{
-    getCheckins(userId: $siteEngineerId){
+  checkin {
+    getCheckins(userId: $siteEngineerId) {
       location
       created_at
     }
