@@ -19,6 +19,11 @@ function Handle({ loading, error, data, refetch, children }: HandleProps) {
     <Loading />
   ) : !data || error ? (
     <ScrollView
+      refreshControl={
+        !refetch ? undefined : (
+          <RefreshControl refreshing={loading} onRefresh={refetch} />
+        )
+      }
       style={{
         flex: 1,
         paddingVertical: 48,

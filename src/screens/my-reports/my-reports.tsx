@@ -20,120 +20,122 @@ const MyReports = () => {
   });
 
   return (
-    <Handle {...{ loading, error, data, refetch }}>
+    <>
       <Header title="PMA" />
 
-      <View
-        style={{
-          backgroundColor: colors.primary,
-          height: 'auto',
-          minHeight: 210,
-          paddingTop: 48,
-          paddingHorizontal: 24,
-          flexDirection: 'row',
-        }}
-      >
-        <Text
+      <Handle {...{ loading, error, data, refetch }}>
+        <View
           style={{
-            flex: 1,
-            paddingBottom: 108,
+            backgroundColor: colors.primary,
             height: 'auto',
-            ...textStyles.h1,
-            color: colors.light0,
+            minHeight: 210,
+            paddingTop: 48,
+            paddingHorizontal: 24,
+            flexDirection: 'row',
           }}
         >
-          My Reports
-        </Text>
-        <Pressable
-          android_ripple={{ color: colors.accent }}
-          style={{ marginTop: 7 }}
-        >
-          <Button onPress={() => navigation.navigate('ReportAdd')}>
-            + Report
-          </Button>
-        </Pressable>
-      </View>
-
-      <View
-        style={{
-          marginTop: -(108 - 24),
-          marginHorizontal: 24,
-          marginBottom: 48,
-          paddingTop: 32,
-          paddingHorizontal: 24,
-          paddingBottom: 8,
-          borderRadius: 8,
-          backgroundColor: colors.light0,
-        }}
-      >
-        <Text
-          style={{
-            marginBottom: 24,
-            ...textStyles.small,
-            textTransform: 'uppercase',
-            color: colors.dark1,
-          }}
-        >
-          {data?.report.myReports.length || 0} STATUS REPORT
-          {data?.report.myReports.length === 1 ? '' : 'S'} AVAILABLE
-        </Text>
+          <Text
+            style={{
+              flex: 1,
+              paddingBottom: 108,
+              height: 'auto',
+              ...textStyles.h1,
+              color: colors.light0,
+            }}
+          >
+            My Reports
+          </Text>
+          <Pressable
+            android_ripple={{ color: colors.accent }}
+            style={{ marginTop: 7 }}
+          >
+            <Button onPress={() => navigation.navigate('ReportAdd')}>
+              + Report
+            </Button>
+          </Pressable>
+        </View>
 
         <View
           style={{
-            marginBottom: 24,
-            borderBottomColor: colors.light2,
-            borderBottomWidth: 1,
+            marginTop: -(108 - 24),
+            marginHorizontal: 24,
+            marginBottom: 48,
+            paddingTop: 32,
+            paddingHorizontal: 24,
+            paddingBottom: 8,
+            borderRadius: 8,
+            backgroundColor: colors.light0,
           }}
-        />
-
-        {(data?.report.myReports || []).map((report) => (
-          <Pressable
-            key={report.id}
-            android_ripple={{ color: colors.accent }}
-            onPress={() =>
-              navigation.navigate('ReportDetail', { reportId: report.id })
-            }
-            style={{ marginBottom: 24 }}
+        >
+          <Text
+            style={{
+              marginBottom: 24,
+              ...textStyles.small,
+              textTransform: 'uppercase',
+              color: colors.dark1,
+            }}
           >
-            <Text
-              style={{
-                ...textStyles.h6,
-                textTransform: 'uppercase',
-                color: colors.primary,
-                marginBottom: 8,
-              }}
+            {data?.report.myReports.length || 0} STATUS REPORT
+            {data?.report.myReports.length === 1 ? '' : 'S'} AVAILABLE
+          </Text>
+
+          <View
+            style={{
+              marginBottom: 24,
+              borderBottomColor: colors.light2,
+              borderBottomWidth: 1,
+            }}
+          />
+
+          {(data?.report.myReports || []).map((report) => (
+            <Pressable
+              key={report.id}
+              android_ripple={{ color: colors.accent }}
+              onPress={() =>
+                navigation.navigate('ReportDetail', { reportId: report.id })
+              }
+              style={{ marginBottom: 24 }}
             >
-              {dayjs(report.created_at).format('ddd, MMM DD, YYYY')}
-            </Text>
-
-            <Text style={{ marginBottom: 8, color: colors.dark1 }}>
-              Report for{' '}
-              <Text style={{ color: colors.dark0 }}>
-                “{report.project.name}”
+              <Text
+                style={{
+                  ...textStyles.h6,
+                  textTransform: 'uppercase',
+                  color: colors.primary,
+                  marginBottom: 8,
+                }}
+              >
+                {dayjs(report.created_at).format('ddd, MMM DD, YYYY')}
               </Text>
-            </Text>
 
-            <Text style={{ color: colors.dark1 }}>
-              EXECUTED:{' '}
-              <Text style={{ color: colors.dark0 }}>
-                {Math.round(
-                  ((report.reportUnits || []).reduce(
-                    (p, c) => p + (c?.executed || 0),
-                    0
-                  ) /
-                    (report.reportUnits || []).reduce(
-                      (p, c) => p + (c?.planned || 0),
+              <Text style={{ marginBottom: 8, color: colors.dark1 }}>
+                Report for{' '}
+                <Text style={{ color: colors.dark0 }}>
+                  “{report.project.name}”
+                </Text>
+              </Text>
+
+              <Text style={{ color: colors.dark1 }}>
+                EXECUTED:{' '}
+                <Text style={{ color: colors.dark0 }}>
+                  {Math.round(
+                    ((report.reportUnits || []).reduce(
+                      (p, c) => p + (c?.executed || 0),
                       0
-                    )) *
-                    100
-                )}
-                %
+                    ) /
+                      (report.reportUnits || []).reduce(
+                        (p, c) => p + (c?.planned || 0),
+                        0
+                      )) *
+                      100
+                  )}
+                  %
+                </Text>
               </Text>
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-    </Handle>
+            </Pressable>
+          ))}
+        </View>
+      </Handle>
+    </>
   );
 };
 
