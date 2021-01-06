@@ -1,15 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  PermissionsAndroid,
-  Image,
-} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, TextInput, Button } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/file-uploader';

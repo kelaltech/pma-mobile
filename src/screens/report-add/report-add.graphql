@@ -4,7 +4,7 @@
 #   }
 # }
 
-mutation ReportAdd($input: ReportCreateInput) {
+mutation ReportAdd($input: ReportCreateInput!) {
   report {
     createReport(input: $input) {
       id
