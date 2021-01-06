@@ -25,27 +25,22 @@ mutation ReportAdd($input: ReportCreateInput!) {
   }
 }
 query ReportGet($projectId: ID!) {
-  section {
-    getProject(id: $projectId) {
+ project{
+    getProject(id: $projectId){
       id
-
       name
-      sections {
-        id
-
+      sections{
         name
-        sectionItems {
+        sectionItems{
           id
-
           name
-          units {
+          units{
             id
-
             name
             quantity
             rate
-            unit
             toDate
+            unit            
           }
         }
       }

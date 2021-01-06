@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import {
   useReportAddMutation,
@@ -14,6 +14,7 @@ import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
 import { addReportStyle } from './report-add-style';
+import { ReportUnitCreateInput } from '../../../gen/apollo-types';
 
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
 
@@ -22,7 +23,11 @@ const AddReports = () => {
     variables: { projectId },
   });
 
-  const sections = data?.section.getProject?.sections;
+  const sections = data?.project.getProject?.sections;
+
+  const [allFile, setAllFile] = useState<string[]>([]);
+  const [allImg, setAllImg] = useState<string[]>([]);
+  const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
 
   const [] = useReportAddMutation();
 
@@ -38,33 +43,60 @@ const AddReports = () => {
         </View>
 
         <View style={addReportStyle.formContainer}>
-          {(sections || []).map((section) => (
-            <View key={section?.id}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: '400',
+          <View>
+            <Text
+              style={[
+                textStyles.small,
+                {
                   color: '#5A5A5A',
                   paddingBottom: 12,
-                }}
-              >
-                For {section?.name}
+                },
+              ]}
+            >
+              For {data?.project.getProject?.name}
+            </Text>
+            <View
+              style={{
+                borderBottomColor: '#EFF1F1',
+                borderBottomWidth: 2,
+              }}
+            />
+          </View>
+          {(sections || []).map((section) => (
+            <View>
+              <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
+                {' '}
+                Photos{' '}
               </Text>
+
+              <PhotoUploader onChange={(newVal: any) => setAllImg(newVal)} />
+
               <View
                 style={{
+                  paddingTop: 12,
                   borderBottomColor: '#EFF1F1',
                   borderBottomWidth: 2,
                 }}
               />
-              <Text style={{ paddingVertical: 12 }}> Photos </Text>
 
-              <PhotoUploader />
+              <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
+                {' '}
+                Documents{' '}
+              </Text>
 
-              <FileUploader />
+              <FileUploader onChange={(newVal: any) => setAllFile(newVal)} />
+
+              <View
+                style={{
+                  paddingVertical: 12,
+                  borderBottomColor: '#EFF1F1',
+                  borderBottomWidth: 2,
+                }}
+              />
 
               {(section?.sectionItems || []).map((item) => (
                 <View key={item?.id}>
-                  <Text>{item?.name}</Text>
+                  <Text style={[textStyles.h5]}>{item?.name}</Text>
 
                   {(item?.units || []).map((unit) => (
                     <View key={unit?.id}>
@@ -76,12 +108,29 @@ const AddReports = () => {
                       </Text>
                       <Text>To-Date: {unit?.toDate}</Text>
                       <View style={{ flexDirection: 'row' }}>
-                        <TextInput placeholder={'Planned'} />
                         <TextInput
+                          keyboardType="numeric"
+                          placeholder={'Planned'}
+                          onChange={() => {}}
+                        />
+                        <TextInput
+                          // value={eachUnitData.planned? '' : eachUnitData.planned}
+                          keyboardType="numeric"
                           placeholder={'Executed'}
                           onChange={() => {}}
                         />
                       </View>
+                      {/* {unitData.map(eachUnitData => (
+                        <View style={{ flexDirection: 'row' }}>
+                          <TextInput placeholder={'Planned'} />
+                          <TextInput
+                            // value={eachUnitData.planned? '' : eachUnitData.planned}
+                            keyboardType='numeric'
+                            placeholder={'Executed'}
+                            onChange={() => handleunitchage(unit?.id, 8, 1)}
+                          />
+                        </View>
+                      ))} */}
                     </View>
                   ))}
                 </View>

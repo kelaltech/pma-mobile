@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState } from 'react';
-import { Button, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import Button from '../../../_shared/button/button';
 
-const FileUploader = () => {
+const FileUploader = (porps: any) => {
   const [allFile, setAllFile] = useState<string[]>([]);
 
   const removeFile = async (id?: string) => {
@@ -36,6 +36,7 @@ const FileUploader = () => {
           } catch (err) {
             console.log('File Upload Error: ', err);
           }
+          porps.onChange(data);
         });
       } else {
         console.warn('File not Picked');
@@ -52,24 +53,26 @@ const FileUploader = () => {
           {allFile.map((upload, key) => (
             <View key={key}>
               <Text>{upload}</Text>
-              <TouchableOpacity onPress={() => removeFile(key.toString())}>
+              <Pressable onPress={() => removeFile(key.toString())}>
                 <Text>Remove</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ))}
         </View>
       ) : (
         <View>
-          <Text> Add Files </Text>
+          <Text style={{ alignSelf: 'center', paddingVertical: 12 }}>
+            {' '}
+            No Files{' '}
+          </Text>
         </View>
       )}
       <Button
-        onPress={() => {
-          getFile();
-        }}
-        title="+ Add Files "
-        color="#F59D31"
-      />
+        onPress={getFile}
+        pressableProps={{ style: { alignSelf: 'flex-start' } }}
+      >
+        + Add Files
+      </Button>
     </View>
   );
 };

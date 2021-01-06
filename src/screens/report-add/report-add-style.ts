@@ -10,7 +10,7 @@ export const addReportStyle = StyleSheet.create({
   formContainer: {
     marginTop: -84,
     marginHorizontal: 24,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     height: 'auto',
     borderRadius: 8,
     paddingHorizontal: 24,

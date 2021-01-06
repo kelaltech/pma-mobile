@@ -17,6 +17,7 @@ target 'PMA' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+
   target 'PMATests' do
     inherit! :complete
     # Pods for testing

@@ -1,17 +1,11 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Image,
-  PermissionsAndroid,
-  Pressable,
-  Text,
-  View,
-} from 'react-native';
+import { Image, PermissionsAndroid, Pressable, Text, View } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { colors } from '../../../../assets/styles/colors';
+import Button from '../../../_shared/button/button';
 
-const PhotoUploader = () => {
+const PhotoUploader = (props: any) => {
   useEffect(() => {
     getImage();
   }, []);
@@ -87,6 +81,7 @@ const PhotoUploader = () => {
               } catch (err) {
                 console.log('Set image Error', err);
               }
+              props.onChange(vat);
             }
           }
         );
@@ -144,13 +139,18 @@ const PhotoUploader = () => {
           ))}
         </View>
       ) : (
-        <Text style={{ alignSelf: 'center', paddingBottom: 12, color: '' }}>
+        <Text style={{ alignSelf: 'center', paddingBottom: 12 }}>
           {' '}
           No Image{' '}
         </Text>
       )}
 
-      <Button onPress={openCamera} title="+ Add Photo" color="#F59D31" />
+      <Button
+        onPress={openCamera}
+        pressableProps={{ style: { alignSelf: 'flex-start' } }}
+      >
+        + Add Photo
+      </Button>
     </View>
   );
 };
