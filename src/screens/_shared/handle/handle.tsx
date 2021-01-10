@@ -21,7 +21,11 @@ function Handle({ loading, error, data, refetch, children }: HandleProps) {
     <ScrollView
       refreshControl={
         !refetch ? undefined : (
-          <RefreshControl refreshing={loading} onRefresh={refetch} />
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refetch}
+            colors={[colors.accent, colors.primary]}
+          />
         )
       }
       style={{
@@ -41,7 +45,11 @@ function Handle({ loading, error, data, refetch, children }: HandleProps) {
     <ScrollView
       refreshControl={
         !refetch ? undefined : (
-          <RefreshControl refreshing={loading} onRefresh={refetch} />
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refetch}
+            colors={[colors.accent, colors.primary]}
+          />
         )
       }
       style={{ flex: 1, backgroundColor: colors.light1 }}

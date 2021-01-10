@@ -5,7 +5,7 @@ import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';
 
 function Loading() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
