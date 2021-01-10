@@ -62,8 +62,8 @@ const ReportAdd = () => {
               }}
             />
           </View>
-          {(sections || []).map((section) => (
-            <View>
+          {(sections || []).map((section, key) => (
+            <View key={key}>
               <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
                 {' '}
                 Photos{' '}

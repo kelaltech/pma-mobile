@@ -208,13 +208,17 @@ type CheckinsQuery {
 }
 type CheckinsMutation {
   """Create a checkin for a user."""
-  createCheckins(userId: ID!, location: String!): Checkin
+  createCheckins(input: CheckinCreateInput!): Checkin
 }
 type Checkin {
   id: ID!
   location: String!
   created_at: Date!
   updated_at: Date!
+}
+input CheckinCreateInput {
+  userId: ID!
+  location: String!
 }
 type ProjectQuery {
   """Retrieves a project by its ID."""
@@ -259,6 +263,10 @@ input ProjectUpdateInput {
 type LotQuery {
   """Retrieves a Lot by its ID."""
   getLot(id: ID!): Lot
+  """Get list of Lot for a user"""
+  getLots: [Lot!]!
+  """Get by project coordinator"""
+  getByProjectCoordinator(userId: ID!): Lot
 }
 type LotMutation {
   """Create a lot."""
@@ -269,6 +277,7 @@ type LotMutation {
 type Lot {
   id: ID!
   name: String!
+  projects: [Project]
   created_at: Date!
   updated_at: Date!
 }

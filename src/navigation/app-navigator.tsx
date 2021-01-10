@@ -13,7 +13,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Loading"
+        initialRouteName="ReportAdd"
         headerMode="none"
         screenOptions={{
           gestureEnabled: true,

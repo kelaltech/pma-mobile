@@ -70,12 +70,12 @@ const PhotoUploader = (props: any) => {
       ) {
         // console.log("Camera permission given");
         launchCamera(
-          { mediaType: 'photo', saveToPhotos: true, includeBase64: true },
+          { mediaType: 'photo', saveToPhotos: true, aspect: [4, 3] },
           (res: any) => {
-            if (res.base64) {
-              const vat = [...allImg, res.base64];
+            if (res) {
+              const vat = [...allImg, res.uri];
               setAllImg(vat);
-              // console.log(allImg)
+              console.log(res);
               try {
                 AsyncStorage.setItem('images', JSON.stringify(vat));
               } catch (err) {

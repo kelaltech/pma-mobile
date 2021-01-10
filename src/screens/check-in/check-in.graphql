@@ -6,3 +6,13 @@ query CheckIn($siteEngineerId: ID!) {
     }
   }
 }
+
+mutation AddCheckIn($input: CheckinCreateInput!){
+  checkin{
+    createCheckins(input: $input){
+      id
+      location
+      created_at
+    }
+  } 
+}

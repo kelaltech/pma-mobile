@@ -1,10 +1,16 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  InMemoryCache,
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { createHttpLink } from '@apollo/client/link/http';
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { PropsWithChildren } from 'react';
 import Config from 'react-native-config';
+import { createUploadLink } from 'apollo-upload-client';
 
 const httpLink = createHttpLink({
   uri: Config.GRAPHQL_URL || 'http://localhost:4000/graphql',
@@ -53,7 +59,12 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 export const apolloClient = new ApolloClient({
-  link: authLink.concat(errorLink).concat(httpLink),
+  link: ApolloLink.from([
+    authLink,
+    errorLink,
+    httpLink,
+    // createUploadLink({})
+  ]),
   cache: new InMemoryCache(),
   defaultOptions: {
     query: { fetchPolicy: 'no-cache' },

@@ -1,13 +1,33 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import DocumentPicker from 'react-native-document-picker';
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
 import Button from '../../../_shared/button/button';
+import { colors } from '../../../../assets/styles/colors';
+import { textStyles } from '../../../../assets/styles/text-styles';
 
 const FileUploader = (porps: any) => {
-  const [allFile, setAllFile] = useState<string[]>([]);
+  useEffect(() => {
+    getFiles();
+  }, []);
 
-  const removeFile = async (id?: string) => {
+  const [allFile, setAllFile] = useState<DocumentPickerResponse[]>([]);
+
+  const getFiles = async () => {
+    try {
+      const getData = await AsyncStorage.getItem('files');
+      if (getData !== null) {
+        const storedFiles = JSON.parse(getData);
+        setAllFile(storedFiles);
+      }
+    } catch (err) {
+      console.log('Get image Error', err);
+    }
+  };
+
+  const removeFile = async (id?: any) => {
     if (id) {
       if (id !== '0') {
         const updateFile = allFile.slice(allFile.indexOf(id, 1));
@@ -21,18 +41,18 @@ const FileUploader = (porps: any) => {
     }
   };
 
-  const getFile = async () => {
+  const setFile = async () => {
     try {
       const file = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
       });
       if (file) {
         file.map((val) => {
-          const data = [...allFile, val.uri];
+          const data = [...allFile, val];
           setAllFile(data);
-          console.log(data);
+          // console.log(data);
           try {
-            AsyncStorage.setItem('', JSON.stringify(data));
+            AsyncStorage.setItem('files', JSON.stringify(data));
           } catch (err) {
             console.log('File Upload Error: ', err);
           }
@@ -51,10 +71,17 @@ const FileUploader = (porps: any) => {
       {allFile && allFile.length !== 0 ? (
         <View>
           {allFile.map((upload, key) => (
-            <View key={key}>
-              <Text>{upload}</Text>
+            <View
+              key={key}
+              style={{ flexDirection: 'row', paddingVertical: 12 }}
+            >
+              <Text style={[{ ...textStyles.medium, color: colors.dark1 }]}>
+                {upload.name} {'  '}
+              </Text>
               <Pressable onPress={() => removeFile(key.toString())}>
-                <Text>Remove</Text>
+                <Text style={{ ...textStyles.medium, color: colors.warn }}>
+                  Remove
+                </Text>
               </Pressable>
             </View>
           ))}
@@ -68,7 +95,7 @@ const FileUploader = (porps: any) => {
         </View>
       )}
       <Button
-        onPress={getFile}
+        onPress={setFile}
         pressableProps={{ style: { alignSelf: 'flex-start' } }}
       >
         + Add Files

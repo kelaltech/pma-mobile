@@ -1,23 +1,48 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Header from '../_shared/header/header';
 import Geolocation from '@react-native-community/geolocation';
 import checkInStyle from './check-in-style';
 import { colors } from '../../assets/styles/colors';
-import { useCheckInQuery } from '../../../gen/apollo-types';
+import {
+  CheckinCreateInput,
+  useAddCheckInMutation,
+  useCheckInQuery,
+} from '../../../gen/apollo-types';
 import Handle from '../_shared/handle/handle';
 import dayjs from 'dayjs';
 
 const siteEngineerId = '613ba210-651a-469c-a690-ad6ecc76a6d5';
 
 const CheckIn = () => {
+  const [checkInData, setCheckInData] = useState<CheckinCreateInput>({
+    userId: '',
+    location: '',
+  });
   const { loading, data, error, refetch } = useCheckInQuery({
     variables: { siteEngineerId },
   });
-
+  const [checkInAdd] = useAddCheckInMutation();
   const checkins = data?.checkin.getCheckins;
+
+  const handleCheckin = () => {
+    let currentLocation;
+    Geolocation.getCurrentPosition((info) => {
+      currentLocation = JSON.stringify(info, null, 2);
+      alert(JSON.stringify(info, null, 2));
+    });
+    setCheckInData({
+      userId: siteEngineerId,
+      location: JSON.stringify(currentLocation),
+    });
+    checkInAdd({ variables: { input: checkInData } }).then((res) => {
+      console.log(res);
+    });
+    console.log(currentLocation);
+  };
+
   return (
     <>
       <Header title="PMA" />
@@ -28,11 +53,7 @@ const CheckIn = () => {
         <Pressable
           style={checkInStyle.checkInBtn}
           android_ripple={{ color: colors.accent, radius: 168 / 2 }}
-          onPressOut={() =>
-            Geolocation.getCurrentPosition(
-              (info) => alert(JSON.stringify(info, null, 2)) // TODO: save check-in to db
-            )
-          }
+          onPressOut={handleCheckin}
         >
           <View
             style={{
