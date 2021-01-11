@@ -218,7 +218,11 @@ type Checkin {
 }
 input CheckinCreateInput {
   userId: ID!
-  location: String!
+  location: LocationInput!
+}
+input LocationInput {
+  longitude: String!
+  latitude: String!
 }
 type ProjectQuery {
   """Retrieves a project by its ID."""
@@ -247,6 +251,8 @@ type Project {
   siteHandoverDate: Date!
   ActualCommencementDate: Date!
   extensionTimeApproved: Int!
+  planned: Float
+  executed: Float
   sections: [Section]
   created_at: Date!
   updated_at: Date!
@@ -270,22 +276,30 @@ type LotQuery {
 }
 type LotMutation {
   """Create a lot."""
-  createLot(input: LotCreateInput): Lot
+  createLot(input: LotCreateInput!): Lot
   """Update a lot."""
-  updateLot(input: LotUpdateInput): Lot
+  updateLot(input: LotUpdateInput!): Lot
 }
 type Lot {
   id: ID!
   name: String!
   projects: [Project]
+  pendingReports: [Report]
+  office_engineer: AccountResponse!
+  project_coordinator: AccountResponse!
   created_at: Date!
   updated_at: Date!
 }
 input LotCreateInput {
   name: String!
+  office_engineer: AccountInput!
+  project_coordinator: AccountInput!
 }
 input LotUpdateInput {
-  name: String
+  id: ID!
+  name: String!
+  office_engineer: AccountInput!
+  project_coordinator: AccountInput!
 }
 type SectionItemQuery {
   """Retrieves a project by its ID."""

@@ -1,8 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
+import { ReactNativeFile } from 'apollo-upload-client';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
+import { DocumentPickerResponse } from 'react-native-document-picker';
+import * as mime from 'react-native-mime-types';
 import {
+  ReportUnitCreateInput,
   useReportAddMutation,
   useReportGetQuery,
 } from '../../../gen/apollo-types';
@@ -14,10 +18,6 @@ import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
 import { addReportStyle } from './report-add-style';
-import { ReportUnitCreateInput } from '../../../gen/apollo-types';
-import { DocumentPickerResponse } from 'react-native-document-picker';
-import { ReactNativeFile } from 'apollo-upload-client';
-import * as mime from 'react-native-mime-types';
 
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
 
@@ -26,6 +26,7 @@ const ReportAdd = () => {
 
   const { error, loading, data, refetch } = useReportGetQuery({
     variables: { projectId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const clone = () => {
@@ -86,7 +87,9 @@ const ReportAdd = () => {
     <>
       <Header title="Add Report" to />
 
-      <Handle {...{ error, loading, data, refetch }}>
+      <Handle
+        {...{ error, loading, data, refetch: () => refetch({ projectId }) }}
+      >
         <View style={addReportStyle.topPart}>
           <Text style={{ ...textStyles.h1, color: colors.light0 }}>
             {dayjs().format('ddd, MMM DD, YYYY')}

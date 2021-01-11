@@ -17,13 +17,16 @@ const MyReports = () => {
 
   const { loading, error, data, refetch } = useMyReportsQuery({
     variables: { projectId },
+    fetchPolicy: 'cache-and-network',
   });
 
   return (
     <>
       <Header title="PMA" />
 
-      <Handle {...{ loading, error, data, refetch }}>
+      <Handle
+        {...{ loading, error, data, refetch: () => refetch({ projectId }) }}
+      >
         <View
           style={{
             backgroundColor: colors.primary,

@@ -1,4 +1,4 @@
-query CheckIn($siteEngineerId: ID!) {
+query CheckIns($siteEngineerId: ID!) {
   checkin {
     getCheckins(userId: $siteEngineerId) {
       id
@@ -9,7 +9,7 @@ query CheckIn($siteEngineerId: ID!) {
   }
 }
 
-mutation AddCheckIn($input: CheckinCreateInput!) {
+mutation CheckInAdd($input: CheckinCreateInput!) {
   checkin {
     createCheckins(input: $input) {
       id
