@@ -15,6 +15,9 @@ import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
 import { addReportStyle } from './report-add-style';
 import { ReportUnitCreateInput } from '../../../gen/apollo-types';
+import { DocumentPickerResponse } from 'react-native-document-picker';
+import { ReactNativeFile } from 'apollo-upload-client';
+import * as mime from 'react-native-mime-types';
 
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
 
@@ -25,11 +28,28 @@ const ReportAdd = () => {
 
   const sections = data?.project.getProject?.sections;
 
-  const [allFile, setAllFile] = useState<string[]>([]);
+  const [allFile, setAllFile] = useState<DocumentPickerResponse[]>([]);
   const [allImg, setAllImg] = useState<string[]>([]);
   const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
 
   const [] = useReportAddMutation();
+
+  function generateRNFile(uris: any[], name: any) {
+    return uris
+      ? uris.map((uri, key) => {
+          new ReactNativeFile({
+            uri,
+            type: mime.lookup(uri) || 'image',
+            name,
+          });
+        })
+      : null;
+  }
+
+  const handleSubmit = () => {
+    const images = generateRNFile(allImg, `image-${Date.now()}`);
+    const files = generateRNFile(allFile, `file-${Date.now()}`);
+  };
 
   return (
     <>
@@ -69,7 +89,12 @@ const ReportAdd = () => {
                 Photos{' '}
               </Text>
 
-              <PhotoUploader onChange={(newVal: any) => setAllImg(newVal)} />
+              <PhotoUploader
+                onChange={(newVal: any) => {
+                  setAllImg(newVal);
+                  console.log(newVal.uri);
+                }}
+              />
 
               <View
                 style={{
@@ -84,7 +109,9 @@ const ReportAdd = () => {
                 Documents{' '}
               </Text>
 
-              <FileUploader onChange={(newVal: any) => setAllFile(newVal)} />
+              <FileUploader
+                onChange={(newVal: any) => setAllFile(newVal.uri)}
+              />
 
               <View
                 style={{
@@ -142,8 +169,8 @@ const ReportAdd = () => {
         <View style={{ margin: 24 }}>
           <Button
             pressableProps={{ style: { alignSelf: 'flex-end' } }}
-            onPress={() => {}}
-            // onPress={() => submitForm(submitData)}
+            // onPress={() => { }}
+            onPress={handleSubmit}
           >
             Submit
           </Button>

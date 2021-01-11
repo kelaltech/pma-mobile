@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, PermissionsAndroid, Pressable, Text, View } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { colors } from '../../../../assets/styles/colors';
+import { textStyles } from '../../../../assets/styles/text-styles';
 import Button from '../../../_shared/button/button';
 
 const PhotoUploader = (props: any) => {
@@ -70,18 +71,23 @@ const PhotoUploader = (props: any) => {
       ) {
         // console.log("Camera permission given");
         launchCamera(
-          { mediaType: 'photo', saveToPhotos: true, aspect: [4, 3] },
+          {
+            mediaType: 'photo',
+            saveToPhotos: true,
+            aspect: [4, 3],
+            includeBase64: true,
+          },
           (res: any) => {
             if (res) {
-              const vat = [...allImg, res.uri];
-              setAllImg(vat);
-              console.log(res);
+              const imageFile = [...allImg, res];
+              setAllImg(imageFile);
+              // console.log(res);
               try {
-                AsyncStorage.setItem('images', JSON.stringify(vat));
+                AsyncStorage.setItem('images', JSON.stringify(imageFile));
               } catch (err) {
                 console.log('Set image Error', err);
               }
-              props.onChange(vat);
+              props.onChange(imageFile);
             }
           }
         );
@@ -104,14 +110,14 @@ const PhotoUploader = (props: any) => {
         >
           {allImg.map((img, key) => (
             <View key={key} style={{ flexDirection: 'column' }}>
-              <Image
-                source={{ uri: `data:image/jpeg;base64,${img}` }}
+              {/* <Image
+                source={{ uri: `data:image/jpeg;base64,${img.base64}` }}
                 style={{
                   width: 140,
                   height: 100,
                   marginLeft: key % 2 === 0 ? 0 : 24,
                 }}
-              />
+              /> */}
 
               <Pressable
                 android_ripple={{ color: colors.accent }}
@@ -122,17 +128,17 @@ const PhotoUploader = (props: any) => {
                   marginLeft: key % 2 === 0 ? 0 : 24,
                   alignSelf: 'center',
                   height: 30,
-                  backgroundColor: '#ff0000',
+                  backgroundColor: colors.warn,
                 }}
               >
                 <Text
                   style={{
                     alignSelf: 'center',
                     color: 'white',
-                    fontSize: 18,
+                    ...textStyles.large,
                   }}
                 >
-                  DELETE
+                  Delete
                 </Text>
               </Pressable>
             </View>

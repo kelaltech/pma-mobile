@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
@@ -30,6 +30,7 @@ const FileUploader = (porps: any) => {
   const removeFile = async (id?: any) => {
     if (id) {
       if (id !== '0') {
+        Alert.alert('Delete File', 'Are you sure you want to Delete the file?');
         const updateFile = allFile.slice(allFile.indexOf(id, 1));
         setAllFile(updateFile);
         AsyncStorage.setItem('files', JSON.stringify(updateFile));
