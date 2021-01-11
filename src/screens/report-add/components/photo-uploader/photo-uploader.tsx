@@ -7,22 +7,20 @@ import { textStyles } from '../../../../assets/styles/text-styles';
 import Button from '../../../_shared/button/button';
 
 const PhotoUploader = (props: any) => {
-  useEffect(() => {
-    getImage();
-  }, []);
   const [allImg, setAllImg] = useState<string[]>([]);
-  const getImage = async () => {
-    try {
-      const getData = await AsyncStorage.getItem('images');
-      if (getData !== null) {
-        const bil = JSON.parse(getData);
-        // console.log(bil.length)
+
+  useEffect(() => {
+    AsyncStorage.getItem('images')
+      .then((getData) => {
+        const bil = JSON.parse(getData || '');
         setAllImg(bil);
-      }
-    } catch (err) {
-      console.error('Get images Error', err);
-    }
-  };
+        console.log('bil', bil.length);
+      })
+      .catch((err) => console.error('Get images Error', err));
+
+    console.log('lenth', allImg.length);
+    if (allImg.length !== 0) props.onChange(allImg);
+  }, []);
 
   const removeImg = (id?: string) => {
     if (id) {

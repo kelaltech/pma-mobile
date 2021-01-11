@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import {
   useReportAddMutation,
@@ -22,33 +22,64 @@ import * as mime from 'react-native-mime-types';
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
 
 const ReportAdd = () => {
+  const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
+
   const { error, loading, data, refetch } = useReportGetQuery({
     variables: { projectId },
   });
 
+  const clone = () => {
+    data?.project.getProject?.sections?.map((item) => {
+      item?.sectionItems?.map((units) => {
+        units?.units?.map((u) => {
+          setUnitData([
+            ...unitData,
+            { unitId: u?.id || '', planned: 0, executed: 0 },
+          ]);
+        });
+      });
+    });
+  };
+
+  useEffect(() => {
+    clone();
+  }, [data]);
+
   const sections = data?.project.getProject?.sections;
 
-  const [allFile, setAllFile] = useState<DocumentPickerResponse[]>([]);
-  const [allImg, setAllImg] = useState<string[]>([]);
-  const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
+  const [allFile, setAllFile] = useState<any[]>([]);
+  const [allImg, setAllImg] = useState<any[]>([]);
 
-  const [] = useReportAddMutation();
+  const [addReport] = useReportAddMutation();
 
-  function generateRNFile(uris: any[], name: any) {
-    return uris
-      ? uris.map((uri, key) => {
-          new ReactNativeFile({
-            uri,
-            type: mime.lookup(uri) || 'image',
-            name,
-          });
+  const generateRNFile = (uri: any, name: any) => {
+    return uri
+      ? new ReactNativeFile({
+          uri,
+          type: mime.lookup(uri) || 'image',
+          name,
         })
       : null;
-  }
+  };
 
   const handleSubmit = () => {
-    const images = generateRNFile(allImg, `image-${Date.now()}`);
-    const files = generateRNFile(allFile, `file-${Date.now()}`);
+    console.log('files', allFile);
+    console.log('image', allImg);
+    console.log('units', unitData);
+    try {
+      addReport({
+        variables: {
+          input: {
+            project_id: projectId,
+            files: allFile,
+            photos: allImg,
+            reportUnits: unitData,
+          },
+        },
+      });
+    } catch (err) {
+      console.log('Mutaion Error: ', err);
+    }
   };
 
   return (
@@ -90,9 +121,14 @@ const ReportAdd = () => {
               </Text>
 
               <PhotoUploader
-                onChange={(newVal: any) => {
-                  setAllImg(newVal);
-                  console.log(newVal.uri);
+                onChange={(newVal: any[]) => {
+                  newVal.map((imgVal) => {
+                    const image = generateRNFile(
+                      imgVal.uri,
+                      `image-${Date.now()}`
+                    );
+                    setAllImg([...allImg, image]);
+                  });
                 }}
               />
 
@@ -110,7 +146,15 @@ const ReportAdd = () => {
               </Text>
 
               <FileUploader
-                onChange={(newVal: any) => setAllFile(newVal.uri)}
+                onChange={(newVal: DocumentPickerResponse[]) => {
+                  newVal.map((fileVal) => {
+                    const file = generateRNFile(
+                      fileVal?.uri,
+                      ` file-${Date.now()}`
+                    );
+                    setAllFile([...allFile, file]);
+                  });
+                }}
               />
 
               <View
@@ -120,44 +164,84 @@ const ReportAdd = () => {
                   borderBottomWidth: 2,
                 }}
               />
-
+              <Text style={[textStyles.h5, { paddingTop: 12 }]}>
+                {' '}
+                {section?.name}
+              </Text>
               {(section?.sectionItems || []).map((item) => (
                 <View key={item?.id}>
-                  <Text style={[textStyles.h5]}>{item?.name}</Text>
+                  <Text style={[textStyles.h6, { paddingVertical: 12 }]}>
+                    {key + 1}. {item?.name}
+                  </Text>
 
                   {(item?.units || []).map((unit) => (
                     <View key={unit?.id}>
-                      <Text>
+                      <Text style={[textStyles.small, { paddingBottom: 12 }]}>
                         {unit?.name} [{unit?.unit}]:
                       </Text>
-                      <Text>
-                        Amount: {(unit?.quantity || 0) * (unit?.rate || 0)}
+                      <Text
+                        style={[
+                          textStyles.small,
+                          { paddingBottom: 12, color: colors.dark1 },
+                        ]}
+                      >
+                        Amount: {(unit?.quantity || 0) * (unit?.rate || 0)}{' '}
+                        {'    '}
+                        To-Date: {unit?.toDate}
                       </Text>
-                      <Text>To-Date: {unit?.toDate}</Text>
-                      <View style={{ flexDirection: 'row' }}>
+                      <View style={{ flexDirection: 'row', paddingRight: 12 }}>
                         <TextInput
                           keyboardType="numeric"
                           placeholder={'Planned'}
-                          onChange={() => {}}
+                          onChangeText={(val) => {
+                            setUnitData(
+                              unitData.map((u) => {
+                                if (u.unitId === unit?.id) {
+                                  return {
+                                    ...u,
+                                    planned: Number(val),
+                                  };
+                                } else {
+                                  return {
+                                    ...u,
+                                  };
+                                }
+                              })
+                            );
+                          }}
+                          style={[textStyles.large, addReportStyle.textInput]}
                         />
+                        <Text
+                          style={[
+                            textStyles.large,
+                            { alignSelf: 'center', color: colors.dark1 },
+                          ]}
+                        >
+                          {'  '} / {'  '}
+                        </Text>
                         <TextInput
-                          // value={eachUnitData.planned? '' : eachUnitData.planned}
+                          // value={unitData[key].planned.toString() ? '' : unitData[key].planned.toString()}
                           keyboardType="numeric"
                           placeholder={'Executed'}
-                          onChange={() => {}}
+                          onChangeText={(val) => {
+                            setUnitData(
+                              unitData.map((u) => {
+                                if (u.unitId === unit?.id) {
+                                  return {
+                                    ...u,
+                                    executed: Number(val),
+                                  };
+                                } else {
+                                  return {
+                                    ...u,
+                                  };
+                                }
+                              })
+                            );
+                          }}
+                          style={[textStyles.large, addReportStyle.textInput]}
                         />
                       </View>
-                      {/* {unitData.map(eachUnitData => (
-                        <View style={{ flexDirection: 'row' }}>
-                          <TextInput placeholder={'Planned'} />
-                          <TextInput
-                            // value={eachUnitData.planned? '' : eachUnitData.planned}
-                            keyboardType='numeric'
-                            placeholder={'Executed'}
-                            onChange={() => handleunitchage(unit?.id, 8, 1)}
-                          />
-                        </View>
-                      ))} */}
                     </View>
                   ))}
                 </View>
