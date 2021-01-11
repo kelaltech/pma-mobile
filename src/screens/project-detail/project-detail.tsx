@@ -14,6 +14,7 @@ const accountId = '613ba210-651a-469c-a690-ad6ecc76a6d5'; // TODO: load from glo
 const ProjectDetail = () => {
   const { loading, error, data, refetch } = useProjectDetailQuery({
     variables: { accountId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const project = data?.project.getBySiteEngineer;
@@ -22,7 +23,9 @@ const ProjectDetail = () => {
     <>
       <Header title="PMA" />
 
-      <Handle {...{ loading, error, data, refetch }}>
+      <Handle
+        {...{ loading, error, data, refetch: () => refetch({ accountId }) }}
+      >
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{project?.name}</Text>
         </View>

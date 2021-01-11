@@ -15,9 +15,9 @@ type HandleProps = React.PropsWithChildren<{
 }>;
 
 function Handle({ loading, error, data, refetch, children }: HandleProps) {
-  return loading ? (
+  return !data && loading ? (
     <Loading />
-  ) : !data || error ? (
+  ) : !data && error ? (
     <ScrollView
       refreshControl={
         !refetch ? undefined : (
@@ -38,7 +38,7 @@ function Handle({ loading, error, data, refetch, children }: HandleProps) {
         An error occurred...
       </Text>
       <Text style={[textStyles.large, { color: colors.warn }]}>
-        {!error && !data ? 'No data' : `${error?.name}: ${error?.message}`}
+        {error?.name}: {error?.message}
       </Text>
     </ScrollView>
   ) : (

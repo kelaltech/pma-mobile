@@ -14,6 +14,7 @@ const ReportDetail = ({ route }: any) => {
 
   const { loading, error, data, refetch } = useReportDetailQuery({
     variables: { reportId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const report = data?.report.byId;
@@ -23,7 +24,9 @@ const ReportDetail = ({ route }: any) => {
     <>
       <Header title="Reports" to />
 
-      <Handle {...{ loading, error, data, refetch }}>
+      <Handle
+        {...{ loading, error, data, refetch: () => refetch({ reportId }) }}
+      >
         <View
           style={{
             backgroundColor: colors.primary,

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Text } from 'react-native';
 import { colors } from '../assets/styles/colors';
 import { textStyles } from '../assets/styles/text-styles';
-import CheckIn from '../screens/check-in/check-in';
+import CheckIns from '../screens/check-ins/check-ins';
 import MyReports from '../screens/my-reports/my-reports';
 import ProjectDetail from '../screens/project-detail/project-detail';
 
@@ -54,8 +54,8 @@ const MainNavigator = () => {
         }}
       />
       <BottomTab.Screen
-        name="CheckIn"
-        component={CheckIn}
+        name="CheckIns"
+        component={CheckIns}
         options={{
           tabBarIcon: ({ focused }) => (
             <Text
