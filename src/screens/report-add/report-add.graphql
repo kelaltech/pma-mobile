@@ -24,12 +24,14 @@ mutation ReportAdd($input: ReportCreateInput!) {
     }
   }
 }
+
 query ReportGet($projectId: ID!) {
   project {
     getProject(id: $projectId) {
       id
       name
       sections {
+        id
         name
         sectionItems {
           id

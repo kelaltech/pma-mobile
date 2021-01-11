@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
   Alert,
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -125,7 +126,12 @@ const Login = () => {
         >
           2020 © Engineering Corporation of Oromia (ECO).
         </Text>
-        <Pressable android_ripple={{ color: colors.accent, borderless: true }}>
+        <Pressable
+          android_ripple={{ color: colors.accent, borderless: true }}
+          onPress={() => {
+            Linking.openURL('https://www.kelaltech.com');
+          }}
+        >
           <Text
             style={{
               ...textStyles.small,

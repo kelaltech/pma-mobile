@@ -67,9 +67,9 @@ export const apolloClient = new ApolloClient({
   ]),
   cache: new InMemoryCache(),
   defaultOptions: {
-    query: { fetchPolicy: 'no-cache' },
+    query: { fetchPolicy: 'cache-first' },
     mutate: { fetchPolicy: 'no-cache' },
-    watchQuery: { fetchPolicy: 'no-cache' },
+    watchQuery: { fetchPolicy: 'cache-and-network' },
   },
 });
 
