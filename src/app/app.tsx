@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { PermissionsAndroid, StatusBar } from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  PermissionsAndroid,
+  StatusBar,
+} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { colors } from '../assets/styles/colors';
 import AppNavigator from '../navigation/app-navigator';
@@ -21,7 +26,16 @@ const App = () => {
           { enableHighAccuracy: true, forceRequestLocation: true }
         );
       })
-      .catch(console.error);
+      .catch((e) => {
+        Alert.alert('Missing permissions', e?.message || '', [
+          {
+            text: 'Exit app',
+            onPress: () => {
+              BackHandler.exitApp();
+            },
+          },
+        ]);
+      });
 
     return () => {
       if (watchId !== null) {
