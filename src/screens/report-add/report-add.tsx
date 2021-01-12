@@ -2,7 +2,7 @@
 import { ReactNativeFile } from 'apollo-upload-client';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Alert, Text, TextInput, View } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import * as mime from 'react-native-mime-types';
 import {
@@ -64,8 +64,8 @@ const ReportAdd = () => {
   };
 
   const handleSubmit = () => {
-    console.log('files', allFile);
-    console.log('image', allImg);
+    console.log('files', allFile.length);
+    console.log('image', allImg.length);
     console.log('units', unitData);
     try {
       addReport({
@@ -77,7 +77,9 @@ const ReportAdd = () => {
             reportUnits: unitData,
           },
         },
-      });
+      })
+        .then((res) => console.log(res))
+        .catch((err) => Alert.alert('error', err));
     } catch (err) {
       console.log('Mutaion Error: ', err);
     }

@@ -4,12 +4,19 @@ import { Alert, Pressable, Text, View } from 'react-native';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
-import Button from '../../../_shared/button/button';
 import { colors } from '../../../../assets/styles/colors';
 import { textStyles } from '../../../../assets/styles/text-styles';
+import Button from '../../../_shared/button/button';
 
-const FileUploader = (porps: any) => {
+const FileUploader = (props: any) => {
   useEffect(() => {
+    AsyncStorage.getItem('files')
+      .then((getData) => {
+        const storedFiles = JSON.parse(getData || '[]');
+        setAllFile(storedFiles);
+        props.onChange(storedFiles);
+      })
+      .catch((err) => console.log('Get Files Error: ', err));
     getFiles();
   }, []);
 
@@ -27,19 +34,25 @@ const FileUploader = (porps: any) => {
     }
   };
 
-  const removeFile = async (id?: any) => {
-    if (id) {
-      if (id !== '0') {
-        Alert.alert('Delete File', 'Are you sure you want to Delete the file?');
-        const updateFile = allFile.slice(allFile.indexOf(id, 1));
-        setAllFile(updateFile);
-        AsyncStorage.setItem('files', JSON.stringify(updateFile));
-      } else {
-        const updateFile = allFile.slice(1);
-        setAllFile(updateFile);
-        AsyncStorage.setItem('files', JSON.stringify(updateFile));
-      }
-    }
+  const removeFile = async (id?: number) => {
+    Alert.alert('Delete File!', 'Are you sure you want to Delete the file', [
+      {
+        text: 'Yes',
+        style: 'default',
+        onPress: () => {
+          if (id !== undefined) {
+            const updateFile = [
+              ...allFile.slice(0, id),
+              ...allFile.slice(id + 1),
+            ];
+            setAllFile(updateFile);
+            props.onChange(updateFile);
+            AsyncStorage.setItem('files', JSON.stringify(updateFile));
+          }
+        },
+      },
+      { text: 'No', style: 'cancel' },
+    ]);
   };
 
   const setFile = async () => {
@@ -57,7 +70,7 @@ const FileUploader = (porps: any) => {
           } catch (err) {
             console.log('File Upload Error: ', err);
           }
-          porps.onChange(data);
+          props.onChange(data);
         });
       } else {
         console.warn('File not Picked');
@@ -79,7 +92,7 @@ const FileUploader = (porps: any) => {
               <Text style={[{ ...textStyles.medium, color: colors.dark1 }]}>
                 {upload.name} {'  '}
               </Text>
-              <Pressable onPress={() => removeFile(key.toString())}>
+              <Pressable onPress={() => removeFile(key)}>
                 <Text style={{ ...textStyles.medium, color: colors.warn }}>
                   Remove
                 </Text>

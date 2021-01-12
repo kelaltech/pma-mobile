@@ -1,46 +1,63 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useEffect, useState } from 'react';
-import { Image, PermissionsAndroid, Pressable, Text, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  PermissionsAndroid,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { colors } from '../../../../assets/styles/colors';
 import { textStyles } from '../../../../assets/styles/text-styles';
 import Button from '../../../_shared/button/button';
 
 const PhotoUploader = (props: any) => {
-  const [allImg, setAllImg] = useState<string[]>([]);
+  const [allImg, setAllImg] = useState<
+    {
+      didCancel: boolean;
+      errorCode: any;
+      errorMessage: string;
+      base64: string;
+      uri: string;
+      width: number;
+      height: number;
+      fileSize: number;
+      type: string;
+      fileName: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     AsyncStorage.getItem('images')
       .then((getData) => {
-        const bil = JSON.parse(getData || '');
-        setAllImg(bil);
-        console.log('bil', bil.length);
+        const storedImage = JSON.parse(getData || '[]');
+        setAllImg(storedImage);
+        props.onChange(storedImage);
       })
       .catch((err) => console.error('Get images Error', err));
-
-    console.log('lenth', allImg.length);
-    if (allImg.length !== 0) props.onChange(allImg);
   }, []);
 
-  const removeImg = (id?: string) => {
-    if (id) {
-      if (id !== '0') {
-        const updateImgs = allImg.slice(allImg.indexOf(id, 1));
-        setAllImg(updateImgs);
-
-        AsyncStorage.setItem('images', JSON.stringify(updateImgs));
-      } else {
-        const updateImgs = allImg.slice(1);
-        setAllImg(updateImgs);
-
-        AsyncStorage.setItem('images', JSON.stringify(updateImgs));
-      }
-    } else {
-      AsyncStorage.getAllKeys()
-        .then((keys) => AsyncStorage.multiRemove(keys))
-        .then(() => alert('success'));
-      setAllImg([]);
-    }
+  const removeImg = (id?: number) => {
+    Alert.alert('Delete File!', 'Are you sure you want to Delete the file', [
+      {
+        text: 'Yes',
+        style: 'default',
+        onPress: () => {
+          if (id !== undefined) {
+            const updateImgs = [
+              ...allImg.slice(0, id),
+              ...allImg.slice(id + 1),
+            ];
+            setAllImg(updateImgs);
+            props.onChange(updateImgs);
+            AsyncStorage.setItem('images', JSON.stringify(updateImgs));
+          }
+        },
+      },
+      { text: 'No', style: 'cancel' },
+    ]);
   };
 
   const openCamera = async () => {
@@ -76,6 +93,7 @@ const PhotoUploader = (props: any) => {
             includeBase64: true,
           },
           (res: any) => {
+            // console.log('res', res)
             if (res) {
               const imageFile = [...allImg, res];
               setAllImg(imageFile);
@@ -108,18 +126,18 @@ const PhotoUploader = (props: any) => {
         >
           {allImg.map((img, key) => (
             <View key={key} style={{ flexDirection: 'column' }}>
-              {/* <Image
+              <Image
                 source={{ uri: `data:image/jpeg;base64,${img.base64}` }}
                 style={{
                   width: 140,
                   height: 100,
                   marginLeft: key % 2 === 0 ? 0 : 24,
                 }}
-              /> */}
+              />
 
               <Pressable
                 android_ripple={{ color: colors.accent }}
-                onPressOut={() => removeImg(key.toString())}
+                onPressOut={() => removeImg(key)}
                 style={{
                   marginBottom: 12,
                   width: 140,

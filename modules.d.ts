@@ -6,3 +6,4 @@ declare module '*.svg' {
 }
 
 declare module 'react-native-image-picker';
+declare module 'react-native-mime-types'
