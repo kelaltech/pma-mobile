@@ -67,22 +67,18 @@ const ReportAdd = () => {
     console.log('files', allFile.length);
     console.log('image', allImg.length);
     console.log('units', unitData);
-    try {
-      addReport({
-        variables: {
-          input: {
-            project_id: projectId,
-            files: allFile,
-            photos: allImg,
-            reportUnits: unitData,
-          },
+    addReport({
+      variables: {
+        input: {
+          project_id: projectId,
+          files: allFile,
+          photos: allImg,
+          reportUnits: unitData,
         },
-      })
-        .then((res) => console.log(res))
-        .catch((err) => Alert.alert('error', err));
-    } catch (err) {
-      console.log('Mutaion Error: ', err);
-    }
+      },
+    })
+      .then((res) => console.log('res', res))
+      .catch((err) => console.error('error', err));
   };
 
   return (

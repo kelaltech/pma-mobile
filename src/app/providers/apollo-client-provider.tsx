@@ -6,13 +6,12 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { createHttpLink } from '@apollo/client/link/http';
 import AsyncStorage from '@react-native-community/async-storage';
+import { createUploadLink } from 'apollo-upload-client';
 import React, { PropsWithChildren } from 'react';
 import Config from 'react-native-config';
-import { createUploadLink } from 'apollo-upload-client';
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: Config.GRAPHQL_URL || 'http://localhost:4000/graphql',
   fetch,
 });
