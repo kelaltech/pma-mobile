@@ -58,12 +58,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 export const apolloClient = new ApolloClient({
-  link: ApolloLink.from([
-    authLink,
-    errorLink,
-    httpLink,
-    // createUploadLink({})
-  ]),
+  link: authLink.concat(errorLink).concat(httpLink),
   cache: new InMemoryCache(),
   defaultOptions: {
     query: { fetchPolicy: 'cache-first' },

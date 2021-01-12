@@ -28,6 +28,7 @@ query ReportDetail($reportId: ID!) {
           }
         }
       }
+      
       reportUnits {
         id
 
