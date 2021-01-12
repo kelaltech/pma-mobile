@@ -153,6 +153,8 @@ const ReportAdd = () => {
               <FileUploader
                 onChange={(newVal: DocumentPickerResponse[]) => {
                   newVal.map((fileVal) => {
+                    // console.log(newVal.length)
+                    // console.log('fileval',fileVal)
                     const file = generateRNFile(
                       fileVal?.uri,
                       ` file-${Date.now()}`

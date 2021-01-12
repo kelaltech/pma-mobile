@@ -94,7 +94,8 @@ const PhotoUploader = (props: any) => {
           },
           (res: any) => {
             // console.log('res', res)
-            if (res) {
+            // res.didCancel()
+            if (res && !res.didCancel) {
               const imageFile = [...allImg, res];
               setAllImg(imageFile);
               // console.log(res);

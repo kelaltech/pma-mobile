@@ -46,6 +46,7 @@ const FileUploader = (props: any) => {
               ...allFile.slice(id + 1),
             ];
             setAllFile(updateFile);
+            console.log(updateFile);
             props.onChange(updateFile);
             AsyncStorage.setItem('files', JSON.stringify(updateFile));
           }
@@ -76,7 +77,7 @@ const FileUploader = (props: any) => {
         console.warn('File not Picked');
       }
     } catch (err) {
-      console.warn(err);
+      console.log(err);
     }
   };
 
