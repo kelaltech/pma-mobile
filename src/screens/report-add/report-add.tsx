@@ -69,10 +69,8 @@ const ReportAdd = () => {
       photos: allImg,
       reportUnits: unitData,
     };
-    console.log('addReport input:', JSON.stringify(input, null, 2));
     addReport({ variables: { input }, fetchPolicy: 'no-cache' })
       .then((response) => {
-        console.log('addReport response:', JSON.stringify(response, null, 2));
         if (response.data?.report.createReport?.id) {
           clearDraft();
           navigation.navigate('MyReports');
