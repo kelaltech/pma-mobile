@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import AsyncStorage from '@react-native-community/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
 import DocumentPicker, {
   DocumentPickerResponse,
@@ -8,78 +9,81 @@ import { colors } from '../../../../assets/styles/colors';
 import { textStyles } from '../../../../assets/styles/text-styles';
 import Button from '../../../_shared/button/button';
 
-const FileUploader = (props: any) => {
-  useEffect(() => {
-    AsyncStorage.getItem('files')
-      .then((getData) => {
-        const storedFiles = JSON.parse(getData || '[]');
-        setAllFile(storedFiles);
-        props.onChange(storedFiles);
-      })
-      .catch((err) => console.log('Get Files Error: ', err));
-    getFiles();
-  }, []);
-
+const FileUploader = ({
+  onChange,
+}: {
+  onChange: (newDocuments: DocumentPickerResponse[]) => void;
+}) => {
   const [allFile, setAllFile] = useState<DocumentPickerResponse[]>([]);
 
-  const getFiles = async () => {
-    try {
-      const getData = await AsyncStorage.getItem('files');
-      if (getData !== null) {
-        const storedFiles = JSON.parse(getData);
-        setAllFile(storedFiles);
-      }
-    } catch (err) {
-      console.log('Get image Error', err);
-    }
-  };
+  useEffect(() => {
+    AsyncStorage.getItem('files')
+      .then((storedStr) => {
+        const stored = JSON.parse(storedStr || '[]');
+        setAllFile(stored);
+        onChange(stored);
+      })
+      .catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to fetch documents: ${e?.message || 'unknown error'}`
+        )
+      );
+  }, [onChange]);
 
-  const removeFile = async (id?: number) => {
-    Alert.alert('Delete File!', 'Are you sure you want to Delete the file', [
-      {
-        text: 'Yes',
-        style: 'default',
-        onPress: () => {
-          if (id !== undefined) {
-            const updateFile = [
-              ...allFile.slice(0, id),
-              ...allFile.slice(id + 1),
-            ];
-            setAllFile(updateFile);
-            console.log(updateFile);
-            props.onChange(updateFile);
-            AsyncStorage.setItem('files', JSON.stringify(updateFile));
-          }
-        },
-      },
-      { text: 'No', style: 'cancel' },
-    ]);
-  };
+  const removeFile = useCallback(
+    (index: number) => {
+      Alert.alert(
+        'Remove Confirmation',
+        'Are you sure you want to remove this file?',
+        [
+          { text: 'No', style: 'cancel' },
+          {
+            text: 'Yes',
+            style: 'default',
+            onPress: () => {
+              const updatedDocuments = [
+                ...allFile.slice(0, index),
+                ...allFile.slice(index + 1),
+              ];
+              setAllFile(updatedDocuments);
+              onChange(updatedDocuments);
+              AsyncStorage.setItem(
+                'files',
+                JSON.stringify(updatedDocuments)
+              ).catch((e) =>
+                Alert.alert(
+                  'Error :(',
+                  `Unable to remove document: ${e?.message || 'unknown error'}`
+                )
+              );
+            },
+          },
+        ]
+      );
+    },
+    [allFile, onChange]
+  );
 
-  const setFile = async () => {
-    try {
-      const file = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.allFiles],
-      });
-      if (file) {
-        file.map((val) => {
-          const data = [...allFile, val];
-          setAllFile(data);
-          // console.log(data);
-          try {
-            AsyncStorage.setItem('files', JSON.stringify(data));
-          } catch (err) {
-            console.log('File Upload Error: ', err);
-          }
-          props.onChange(data);
-        });
-      } else {
-        console.warn('File not Picked');
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const setFile = useCallback(() => {
+    DocumentPicker.pickMultiple({
+      type: [DocumentPicker.types.allFiles],
+    })
+      .then((files) => {
+        if (files) {
+          const newDocuments = [...allFile, ...files];
+          setAllFile(newDocuments);
+          onChange(newDocuments);
+          return AsyncStorage.setItem('files', JSON.stringify(newDocuments));
+        }
+      })
+      .catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to save document: ${e?.message || 'unknown error'}`
+        )
+      );
+  }, [allFile, onChange]);
 
   return (
     <View>
@@ -91,7 +95,8 @@ const FileUploader = (props: any) => {
               style={{ flexDirection: 'row', paddingVertical: 12 }}
             >
               <Text style={[{ ...textStyles.medium, color: colors.dark1 }]}>
-                {upload.name} {'  '}
+                {upload.name}
+                {'  '}
               </Text>
               <Pressable onPress={() => removeFile(key)}>
                 <Text style={{ ...textStyles.medium, color: colors.warn }}>
@@ -104,8 +109,7 @@ const FileUploader = (props: any) => {
       ) : (
         <View>
           <Text style={{ alignSelf: 'center', paddingVertical: 12 }}>
-            {' '}
-            No Files{' '}
+            No document selected yet.
           </Text>
         </View>
       )}

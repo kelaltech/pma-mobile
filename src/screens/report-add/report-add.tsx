@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
 import { ReactNativeFile } from 'apollo-upload-client';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Text, TextInput, View } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import * as mime from 'react-native-mime-types';
@@ -19,67 +20,91 @@ import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
 import { addReportStyle } from './report-add-style';
 
-const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; //TODO GET PROJECT ID FROM GLOBAL STATE
+const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; // TODO: GET PROJECT ID FROM GLOBAL STATE
 
 const ReportAdd = () => {
-  const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
-
   const { error, loading, data, refetch } = useReportGetQuery({
     variables: { projectId },
     fetchPolicy: 'cache-and-network',
   });
+  const sections = useMemo(() => data?.project.getProject?.sections || [], [
+    data,
+  ]);
 
-  const clone = () => {
-    data?.project.getProject?.sections?.map((item) => {
-      item?.sectionItems?.map((units) => {
-        units?.units?.map((u) => {
-          setUnitData([
-            ...unitData,
-            { unitId: u?.id || '', planned: 0, executed: 0 },
-          ]);
-        });
-      });
-    });
-  };
+  const [allImg, setAllImg] = useState<{ uri?: string }[]>([]);
+  const [allFile, setAllFile] = useState<{ uri?: string }[]>([]);
 
+  const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
   useEffect(() => {
-    clone();
-  }, [data]);
+    const _reportUnits: ReportUnitCreateInput[] = [];
+    for (const section of sections) {
+      for (const item of section?.sectionItems || []) {
+        for (const unit of item?.units || []) {
+          _reportUnits.push({ unitId: unit?.id!, executed: 0, planned: 0 });
+        }
+      }
+    }
+    setUnitData(_reportUnits);
+  }, [sections]);
 
-  const sections = data?.project.getProject?.sections;
+  const clearDraft = useCallback(() => {
+    // TODO: clear async storage
+  }, []);
 
-  const [allFile, setAllFile] = useState<any[]>([]);
-  const [allImg, setAllImg] = useState<any[]>([]);
-
-  const [addReport] = useReportAddMutation();
-
-  const generateRNFile = (uri: any, name: any) => {
+  const getReactNativeFile = useCallback((uri?: string, name?: string) => {
     return uri
-      ? new ReactNativeFile({
-          uri,
-          type: mime.lookup(uri) || 'image',
-          name,
-        })
+      ? new ReactNativeFile({ uri, type: mime.lookup(uri) || 'image', name })
       : null;
-  };
+  }, []);
+  const navigation = useNavigation();
+  const [addReport] = useReportAddMutation();
+  const handleSubmit = useCallback(() => {
+    const input = {
+      project_id: projectId,
+      files: allFile,
+      photos: allImg,
+      reportUnits: unitData,
+    };
+    console.log('addReport input:', JSON.stringify(input, null, 2));
+    addReport({ variables: { input } })
+      .then((response) => {
+        if (response.data?.report.createReport?.id) {
+          clearDraft();
+          navigation.navigate('MyReports');
+        } else {
+          throw response.errors?.length
+            ? response.errors[0]
+            : new Error('No data');
+        }
+      })
+      .catch((e) => Alert.alert('Error :(', e?.message || 'Unknown error'));
+  }, [addReport, allFile, allImg, clearDraft, navigation, unitData]);
 
-  const handleSubmit = () => {
-    console.log('files', allFile.length);
-    console.log('image', allImg.length);
-    console.log('units', unitData);
-    addReport({
-      variables: {
-        input: {
-          project_id: projectId,
-          files: allFile,
-          photos: allImg,
-          reportUnits: unitData,
-        },
-      },
-    })
-      .then((res) => console.log('res', res))
-      .catch((err) => console.error('error', err));
-  };
+  const photosOnChange = useCallback(
+    (newPhotos: { uri?: string; fileName?: string }[]) => {
+      setAllImg(
+        newPhotos
+          .map(
+            (newPhoto) => getReactNativeFile(newPhoto.uri, newPhoto.fileName)!
+          )
+          .filter((d) => d !== null)
+      );
+    },
+    [getReactNativeFile]
+  );
+  const documentsOnChange = useCallback(
+    (newDocuments: DocumentPickerResponse[]) => {
+      setAllFile(
+        newDocuments
+          .map(
+            (newDocument) =>
+              getReactNativeFile(newDocument.uri, newDocument.name)!
+          )
+          .filter((d) => d !== null)
+      );
+    },
+    [getReactNativeFile]
+  );
 
   return (
     <>
@@ -99,76 +124,43 @@ const ReportAdd = () => {
             <Text
               style={[
                 textStyles.small,
-                {
-                  color: '#5A5A5A',
-                  paddingBottom: 12,
-                },
+                { color: colors.dark1, paddingBottom: 12 },
               ]}
             >
               For {data?.project.getProject?.name}
             </Text>
             <View
-              style={{
-                borderBottomColor: '#EFF1F1',
-                borderBottomWidth: 2,
-              }}
+              style={{ borderBottomColor: colors.light2, borderBottomWidth: 2 }}
             />
           </View>
           {(sections || []).map((section, key) => (
             <View key={key}>
               <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
-                {' '}
-                Photos{' '}
+                Photos
               </Text>
-
-              <PhotoUploader
-                onChange={(newVal: any[]) => {
-                  newVal.map((imgVal) => {
-                    const image = generateRNFile(
-                      imgVal.uri,
-                      `image-${Date.now()}`
-                    );
-                    setAllImg([...allImg, image]);
-                  });
-                }}
-              />
+              <PhotoUploader onChange={photosOnChange} />
 
               <View
                 style={{
                   paddingTop: 12,
-                  borderBottomColor: '#EFF1F1',
+                  borderBottomColor: colors.light2,
                   borderBottomWidth: 2,
                 }}
               />
 
               <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
-                {' '}
-                Documents{' '}
+                Documents
               </Text>
-
-              <FileUploader
-                onChange={(newVal: DocumentPickerResponse[]) => {
-                  newVal.map((fileVal) => {
-                    // console.log(newVal.length)
-                    // console.log('fileval',fileVal)
-                    const file = generateRNFile(
-                      fileVal?.uri,
-                      ` file-${Date.now()}`
-                    );
-                    setAllFile([...allFile, file]);
-                  });
-                }}
-              />
+              <FileUploader onChange={documentsOnChange} />
 
               <View
                 style={{
                   paddingVertical: 12,
-                  borderBottomColor: '#EFF1F1',
+                  borderBottomColor: colors.light2,
                   borderBottomWidth: 2,
                 }}
               />
               <Text style={[textStyles.h5, { paddingTop: 12 }]}>
-                {' '}
                 {section?.name}
               </Text>
               {(section?.sectionItems || []).map((item) => (
@@ -189,25 +181,20 @@ const ReportAdd = () => {
                         ]}
                       >
                         Amount: {(unit?.quantity || 0) * (unit?.rate || 0)}{' '}
-                        {'    '}
                         To-Date: {unit?.toDate}
                       </Text>
                       <View style={{ flexDirection: 'row', paddingRight: 12 }}>
                         <TextInput
+                          // value={unitData[key].planned.toString() ? '' : unitData[key].planned.toString()}
                           keyboardType="numeric"
-                          placeholder={'Planned'}
+                          placeholder={'Executed'}
                           onChangeText={(val) => {
                             setUnitData(
                               unitData.map((u) => {
                                 if (u.unitId === unit?.id) {
-                                  return {
-                                    ...u,
-                                    planned: Number(val),
-                                  };
+                                  return { ...u, executed: Number(val) };
                                 } else {
-                                  return {
-                                    ...u,
-                                  };
+                                  return { ...u };
                                 }
                               })
                             );
@@ -217,27 +204,25 @@ const ReportAdd = () => {
                         <Text
                           style={[
                             textStyles.large,
-                            { alignSelf: 'center', color: colors.dark1 },
+                            {
+                              alignSelf: 'center',
+                              color: colors.dark1,
+                              paddingHorizontal: 8,
+                            },
                           ]}
                         >
-                          {'  '} / {'  '}
+                          /
                         </Text>
                         <TextInput
-                          // value={unitData[key].planned.toString() ? '' : unitData[key].planned.toString()}
                           keyboardType="numeric"
-                          placeholder={'Executed'}
+                          placeholder={'Planned'}
                           onChangeText={(val) => {
                             setUnitData(
                               unitData.map((u) => {
                                 if (u.unitId === unit?.id) {
-                                  return {
-                                    ...u,
-                                    executed: Number(val),
-                                  };
+                                  return { ...u, planned: Number(val) };
                                 } else {
-                                  return {
-                                    ...u,
-                                  };
+                                  return { ...u };
                                 }
                               })
                             );
@@ -256,7 +241,6 @@ const ReportAdd = () => {
         <View style={{ margin: 24 }}>
           <Button
             pressableProps={{ style: { alignSelf: 'flex-end' } }}
-            // onPress={() => { }}
             onPress={handleSubmit}
           >
             Submit
