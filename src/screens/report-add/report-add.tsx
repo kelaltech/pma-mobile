@@ -236,19 +236,126 @@ const ReportAdd = () => {
                       </View>
                     </View>
                   ))}
+                  <View style={{ flexDirection: 'row', paddingTop: 12 }}>
+                    <Text style={{ color: colors.dark1 }}>
+                      {' '}
+                      Total Planned:{' '}
+                    </Text>
+                    <Text> 0 </Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', paddingTop: 12 }}>
+                    <Text style={{ color: colors.dark1 }}>
+                      {' '}
+                      Total Executed:{' '}
+                    </Text>
+                    <Text> 0 </Text>
+                  </View>
                 </View>
               ))}
+
+              <View
+                style={{
+                  borderBottomColor: colors.light2,
+                  borderBottomWidth: 2,
+                  paddingTop: 24,
+                }}
+              />
+
+              <View style={{ paddingTop: 24 }}>
+                <Text style={{ paddingBottom: 12, ...textStyles.small }}>
+                  Current Work Activity:
+                </Text>
+                <TextInput
+                  style={{
+                    backgroundColor: colors.light2,
+                    borderRadius: 8,
+                    justifyContent: 'flex-start',
+                  }}
+                  numberOfLines={5}
+                  multiline={true}
+                />
+                <Text style={{ paddingVertical: 12, ...textStyles.small }}>
+                  Major Problems:
+                </Text>
+                <TextInput
+                  style={{
+                    backgroundColor: colors.light2,
+                    borderRadius: 8,
+                    justifyContent: 'flex-start',
+                  }}
+                  numberOfLines={5}
+                  multiline={true}
+                />
+              </View>
             </View>
           ))}
-        </View>
 
-        <View style={{ margin: 24 }}>
-          <Button
-            pressableProps={{ style: { alignSelf: 'flex-end' } }}
-            onPress={handleSubmit}
-          >
-            Submit
-          </Button>
+          <View
+            style={{
+              borderBottomColor: colors.light2,
+              borderBottomWidth: 2,
+              paddingTop: 24,
+            }}
+          />
+          <View style={{ paddingTop: 24 }}>
+            <Text style={{ ...textStyles.h5 }}> Grand Total </Text>
+            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
+              <Text style={{ color: colors.dark1, ...textStyles.large }}>
+                {' '}
+                AMOUNT:{' '}
+              </Text>
+              <Text style={{ ...textStyles.large }}>ETB 8,484,097.20 </Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
+              <Text style={{ color: colors.dark1, ...textStyles.large }}>
+                {' '}
+                TO-DATE:{' '}
+              </Text>
+              <Text style={{ ...textStyles.large }}>ETB 8,484,097.20 </Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
+              <Text style={{ color: colors.dark1, ...textStyles.large }}>
+                {' '}
+                PLANNED:{' '}
+              </Text>
+              <Text style={{ ...textStyles.large }}>100 </Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
+              <Text style={{ color: colors.dark1, ...textStyles.large }}>
+                {' '}
+                EXECUTED:{' '}
+              </Text>
+              <Text style={{ ...textStyles.large }}>100 </Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
+              <Text style={{ color: colors.dark1, ...textStyles.large }}>
+                {' '}
+                EXECUTED IN %:{' '}
+              </Text>
+              <Text style={{ ...textStyles.large }}> 41.54% </Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
+              <Text style={{ color: colors.dark1, ...textStyles.large }}>
+                {' '}
+                ATTACHED{' '}
+              </Text>
+              <Text style={{ ...textStyles.large }}>
+                {' '}
+                {allImg.length} Photos + {allFile.length} Documents{' '}
+              </Text>
+            </View>
+          </View>
+
+          {/* Submit button */}
+
+          <View style={{ margin: 24 }}>
+            <Button
+              pressableProps={{ style: { alignSelf: 'flex-end' } }}
+              onPress={handleSubmit}
+            >
+              Submit
+            </Button>
+          </View>
         </View>
       </Handle>
     </>
