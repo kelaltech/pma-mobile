@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { ReactNativeFile } from 'apollo-upload-client';
 import dayjs from 'dayjs';
@@ -48,7 +49,7 @@ const ReportAdd = () => {
   }, [sections]);
 
   const clearDraft = useCallback(() => {
-    // TODO: clear async storage
+    AsyncStorage.multiRemove(['images', 'files']);
   }, []);
 
   const getReactNativeFile = useCallback((uri?: string, name?: string) => {

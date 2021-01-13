@@ -54,3 +54,16 @@ query ReportDetail($reportId: ID!) {
     }
   }
 }
+
+query getcomment($reportId: ID!) {
+  comment {
+    byReportId(id: $reportId){
+      content
+      user{
+        id 
+        name
+        email
+      }      
+    }
+  }
+}
