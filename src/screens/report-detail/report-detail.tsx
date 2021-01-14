@@ -787,8 +787,15 @@ const ReportDetail = ({ route }: any) => {
                 }}
               >
                 <View style={{ flexDirection: 'row' }}>
-                  <Text>{comment.user.name}</Text>
-                  <Text>{dayjs(comment.created_at).toString()}</Text>
+                  <Text style={{ ...textStyles.h6, paddingBottom: 12 }}>
+                    {comment.user.name}
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                  <Text>
+                    {dayjs(comment.created_at)
+                      .format('MMM, DD, YYYY')
+                      .toString()}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -796,7 +803,15 @@ const ReportDetail = ({ route }: any) => {
                     borderBottomWidth: 2,
                   }}
                 />
-                <Text>{comment.content}</Text>
+                <Text
+                  style={{
+                    paddingTop: 12,
+                    ...textStyles.large,
+                    color: colors.dark1,
+                  }}
+                >
+                  {comment.content}
+                </Text>
               </View>
             ))}
           </View>
