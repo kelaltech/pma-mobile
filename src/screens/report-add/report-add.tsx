@@ -8,6 +8,7 @@ import { Alert, Text, TextInput, View } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import * as mime from 'react-native-mime-types';
 import {
+  ReportCreateInput,
   ReportUnitCreateInput,
   useReportAddMutation,
   useReportGetQuery,
@@ -48,6 +49,9 @@ const ReportAdd = () => {
     setUnitData(_reportUnits);
   }, [sections]);
 
+  const [currentWorkActivity, setCurrentWorkActivity] = useState('');
+  const [majorProblems, setMajorProblems] = useState('');
+
   const clearDraft = useCallback(() => {
     AsyncStorage.multiRemove(['images', 'files']);
   }, []);
@@ -64,12 +68,30 @@ const ReportAdd = () => {
   const navigation = useNavigation();
   const [addReport] = useReportAddMutation();
   const handleSubmit = useCallback(() => {
-    const input = {
+    const input: ReportCreateInput = {
       project_id: projectId,
       files: allFile,
       photos: allImg,
       reportUnits: unitData,
+      current_work_problems: currentWorkActivity,
+      major_problems: majorProblems,
     };
+
+    let isReady = true;
+    for (const unit of input.reportUnits) {
+      if (unit.executed === undefined || !unit.planned === undefined) {
+        isReady = false;
+        break;
+      }
+    }
+    if (!input.current_work_problems || !input.major_problems) {
+      isReady = false;
+    }
+    if (!isReady) {
+      Alert.alert('Validation Error', 'Missing value for required input(s).');
+      return;
+    }
+
     addReport({ variables: { input }, fetchPolicy: 'no-cache' })
       .then((response) => {
         if (response.data?.report.createReport?.id) {
@@ -82,7 +104,16 @@ const ReportAdd = () => {
         }
       })
       .catch((e) => Alert.alert('Error :(', e?.message || 'Unknown error'));
-  }, [addReport, allFile, allImg, clearDraft, navigation, unitData]);
+  }, [
+    addReport,
+    allFile,
+    allImg,
+    clearDraft,
+    currentWorkActivity,
+    majorProblems,
+    navigation,
+    unitData,
+  ]);
 
   const photosOnChange = useCallback(
     (newPhotos: { uri?: string; fileName?: string }[]) => {
@@ -206,7 +237,7 @@ const ReportAdd = () => {
                       <View style={[styles.dualFields, { marginBottom: 24 }]}>
                         <TextInput
                           keyboardType="numeric"
-                          placeholder="Executed"
+                          placeholder="Executed *"
                           onChangeText={(val) => {
                             setUnitData(
                               unitData.map((u) => {
@@ -225,7 +256,7 @@ const ReportAdd = () => {
 
                         <TextInput
                           keyboardType="numeric"
-                          placeholder={'Planned'}
+                          placeholder="Planned *"
                           onChangeText={(val) => {
                             setUnitData(
                               unitData.map((u) => {
@@ -279,38 +310,36 @@ const ReportAdd = () => {
               ))}
 
               <View style={[styles.hr, { marginBottom: 24 }]} />
-
-              <Text
-                style={[
-                  textStyles.small,
-                  { marginBottom: 4, color: colors.dark0 },
-                ]}
-              >
-                Current Work Activity:
-              </Text>
-
-              <TextInput
-                numberOfLines={4}
-                multiline={true}
-                style={[styles.input, { height: 'auto', marginBottom: 24 }]}
-              />
-
-              <Text
-                style={[
-                  textStyles.small,
-                  { marginBottom: 4, color: colors.dark0 },
-                ]}
-              >
-                Major Problems:
-              </Text>
-
-              <TextInput
-                numberOfLines={4}
-                multiline={true}
-                style={[styles.input, { height: 'auto', marginBottom: 24 }]}
-              />
             </View>
           ))}
+
+          <Text
+            style={[textStyles.small, { marginBottom: 4, color: colors.dark0 }]}
+          >
+            Current Work Activity: *
+          </Text>
+
+          <TextInput
+            value={currentWorkActivity}
+            onChangeText={setCurrentWorkActivity}
+            numberOfLines={4}
+            multiline={true}
+            style={[styles.input, { height: 'auto', marginBottom: 24 }]}
+          />
+
+          <Text
+            style={[textStyles.small, { marginBottom: 4, color: colors.dark0 }]}
+          >
+            Major Problems: *
+          </Text>
+
+          <TextInput
+            value={majorProblems}
+            onChangeText={setMajorProblems}
+            numberOfLines={4}
+            multiline={true}
+            style={[styles.input, { height: 'auto', marginBottom: 24 }]}
+          />
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
 

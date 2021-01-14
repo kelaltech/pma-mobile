@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useMyReportsQuery } from '../../../gen/apollo-types';
 import { colors } from '../../assets/styles/colors';
@@ -19,6 +19,9 @@ const MyReports = () => {
     variables: { projectId },
     fetchPolicy: 'cache-and-network',
   });
+  useEffect(() => {
+    refetch({ projectId });
+  }, [refetch]);
 
   return (
     <>

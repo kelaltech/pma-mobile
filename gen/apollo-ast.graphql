@@ -202,7 +202,7 @@ type PrivilegeScopeResponse {
 }
 type CheckinsQuery {
   """Retrieves list of checkins for a user."""
-  getCheckins(userId: ID!): [Checkin]!
+  getCheckins(userId: ID!, limit: Int = 10, offset: Int = 0): [Checkin]!
   """Retrieves an Account by its ID."""
   getCheckin(id: ID!): Checkin
 }
@@ -384,7 +384,7 @@ type ReportQuery {
   """Retrieves a report by its ID."""
   getReport(id: ID!): Report
   """Get report by project id"""
-  byProjectId(id: ID!): [Report!]!
+  byProjectId(id: ID!, limit: Int = 10, offset: Int = 0): [Report!]!
 }
 type ReportMutation {
   """Create a report."""
@@ -398,6 +398,8 @@ type Report {
   project: Project!
   photos: [File]
   files: [File]
+  major_problems: String
+  current_work_problems: String
   reportUnits: [ReportUnit]
   created_at: Date!
   updated_at: Date!
@@ -414,14 +416,19 @@ input ReportCreateInput {
   files: [Upload!]!
   photos: [Upload!]!
   reportUnits: [ReportUnitCreateInput!]!
+  major_problems: String
+  current_work_problems: String
 }
 input ReportUpdateInput {
+  reportId: ID!
   approved_by: ID!
-  newFiles: [Upload!]!
+  newFiles: [Upload]
   removedFiles: [ID]
-  newPhotos: [Upload!]!
+  newPhotos: [Upload]
   removedPhotos: [ID]
   reportUnits: [ReportUnitCreateInput!]!
+  major_problems: String
+  current_work_problems: String
 }
 type ReportUnitQuery {
   """Retrieves a report by its ID."""
