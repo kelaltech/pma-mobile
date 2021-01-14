@@ -53,17 +53,28 @@ query ReportDetail($reportId: ID!) {
       }
     }
   }
-}
 
-query getcomment($reportId: ID!) {
-  comment {
-    byReportId(id: $reportId) {
+  comment{
+    byReportId(id: $reportId){
+      id
+      created_at
       content
-      user {
+      report{
         id
+      }
+      user{
         name
         email
+        id        
       }
     }
+  }
+}
+
+mutation createComment($input: CommentCreateInput!){
+  comment{
+   createComment(input: $input){
+    id
+  }
   }
 }

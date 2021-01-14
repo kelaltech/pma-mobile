@@ -1,11 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
-import React from 'react';
-import { Image, Linking, Pressable, Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useReportDetailQuery } from '../../../gen/apollo-types';
+import React, { useCallback, useState } from 'react';
+import { Alert, Image, Linking, Pressable, Text, View } from 'react-native';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import {
+  useReportDetailQuery,
+  useCreateCommentMutation,
+} from '../../../gen/apollo-types';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
+import Button from '../_shared/button/button';
 import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 
@@ -17,8 +21,29 @@ const ReportDetail = ({ route }: any) => {
     fetchPolicy: 'cache-and-network',
   });
 
+  const [addComment] = useCreateCommentMutation();
+
+  const [commentVal, setCommentVal] = useState<string>();
+
   const report = data?.report.byId;
   const reportUnits = report?.reportUnits;
+  const comments = data?.comment.byReportId;
+
+  const handleComment = () => {
+    const input = {
+      content: commentVal || '',
+      reportId: reportId,
+      userId: '613ba210-651a-469c-a690-ad6ecc76a6d5', //change this, fetch from backend
+    };
+
+    addComment({ variables: { input }, fetchPolicy: 'no-cache' })
+      .then((res) => {
+        console.log('add comment response', res);
+      })
+      .catch((err) => {
+        Alert.alert('Error :(', err?.message || 'Unknown error');
+      });
+  };
 
   return (
     <>
@@ -662,6 +687,76 @@ const ReportDetail = ({ route }: any) => {
               </Text>
             </Pressable>
           ))}
+        </View>
+
+        <View>
+          <Text
+            style={{ ...textStyles.h2, paddingLeft: 24, paddingBottom: 24 }}
+          >
+            Comment
+          </Text>
+          <View>
+            {comments?.map((comment) => (
+              <View
+                key={comment.id}
+                style={{
+                  marginHorizontal: 24,
+                  marginBottom: 24,
+                  paddingTop: 32,
+                  paddingHorizontal: 24,
+                  paddingBottom: 8,
+                  borderRadius: 8,
+                  backgroundColor: colors.light0,
+                }}
+              >
+                <View style={{ flexDirection: 'row' }}>
+                  <Text>{comment.user.name}</Text>
+                  <Text>{dayjs(comment.created_at).diff(dayjs())}</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomColor: colors.light2,
+                    borderBottomWidth: 2,
+                  }}
+                />
+                <Text>{comment.content}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View
+            style={{
+              marginHorizontal: 24,
+              marginBottom: 24,
+              paddingTop: 32,
+              paddingHorizontal: 24,
+              paddingBottom: 8,
+              borderRadius: 8,
+              backgroundColor: colors.light0,
+            }}
+          >
+            <Text style={{ paddingBottom: 12, ...textStyles.small }}>
+              Add your comment:
+            </Text>
+            <TextInput
+              style={{
+                backgroundColor: colors.light2,
+                borderRadius: 8,
+                justifyContent: 'flex-start',
+              }}
+              numberOfLines={5}
+              multiline={true}
+              onChangeText={(val) => setCommentVal(val)}
+            />
+            <View style={{ margin: 24 }}>
+              <Button
+                pressableProps={{ style: { alignSelf: 'flex-end' } }}
+                onPress={handleComment}
+              >
+                Comment
+              </Button>
+            </View>
+          </View>
         </View>
       </Handle>
     </>
