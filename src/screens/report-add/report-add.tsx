@@ -36,24 +36,121 @@ const ReportAdd = () => {
   const [allImg, setAllImg] = useState<{ uri?: string }[]>([]);
   const [allFile, setAllFile] = useState<{ uri?: string }[]>([]);
 
-  const [unitData, setUnitData] = useState<ReportUnitCreateInput[]>([]);
+  const [reportUnits, _setReportUnits] = useState<ReportUnitCreateInput[]>([]);
+  const setReportUnits = useCallback(
+    (_reportUnits: typeof reportUnits) => {
+      _setReportUnits(_reportUnits);
+      AsyncStorage.setItem(
+        'reportUnits',
+        JSON.stringify(_reportUnits)
+      ).catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to save progress: ${e?.message || 'unknown error'}`
+        )
+      );
+    },
+    [reportUnits]
+  );
+
+  const [currentWorkActivity, _setCurrentWorkActivity] = useState('');
+  const setCurrentWorkActivity = useCallback(
+    (_currentWorkActivity: typeof currentWorkActivity) => {
+      _setCurrentWorkActivity(_currentWorkActivity);
+      AsyncStorage.setItem(
+        'currentWorkActivity',
+        _currentWorkActivity
+      ).catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to save currentWorkActivity: ${e?.message || 'unknown error'}`
+        )
+      );
+    },
+    [currentWorkActivity]
+  );
+
+  const [majorProblems, _setMajorProblems] = useState('');
+  const setMajorProblems = useCallback(
+    (_majorProblems: typeof majorProblems) => {
+      _setMajorProblems(_majorProblems);
+      AsyncStorage.setItem('majorProblems', _majorProblems).catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to save majorProblems: ${e?.message || 'unknown error'}`
+        )
+      );
+    },
+    [majorProblems]
+  );
+
   useEffect(() => {
-    const _reportUnits: ReportUnitCreateInput[] = [];
-    for (const section of sections) {
-      for (const item of section?.sectionItems || []) {
-        for (const unit of item?.units || []) {
-          _reportUnits.push({ unitId: unit?.id!, executed: 0, planned: 0 });
+    AsyncStorage.getItem('reportUnits')
+      .then((_reportUnitsStr) => {
+        const reportUnitsFromDraft: ReportUnitCreateInput[] = JSON.parse(
+          _reportUnitsStr || '[]'
+        );
+        const _reportUnits: ReportUnitCreateInput[] = [];
+        for (const section of sections) {
+          for (const item of section?.sectionItems || []) {
+            for (const unit of item?.units || []) {
+              const reportUnitFromDraft = reportUnitsFromDraft.find(
+                (u) => u.unitId === unit?.id
+              );
+              _reportUnits.push({
+                unitId: unit?.id!,
+                executed: reportUnitFromDraft?.executed || 0,
+                planned: reportUnitFromDraft?.planned || 0,
+              });
+            }
+          }
         }
-      }
-    }
-    setUnitData(_reportUnits);
+        _setReportUnits(_reportUnits);
+      })
+      .catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to fetch progress: ${e?.message || 'unknown error'}`
+        )
+      );
+
+    AsyncStorage.getItem('currentWorkActivity')
+      .then((_currentWorkActivity) => {
+        if (_currentWorkActivity) {
+          _setCurrentWorkActivity(_currentWorkActivity);
+        }
+      })
+      .catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to fetch currentWorkActivity: ${
+            e?.message || 'unknown error'
+          }`
+        )
+      );
+
+    AsyncStorage.getItem('majorProblems')
+      .then((_majorProblems) => {
+        if (_majorProblems) {
+          _setMajorProblems(_majorProblems);
+        }
+      })
+      .catch((e) =>
+        Alert.alert(
+          'Error :(',
+          `Unable to fetch majorProblems: ${e?.message || 'unknown error'}`
+        )
+      );
   }, [sections]);
 
-  const [currentWorkActivity, setCurrentWorkActivity] = useState('');
-  const [majorProblems, setMajorProblems] = useState('');
-
   const clearDraft = useCallback(() => {
-    AsyncStorage.multiRemove(['images', 'files']);
+    AsyncStorage.multiRemove([
+      'images',
+      'files',
+      'reportUnits',
+      'currentWorkActivity',
+      'majorProblems',
+    ]);
   }, []);
 
   const getReactNativeFile = useCallback((uri?: string, name?: string) => {
@@ -72,7 +169,7 @@ const ReportAdd = () => {
       project_id: projectId,
       files: allFile,
       photos: allImg,
-      reportUnits: unitData,
+      reportUnits: reportUnits,
       current_work_problems: currentWorkActivity,
       major_problems: majorProblems,
     };
@@ -112,7 +209,7 @@ const ReportAdd = () => {
     currentWorkActivity,
     majorProblems,
     navigation,
-    unitData,
+    reportUnits,
   ]);
 
   const photosOnChange = useCallback(
@@ -236,11 +333,13 @@ const ReportAdd = () => {
 
                       <View style={[styles.dualFields, { marginBottom: 24 }]}>
                         <TextInput
-                          keyboardType="numeric"
-                          placeholder="Executed *"
+                          value={(
+                            reportUnits.find((u) => u.unitId === unit?.id)
+                              ?.executed || 0
+                          ).toString()}
                           onChangeText={(val) => {
-                            setUnitData(
-                              unitData.map((u) => {
+                            setReportUnits(
+                              reportUnits.map((u) => {
                                 if (u.unitId === unit?.id) {
                                   return { ...u, executed: Number(val) };
                                 } else {
@@ -249,17 +348,21 @@ const ReportAdd = () => {
                               })
                             );
                           }}
+                          keyboardType="numeric"
+                          placeholder="Executed *"
                           style={[styles.input, { flex: 1 }]}
                         />
 
                         <Text style={styles.dualFieldsSeparator}>/</Text>
 
                         <TextInput
-                          keyboardType="numeric"
-                          placeholder="Planned *"
+                          value={(
+                            reportUnits.find((u) => u.unitId === unit?.id)
+                              ?.planned || 0
+                          ).toString()}
                           onChangeText={(val) => {
-                            setUnitData(
-                              unitData.map((u) => {
+                            setReportUnits(
+                              reportUnits.map((u) => {
                                 if (u.unitId === unit?.id) {
                                   return { ...u, planned: Number(val) };
                                 } else {
@@ -268,6 +371,8 @@ const ReportAdd = () => {
                               })
                             );
                           }}
+                          keyboardType="numeric"
+                          placeholder="Planned *"
                           style={[styles.input, { flex: 1 }]}
                         />
                       </View>
@@ -281,8 +386,8 @@ const ReportAdd = () => {
                       {(item?.units || []).reduce(
                         (p, c) =>
                           p +
-                          (unitData.find((u) => u.unitId === c?.id)?.executed ||
-                            0),
+                          (reportUnits.find((u) => u.unitId === c?.id)
+                            ?.executed || 0),
                         0
                       )}
                     </Text>
@@ -300,8 +405,8 @@ const ReportAdd = () => {
                       {(item?.units || []).reduce(
                         (p, c) =>
                           p +
-                          (unitData.find((u) => u.unitId === c?.id)?.planned ||
-                            0),
+                          (reportUnits.find((u) => u.unitId === c?.id)
+                            ?.planned || 0),
                         0
                       )}
                     </Text>
@@ -409,7 +514,7 @@ const ReportAdd = () => {
           >
             PLANNED:{' '}
             <Text style={{ color: colors.dark0 }}>
-              ETB {unitData.reduce((p, c) => p + c.planned, 0)}
+              ETB {reportUnits.reduce((p, c) => p + c.planned, 0)}
             </Text>
           </Text>
 
@@ -421,7 +526,7 @@ const ReportAdd = () => {
           >
             EXECUTED:{' '}
             <Text style={{ color: colors.dark0 }}>
-              ETB {unitData.reduce((p, c) => p + c.executed, 0)}
+              ETB {reportUnits.reduce((p, c) => p + c.executed, 0)}
             </Text>
           </Text>
 
@@ -434,8 +539,8 @@ const ReportAdd = () => {
             EXECUTED IN %:{' '}
             <Text style={{ color: colors.dark0 }}>
               {Math.round(
-                ((unitData.reduce((p, c) => p + c.executed, 0) || 0) /
-                  (unitData.reduce((p, c) => p + c.planned, 0) || 1)) *
+                ((reportUnits.reduce((p, c) => p + c.executed, 0) || 0) /
+                  (reportUnits.reduce((p, c) => p + c.planned, 0) || 1)) *
                   100
               )}
               %
