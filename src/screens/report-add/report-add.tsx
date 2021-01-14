@@ -19,7 +19,7 @@ import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
-import { addReportStyle } from './report-add-style';
+import { styles } from './report-add-style';
 
 const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; // TODO: GET PROJECT ID FROM GLOBAL STATE
 
@@ -117,81 +117,96 @@ const ReportAdd = () => {
       <Handle
         {...{ error, loading, data, refetch: () => refetch({ projectId }) }}
       >
-        <View style={addReportStyle.topPart}>
-          <Text style={{ ...textStyles.h1, color: colors.light0 }}>
+        <View style={styles.bg}>
+          <Text style={styles.title}>
             {dayjs().format('ddd, MMM DD, YYYY')}
           </Text>
         </View>
 
-        <View style={addReportStyle.formContainer}>
-          <View>
-            <Text
-              style={[
-                textStyles.small,
-                { color: colors.dark1, paddingBottom: 12 },
-              ]}
-            >
-              For {data?.project.getProject?.name}
-            </Text>
-            <View
-              style={{ borderBottomColor: colors.light2, borderBottomWidth: 2 }}
-            />
-          </View>
-          {(sections || []).map((section, key) => (
-            <View key={key}>
-              <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
-                Photos
-              </Text>
-              <PhotoUploader onChange={photosOnChange} />
+        <View style={styles.card}>
+          <Text
+            style={[
+              textStyles.small,
+              { color: colors.dark1, marginBottom: 24 },
+            ]}
+          >
+            For “{data?.project.getProject?.name}” in “
+            {/* TODO: get lot info */ 'Lot 1: Bale, East Bale Robe'}”
+          </Text>
 
-              <View
-                style={{
-                  paddingTop: 12,
-                  borderBottomColor: colors.light2,
-                  borderBottomWidth: 2,
-                }}
-              />
+          <View style={[styles.hr, { marginBottom: 24 }]} />
 
-              <Text style={[textStyles.h5, { paddingVertical: 12 }]}>
-                Documents
-              </Text>
-              <FileUploader onChange={documentsOnChange} />
+          <Text
+            style={[textStyles.h5, { marginBottom: 24, color: colors.dark0 }]}
+          >
+            Photos
+          </Text>
 
-              <View
-                style={{
-                  paddingVertical: 12,
-                  borderBottomColor: colors.light2,
-                  borderBottomWidth: 2,
-                }}
-              />
-              <Text style={[textStyles.h5, { paddingTop: 12 }]}>
+          <PhotoUploader onChange={photosOnChange} />
+
+          <View style={[styles.hr, { marginBottom: 24 }]} />
+
+          <Text
+            style={[textStyles.h5, { marginBottom: 24, color: colors.dark0 }]}
+          >
+            Documents
+          </Text>
+
+          <FileUploader onChange={documentsOnChange} />
+
+          <View style={[styles.hr, { marginBottom: 24 }]} />
+
+          {(sections || []).map((section) => (
+            <View key={section?.id}>
+              <Text
+                style={[
+                  textStyles.h5,
+                  { marginBottom: 24, color: colors.dark0 },
+                ]}
+              >
                 {section?.name}
               </Text>
-              {(section?.sectionItems || []).map((item) => (
+
+              {(section?.sectionItems || []).map((item, itemIndex) => (
                 <View key={item?.id}>
-                  <Text style={[textStyles.h6, { paddingVertical: 12 }]}>
-                    {key + 1}. {item?.name}
+                  <Text
+                    style={[
+                      textStyles.h6,
+                      {
+                        marginBottom: 24,
+                        textTransform: 'uppercase',
+                        color: colors.dark0,
+                      },
+                    ]}
+                  >
+                    {itemIndex + 1}. {item?.name}
                   </Text>
 
                   {(item?.units || []).map((unit) => (
                     <View key={unit?.id}>
-                      <Text style={[textStyles.small, { paddingBottom: 12 }]}>
-                        {unit?.name} [{unit?.unit}]:
-                      </Text>
                       <Text
                         style={[
                           textStyles.small,
-                          { paddingBottom: 12, color: colors.dark1 },
+                          { marginBottom: 4, color: colors.dark0 },
                         ]}
                       >
-                        Amount: {(unit?.quantity || 0) * (unit?.rate || 0)}{' '}
-                        To-Date: {unit?.toDate}
+                        {unit?.name} [{unit?.unit}]:
                       </Text>
-                      <View style={{ flexDirection: 'row', paddingRight: 12 }}>
+
+                      <Text
+                        style={[
+                          textStyles.small,
+                          { marginBottom: 4, color: colors.dark1 },
+                        ]}
+                      >
+                        Amount: ETB {(unit?.quantity || 0) * (unit?.rate || 0)};{' '}
+                        To-Date: ETB {unit?.toDate}
+                      </Text>
+
+                      <View style={[styles.dualFields, { marginBottom: 24 }]}>
                         <TextInput
-                          // value={unitData[key].planned.toString() ? '' : unitData[key].planned.toString()}
                           keyboardType="numeric"
-                          placeholder={'Executed'}
+                          placeholder="Executed"
                           onChangeText={(val) => {
                             setUnitData(
                               unitData.map((u) => {
@@ -203,20 +218,11 @@ const ReportAdd = () => {
                               })
                             );
                           }}
-                          style={[textStyles.large, addReportStyle.textInput]}
+                          style={[styles.input, { flex: 1 }]}
                         />
-                        <Text
-                          style={[
-                            textStyles.large,
-                            {
-                              alignSelf: 'center',
-                              color: colors.dark1,
-                              paddingHorizontal: 8,
-                            },
-                          ]}
-                        >
-                          /
-                        </Text>
+
+                        <Text style={styles.dualFieldsSeparator}>/</Text>
+
                         <TextInput
                           keyboardType="numeric"
                           placeholder={'Planned'}
@@ -231,16 +237,15 @@ const ReportAdd = () => {
                               })
                             );
                           }}
-                          style={[textStyles.large, addReportStyle.textInput]}
+                          style={[styles.input, { flex: 1 }]}
                         />
                       </View>
                     </View>
                   ))}
-                  <View style={{ flexDirection: 'row', paddingTop: 12 }}>
-                    <Text style={{ color: colors.dark1 }}>
-                      Total Executed:{' '}
-                    </Text>
-                    <Text>
+
+                  <Text style={[textStyles.small, { color: colors.dark1 }]}>
+                    Total Executed:{' '}
+                    <Text style={{ color: colors.dark0 }}>
                       ETB{' '}
                       {(item?.units || []).reduce(
                         (p, c) =>
@@ -250,10 +255,16 @@ const ReportAdd = () => {
                         0
                       )}
                     </Text>
-                  </View>
-                  <View style={{ flexDirection: 'row', paddingTop: 12 }}>
-                    <Text style={{ color: colors.dark1 }}>Total Planned: </Text>
-                    <Text>
+                  </Text>
+
+                  <Text
+                    style={[
+                      textStyles.small,
+                      { color: colors.dark1, marginBottom: 24 },
+                    ]}
+                  >
+                    Total Planned:{' '}
+                    <Text style={{ color: colors.dark0 }}>
                       ETB{' '}
                       {(item?.units || []).reduce(
                         (p, c) =>
@@ -263,151 +274,166 @@ const ReportAdd = () => {
                         0
                       )}
                     </Text>
-                  </View>
+                  </Text>
                 </View>
               ))}
 
-              <View
-                style={{
-                  borderBottomColor: colors.light2,
-                  borderBottomWidth: 2,
-                  paddingTop: 24,
-                }}
+              <View style={[styles.hr, { marginBottom: 24 }]} />
+
+              <Text
+                style={[
+                  textStyles.small,
+                  { marginBottom: 4, color: colors.dark0 },
+                ]}
+              >
+                Current Work Activity:
+              </Text>
+
+              <TextInput
+                numberOfLines={4}
+                multiline={true}
+                style={[styles.input, { height: 'auto', marginBottom: 24 }]}
               />
 
-              <View style={{ paddingTop: 24 }}>
-                <Text style={{ paddingBottom: 12, ...textStyles.small }}>
-                  Current Work Activity:
-                </Text>
-                <TextInput
-                  style={{
-                    backgroundColor: colors.light2,
-                    borderRadius: 8,
-                    elevation: 1,
-                  }}
-                  numberOfLines={5}
-                  multiline={true}
-                />
-                <Text style={{ paddingVertical: 12, ...textStyles.small }}>
-                  Major Problems:
-                </Text>
-                <TextInput
-                  style={{
-                    backgroundColor: colors.light2,
-                    borderRadius: 8,
-                    elevation: 1,
-                  }}
-                  numberOfLines={5}
-                  multiline={true}
-                />
-              </View>
+              <Text
+                style={[
+                  textStyles.small,
+                  { marginBottom: 4, color: colors.dark0 },
+                ]}
+              >
+                Major Problems:
+              </Text>
+
+              <TextInput
+                numberOfLines={4}
+                multiline={true}
+                style={[styles.input, { height: 'auto', marginBottom: 24 }]}
+              />
             </View>
           ))}
 
-          <View
-            style={{
-              borderBottomColor: colors.light2,
-              borderBottomWidth: 2,
-              paddingTop: 24,
-            }}
-          />
-          <View style={{ paddingTop: 24 }}>
-            <Text style={{ ...textStyles.h5 }}>Grand Total </Text>
-            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
-              <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                AMOUNT:{' '}
-              </Text>
-              <Text style={{ ...textStyles.large }}>
-                ETB{' '}
-                {sections.reduce(
-                  (p1, c1) =>
-                    p1 +
-                    (c1?.sectionItems || []).reduce(
-                      (p2, c2) =>
-                        p2 +
-                        (c2?.units || []).reduce(
-                          (p3, c3) =>
-                            p3 + (c3?.quantity || 0) * (c3?.rate || 0),
-                          0
-                        ),
-                      0
-                    ),
-                  0
-                )}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
-              <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                TO-DATE:{' '}
-              </Text>
-              <Text style={{ ...textStyles.large }}>
-                ETB{' '}
-                {sections.reduce(
-                  (p1, c1) =>
-                    p1 +
-                    (c1?.sectionItems || []).reduce(
-                      (p2, c2) =>
-                        p2 +
-                        (c2?.units || []).reduce(
-                          (p3, c3) => p3 + (c3?.toDate || 0),
-                          0
-                        ),
-                      0
-                    ),
-                  0
-                )}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
-              <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                PLANNED:{' '}
-              </Text>
-              <Text style={{ ...textStyles.large }}>
-                ETB {unitData.reduce((p, c) => p + c.planned, 0)}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
-              <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                EXECUTED:{' '}
-              </Text>
-              <Text style={{ ...textStyles.large }}>
-                ETB {unitData.reduce((p, c) => p + c.executed, 0)}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
-              <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                EXECUTED IN %:{' '}
-              </Text>
-              <Text style={{ ...textStyles.large }}>
-                {Math.round(
-                  ((unitData.reduce((p, c) => p + c.executed, 0) || 0) /
-                    (unitData.reduce((p, c) => p + c.planned, 0) || 1)) *
-                    100
-                )}
-                %
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', paddingTop: 24 }}>
-              <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                ATTACHED:{' '}
-              </Text>
-              <Text style={{ ...textStyles.large }}>
-                {allImg.length} Photo{allImg.length === 1 ? '' : 's'} +{' '}
-                {allFile.length} Document{allImg.length === 1 ? '' : 's'}
-              </Text>
-            </View>
-          </View>
+          <View style={[styles.hr, { marginBottom: 24 }]} />
 
-          {/* Submit button */}
+          <Text
+            style={[textStyles.h5, { marginBottom: 24, color: colors.dark0 }]}
+          >
+            GRAND TOTAL
+          </Text>
 
-          <View style={{ margin: 24 }}>
-            <Button
-              pressableProps={{ style: { alignSelf: 'flex-end' } }}
-              onPress={handleSubmit}
-            >
-              Submit
-            </Button>
-          </View>
+          <Text
+            style={[
+              textStyles.large,
+              { marginBottom: 24, color: colors.dark1 },
+            ]}
+          >
+            AMOUNT:{' '}
+            <Text style={{ color: colors.dark0 }}>
+              ETB{' '}
+              {sections.reduce(
+                (p1, c1) =>
+                  p1 +
+                  (c1?.sectionItems || []).reduce(
+                    (p2, c2) =>
+                      p2 +
+                      (c2?.units || []).reduce(
+                        (p3, c3) => p3 + (c3?.quantity || 0) * (c3?.rate || 0),
+                        0
+                      ),
+                    0
+                  ),
+                0
+              )}
+            </Text>
+          </Text>
+
+          <Text
+            style={[
+              textStyles.large,
+              { marginBottom: 24, color: colors.dark1 },
+            ]}
+          >
+            TO-DATE:{' '}
+            <Text style={{ color: colors.dark0 }}>
+              ETB{' '}
+              {sections.reduce(
+                (p1, c1) =>
+                  p1 +
+                  (c1?.sectionItems || []).reduce(
+                    (p2, c2) =>
+                      p2 +
+                      (c2?.units || []).reduce(
+                        (p3, c3) => p3 + (c3?.toDate || 0),
+                        0
+                      ),
+                    0
+                  ),
+                0
+              )}
+            </Text>
+          </Text>
+
+          <Text
+            style={[
+              textStyles.large,
+              { marginBottom: 24, color: colors.dark1 },
+            ]}
+          >
+            PLANNED:{' '}
+            <Text style={{ color: colors.dark0 }}>
+              ETB {unitData.reduce((p, c) => p + c.planned, 0)}
+            </Text>
+          </Text>
+
+          <Text
+            style={[
+              textStyles.large,
+              { marginBottom: 24, color: colors.dark1 },
+            ]}
+          >
+            EXECUTED:{' '}
+            <Text style={{ color: colors.dark0 }}>
+              ETB {unitData.reduce((p, c) => p + c.executed, 0)}
+            </Text>
+          </Text>
+
+          <Text
+            style={[
+              textStyles.large,
+              { marginBottom: 24, color: colors.dark1 },
+            ]}
+          >
+            EXECUTED IN %:{' '}
+            <Text style={{ color: colors.dark0 }}>
+              {Math.round(
+                ((unitData.reduce((p, c) => p + c.executed, 0) || 0) /
+                  (unitData.reduce((p, c) => p + c.planned, 0) || 1)) *
+                  100
+              )}
+              %
+            </Text>
+          </Text>
+
+          <Text
+            style={[
+              textStyles.large,
+              { marginBottom: 24, color: colors.dark1 },
+            ]}
+          >
+            ATTACHED:{' '}
+            <Text style={{ color: colors.dark0 }}>
+              {allImg.length} Photo{allImg.length === 1 ? '' : 's'} +{' '}
+              {allFile.length} Document{allImg.length === 1 ? '' : 's'}
+            </Text>
+          </Text>
+
+          <View style={[styles.hr, { marginBottom: 24 }]} />
+
+          <Button
+            pressableProps={{ style: { alignSelf: 'flex-end' } }}
+            onPress={handleSubmit}
+          >
+            Send Report
+          </Button>
         </View>
       </Handle>
     </>

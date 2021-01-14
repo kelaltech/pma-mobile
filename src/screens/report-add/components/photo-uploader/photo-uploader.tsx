@@ -104,43 +104,52 @@ const PhotoUploader = ({
 
   return (
     <View>
-      {allImg && allImg.length !== 0 ? (
+      {allImg?.length ? (
         <View
           style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
             alignItems: 'center',
+            marginRight: -24,
           }}
         >
-          {allImg.map((img, key) => (
-            <View key={key} style={{ flexDirection: 'column' }}>
+          {allImg.map((photo, index) => (
+            <View
+              key={`${index}-${photo.uri}`}
+              style={{
+                flex: 1,
+                minWidth: `${100 / 3}%`,
+                maxWidth: `${100 / 3}%`,
+              }}
+            >
               <Image
-                source={{ uri: `data:image/jpeg;base64,${img.base64}` }}
+                source={{ uri: `data:image/jpeg;base64,${photo.base64}` }}
                 style={{
-                  width: 140,
-                  height: 100,
-                  marginLeft: key % 2 === 0 ? 0 : 24,
+                  height: 70,
+                  marginRight: 24,
                 }}
               />
 
               <Pressable
                 android_ripple={{ color: colors.accent }}
-                onPressOut={() => removeImg(key)}
+                onPressOut={() => removeImg(index)}
                 style={{
-                  marginBottom: 12,
-                  width: 140,
-                  marginLeft: key % 2 === 0 ? 0 : 24,
-                  alignSelf: 'center',
-                  height: 30,
+                  marginBottom: 24,
+                  marginRight: 24,
+                  height: 21,
                   backgroundColor: colors.warn,
                 }}
               >
                 <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: 'white',
-                    ...textStyles.large,
-                  }}
+                  style={[
+                    textStyles.small,
+                    {
+                      alignSelf: 'center',
+                      ...textStyles.large,
+                      lineHeight: 24,
+                      color: colors.light0,
+                    },
+                  ]}
                 >
                   Delete
                 </Text>
@@ -149,16 +158,20 @@ const PhotoUploader = ({
           ))}
         </View>
       ) : (
-        <Text style={{ alignSelf: 'center', paddingBottom: 12 }}>
-          No photo captured yet.
+        <Text
+          style={[textStyles.small, { marginBottom: 24, color: colors.dark1 }]}
+        >
+          No photos captured yet.
         </Text>
       )}
 
       <Button
         onPress={openCamera}
-        pressableProps={{ style: { alignSelf: 'flex-start' } }}
+        pressableProps={{
+          style: { alignSelf: 'flex-start', marginBottom: 24 },
+        }}
       >
-        + Add Photo
+        + Add a photo
       </Button>
     </View>
   );

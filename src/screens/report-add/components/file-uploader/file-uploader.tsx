@@ -87,37 +87,46 @@ const FileUploader = ({
 
   return (
     <View>
-      {allFile && allFile.length !== 0 ? (
-        <View>
-          {allFile.map((upload, key) => (
-            <View
-              key={key}
-              style={{ flexDirection: 'row', paddingVertical: 12 }}
+      {allFile?.length ? (
+        allFile.map((document, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              marginBottom: index < allFile.length - 1 ? 12 : 24,
+            }}
+          >
+            <Text
+              style={[
+                textStyles.medium,
+                { flex: 1, flexWrap: 'wrap', color: colors.dark1 },
+              ]}
             >
-              <Text style={[{ ...textStyles.medium, color: colors.dark1 }]}>
-                {upload.name}
-                {'  '}
+              {document.name}
+            </Text>
+
+            <Pressable onPress={() => removeFile(index)}>
+              <Text style={[textStyles.medium, { color: colors.dark1 }]}>
+                {'  '}(<Text style={[{ color: colors.warn }]}>Remove</Text>)
               </Text>
-              <Pressable onPress={() => removeFile(key)}>
-                <Text style={{ ...textStyles.medium, color: colors.warn }}>
-                  Remove
-                </Text>
-              </Pressable>
-            </View>
-          ))}
-        </View>
+            </Pressable>
+          </View>
+        ))
       ) : (
-        <View>
-          <Text style={{ alignSelf: 'center', paddingVertical: 12 }}>
-            No document selected yet.
-          </Text>
-        </View>
+        <Text
+          style={[textStyles.small, { marginBottom: 24, color: colors.dark1 }]}
+        >
+          No documents selected yet.
+        </Text>
       )}
+
       <Button
         onPress={setFile}
-        pressableProps={{ style: { alignSelf: 'flex-start' } }}
+        pressableProps={{
+          style: { alignSelf: 'flex-start', marginBottom: 24 },
+        }}
       >
-        + Add Files
+        + Upload documents
       </Button>
     </View>
   );
