@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Image, Linking, Pressable, Text, View } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import {
-  useReportDetailQuery,
   useCreateCommentMutation,
+  useReportDetailQuery,
 } from '../../../gen/apollo-types';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
@@ -323,9 +323,11 @@ const ReportDetail = ({ route }: any) => {
                               width: 42,
                             }}
                           >
-                            {((reportUnit?.executed || 0) /
-                              (reportUnit?.planned || 1)) *
-                              100}
+                            {Math.round(
+                              ((reportUnit?.executed || 0) /
+                                (reportUnit?.planned || 1)) *
+                                100
+                            )}
                           </Text>
                         </View>
                       );

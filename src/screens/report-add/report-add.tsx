@@ -238,17 +238,31 @@ const ReportAdd = () => {
                   ))}
                   <View style={{ flexDirection: 'row', paddingTop: 12 }}>
                     <Text style={{ color: colors.dark1 }}>
-                      {' '}
-                      Total Planned:{' '}
-                    </Text>
-                    <Text> 0 </Text>
-                  </View>
-                  <View style={{ flexDirection: 'row', paddingTop: 12 }}>
-                    <Text style={{ color: colors.dark1 }}>
-                      {' '}
                       Total Executed:{' '}
                     </Text>
-                    <Text> 0 </Text>
+                    <Text>
+                      ETB{' '}
+                      {(item?.units || []).reduce(
+                        (p, c) =>
+                          p +
+                          (unitData.find((u) => u.unitId === c?.id)?.executed ||
+                            0),
+                        0
+                      )}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', paddingTop: 12 }}>
+                    <Text style={{ color: colors.dark1 }}>Total Planned: </Text>
+                    <Text>
+                      ETB{' '}
+                      {(item?.units || []).reduce(
+                        (p, c) =>
+                          p +
+                          (unitData.find((u) => u.unitId === c?.id)?.planned ||
+                            0),
+                        0
+                      )}
+                    </Text>
                   </View>
                 </View>
               ))}
@@ -269,7 +283,7 @@ const ReportAdd = () => {
                   style={{
                     backgroundColor: colors.light2,
                     borderRadius: 8,
-                    justifyContent: 'flex-start',
+                    elevation: 1,
                   }}
                   numberOfLines={5}
                   multiline={true}
@@ -281,7 +295,7 @@ const ReportAdd = () => {
                   style={{
                     backgroundColor: colors.light2,
                     borderRadius: 8,
-                    justifyContent: 'flex-start',
+                    elevation: 1,
                   }}
                   numberOfLines={5}
                   multiline={true}
@@ -298,50 +312,88 @@ const ReportAdd = () => {
             }}
           />
           <View style={{ paddingTop: 24 }}>
-            <Text style={{ ...textStyles.h5 }}> Grand Total </Text>
+            <Text style={{ ...textStyles.h5 }}>Grand Total </Text>
             <View style={{ flexDirection: 'row', paddingTop: 24 }}>
               <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                {' '}
                 AMOUNT:{' '}
               </Text>
-              <Text style={{ ...textStyles.large }}>ETB 8,484,097.20 </Text>
+              <Text style={{ ...textStyles.large }}>
+                ETB{' '}
+                {sections.reduce(
+                  (p1, c1) =>
+                    p1 +
+                    (c1?.sectionItems || []).reduce(
+                      (p2, c2) =>
+                        p2 +
+                        (c2?.units || []).reduce(
+                          (p3, c3) =>
+                            p3 + (c3?.quantity || 0) * (c3?.rate || 0),
+                          0
+                        ),
+                      0
+                    ),
+                  0
+                )}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', paddingTop: 24 }}>
               <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                {' '}
                 TO-DATE:{' '}
               </Text>
-              <Text style={{ ...textStyles.large }}>ETB 8,484,097.20 </Text>
+              <Text style={{ ...textStyles.large }}>
+                ETB{' '}
+                {sections.reduce(
+                  (p1, c1) =>
+                    p1 +
+                    (c1?.sectionItems || []).reduce(
+                      (p2, c2) =>
+                        p2 +
+                        (c2?.units || []).reduce(
+                          (p3, c3) => p3 + (c3?.toDate || 0),
+                          0
+                        ),
+                      0
+                    ),
+                  0
+                )}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', paddingTop: 24 }}>
               <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                {' '}
                 PLANNED:{' '}
               </Text>
-              <Text style={{ ...textStyles.large }}>100 </Text>
+              <Text style={{ ...textStyles.large }}>
+                ETB {unitData.reduce((p, c) => p + c.planned, 0)}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', paddingTop: 24 }}>
               <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                {' '}
                 EXECUTED:{' '}
               </Text>
-              <Text style={{ ...textStyles.large }}>100 </Text>
+              <Text style={{ ...textStyles.large }}>
+                ETB {unitData.reduce((p, c) => p + c.executed, 0)}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', paddingTop: 24 }}>
               <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                {' '}
                 EXECUTED IN %:{' '}
               </Text>
-              <Text style={{ ...textStyles.large }}> 41.54% </Text>
+              <Text style={{ ...textStyles.large }}>
+                {Math.round(
+                  ((unitData.reduce((p, c) => p + c.executed, 0) || 0) /
+                    (unitData.reduce((p, c) => p + c.planned, 0) || 1)) *
+                    100
+                )}
+                %
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', paddingTop: 24 }}>
               <Text style={{ color: colors.dark1, ...textStyles.large }}>
-                {' '}
-                ATTACHED{' '}
+                ATTACHED:{' '}
               </Text>
               <Text style={{ ...textStyles.large }}>
-                {' '}
-                {allImg.length} Photos + {allFile.length} Documents{' '}
+                {allImg.length} Photo{allImg.length === 1 ? '' : 's'} +{' '}
+                {allFile.length} Document{allImg.length === 1 ? '' : 's'}
               </Text>
             </View>
           </View>
