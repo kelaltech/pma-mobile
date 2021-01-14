@@ -1,12 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, Image, Linking, Pressable, Text, View } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import {
+  CommentCreateInput,
   useCreateCommentMutation,
   useReportDetailQuery,
 } from '../../../gen/apollo-types';
+import { useAuth } from '../../app/contexts/auth-context';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
 import Button from '../_shared/button/button';
@@ -21,29 +23,32 @@ const ReportDetail = ({ route }: any) => {
     fetchPolicy: 'cache-and-network',
   });
 
+  const [commentVal, setCommentVal] = useState('');
   const [addComment] = useCreateCommentMutation();
-
-  const [commentVal, setCommentVal] = useState<string>();
 
   const report = data?.report.byId;
   const reportUnits = report?.reportUnits;
   const comments = data?.comment.byReportId;
 
-  const handleComment = () => {
-    const input = {
+  const { account } = useAuth()[0];
+  const handleComment = useCallback(() => {
+    const input: CommentCreateInput = {
       content: commentVal || '',
       reportId: reportId,
-      userId: '613ba210-651a-469c-a690-ad6ecc76a6d5', //change this, fetch from backend
+      userId: account?.id!,
     };
 
     addComment({ variables: { input }, fetchPolicy: 'no-cache' })
-      .then((res) => {
-        console.log('add comment response', res);
+      .then(({ errors }) => {
+        if (errors?.length) {
+          Alert.alert('Error :(', errors[0]?.message || 'Unknown error');
+          return;
+        }
+        setCommentVal('');
+        refetch({ reportId });
       })
-      .catch((err) => {
-        Alert.alert('Error :(', err?.message || 'Unknown error');
-      });
-  };
+      .catch((err) => Alert.alert('Error :(', err?.message || 'Unknown error'));
+  }, [account, addComment, commentVal, refetch, reportId]);
 
   return (
     <>
@@ -414,19 +419,21 @@ const ReportDetail = ({ route }: any) => {
                           width: 42,
                         }}
                       >
-                        {((item?.units?.reduce((p, c) => {
-                          const reportUnit = reportUnits?.find(
-                            (u) => u?.unit?.id === c?.id
-                          );
-                          return p + (reportUnit?.executed || 0);
-                        }, 0) || 0) /
-                          (item?.units?.reduce((p, c) => {
+                        {Math.round(
+                          ((item?.units?.reduce((p, c) => {
                             const reportUnit = reportUnits?.find(
                               (u) => u?.unit?.id === c?.id
                             );
-                            return p + (reportUnit?.planned || 0);
-                          }, 0) || 1)) *
-                          100}
+                            return p + (reportUnit?.executed || 0);
+                          }, 0) || 0) /
+                            (item?.units?.reduce((p, c) => {
+                              const reportUnit = reportUnits?.find(
+                                (u) => u?.unit?.id === c?.id
+                              );
+                              return p + (reportUnit?.planned || 0);
+                            }, 0) || 1)) *
+                            100
+                        )}
                         %
                       </Text>
                     </View>
@@ -582,6 +589,74 @@ const ReportDetail = ({ route }: any) => {
               color: colors.dark0,
             }}
           >
+            Description
+          </Text>
+
+          <View
+            style={{
+              marginBottom: 24,
+              borderBottomColor: colors.light2,
+              borderBottomWidth: 1,
+            }}
+          />
+
+          <Text
+            style={{
+              marginBottom: 4,
+              ...textStyles.small,
+              color: colors.dark1,
+            }}
+          >
+            Current Work Activity:
+          </Text>
+          <Text
+            style={{
+              marginBottom: 24,
+              ...textStyles.small,
+              color: colors.dark0,
+            }}
+          >
+            {report?.current_work_problems || 'n/a'}
+          </Text>
+
+          <Text
+            style={{
+              marginBottom: 4,
+              ...textStyles.small,
+              color: colors.dark1,
+            }}
+          >
+            Major Problems:
+          </Text>
+          <Text
+            style={{
+              marginBottom: 24,
+              ...textStyles.small,
+              color: colors.dark0,
+            }}
+          >
+            {report?.major_problems || 'n/a'}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            marginHorizontal: 24,
+            marginBottom: 24,
+            paddingTop: 32,
+            paddingHorizontal: 24,
+            paddingBottom: 8,
+            borderRadius: 8,
+            backgroundColor: colors.light0,
+          }}
+        >
+          <Text
+            style={{
+              marginBottom: 8,
+              ...textStyles.h3,
+              color: colors.dark0,
+            }}
+          >
             Photos
           </Text>
           <Text
@@ -695,7 +770,7 @@ const ReportDetail = ({ route }: any) => {
           <Text
             style={{ ...textStyles.h2, paddingLeft: 24, paddingBottom: 24 }}
           >
-            Comment
+            Comments
           </Text>
           <View>
             {comments?.map((comment) => (
@@ -713,7 +788,7 @@ const ReportDetail = ({ route }: any) => {
               >
                 <View style={{ flexDirection: 'row' }}>
                   <Text>{comment.user.name}</Text>
-                  <Text>{dayjs(comment.created_at).diff(dayjs())}</Text>
+                  <Text>{dayjs(comment.created_at).toString()}</Text>
                 </View>
                 <View
                   style={{
@@ -741,14 +816,15 @@ const ReportDetail = ({ route }: any) => {
               Add your comment:
             </Text>
             <TextInput
+              value={commentVal}
+              onChangeText={setCommentVal}
+              numberOfLines={4}
+              multiline={true}
               style={{
                 backgroundColor: colors.light2,
                 borderRadius: 8,
                 justifyContent: 'flex-start',
               }}
-              numberOfLines={5}
-              multiline={true}
-              onChangeText={(val) => setCommentVal(val)}
             />
             <View style={{ margin: 24 }}>
               <Button

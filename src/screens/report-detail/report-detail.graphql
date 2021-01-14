@@ -39,6 +39,9 @@ query ReportDetail($reportId: ID!) {
         planned
       }
 
+      current_work_problems
+      major_problems
+
       photos {
         id
 
@@ -57,15 +60,20 @@ query ReportDetail($reportId: ID!) {
   comment {
     byReportId(id: $reportId) {
       id
+
       created_at
       content
-      report {
-        id
-      }
+
       user {
-        name
-        email
         id
+
+        name
+
+        privilege {
+          id
+
+          name
+        }
       }
     }
   }
