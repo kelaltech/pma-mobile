@@ -22,6 +22,7 @@ const project = StyleSheet.create({
     height: 'auto',
     borderRadius: 8,
     backgroundColor: colors.light0,
+    marginBottom: 48,
   },
   displayRow: {
     flexDirection: 'row',

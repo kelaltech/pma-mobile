@@ -1,4 +1,4 @@
-query ProjectDetail($accountId: ID!) {
+query ProjectDetail($accountId: ID!, $projectId: ID!) {
   project {
     getBySiteEngineer(id: $accountId) {
       id
@@ -18,7 +18,17 @@ query ProjectDetail($accountId: ID!) {
       extensionTimeApproved
 
       created_at
-      # TODO: continue here...
+      planned
+      executed
+    }
+  }
+  report {
+    byProjectId(id: $projectId, limit: 1) {
+      reportUnits {
+        executed
+        planned
+        id
+      }
     }
   }
 }
