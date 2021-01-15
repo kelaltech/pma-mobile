@@ -3,17 +3,18 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProjectDetailQuery } from '../../../gen/apollo-types';
+import { useAuth } from '../../app/states/auth/use-auth';
 import { colors } from '../../assets/styles/colors';
 import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 import ProgressBar from '../_shared/progress-bar/progress-bar';
 import styles from './project-detail-style';
 
-const accountId = '613ba210-651a-469c-a690-ad6ecc76a6d5'; // TODO: load from global context
-
 const ProjectDetail = () => {
+  const { account } = useAuth()[0];
+
   const { loading, error, data, refetch } = useProjectDetailQuery({
-    variables: { accountId },
+    variables: { accountId: account?.id || '' },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -24,7 +25,12 @@ const ProjectDetail = () => {
       <Header title="PMA" />
 
       <Handle
-        {...{ loading, error, data, refetch: () => refetch({ accountId }) }}
+        {...{
+          loading,
+          error,
+          data,
+          refetch: () => refetch({ accountId: account?.id || '' }),
+        }}
       >
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{project?.name}</Text>

@@ -254,6 +254,7 @@ type Project {
   planned: Float
   executed: Float
   sections: [Section]
+  lot: Lot
   created_at: Date!
   updated_at: Date!
 }
@@ -261,10 +262,37 @@ input ProjectCreateInput {
   name: String!
   contractor: String!
   location: String!
+  contract_signature_date: Date!
+  site_engineer: AccountInput!
+  contractValueMainAgreement: Float!
+  variationOrder: Float!
+  contractTime: Int!
+  mobilizationTime: Int!
+  intendedCommencementDate: Date!
+  siteHandoverDate: Date!
+  ActualCommencementDate: Date!
+  extensionTimeApproved: Int!
+  sections: [SectionCreateInput!]!
+  lotId: ID!
+  created_at: Date!
+  updated_at: Date!
 }
 input ProjectUpdateInput {
-  name: String
-  contractor: String
+  id: ID!
+  name: String!
+  contractor: String!
+  location: String!
+  contract_signature_date: Date!
+  site_engineer: AccountInput
+  contractValueMainAgreement: Float!
+  variationOrder: Float!
+  contractTime: Int!
+  mobilizationTime: Int!
+  intendedCommencementDate: Date!
+  siteHandoverDate: Date!
+  ActualCommencementDate: Date!
+  extensionTimeApproved: Int!
+  lotId: ID!
 }
 type LotQuery {
   """Retrieves a Lot by its ID."""
@@ -320,12 +348,11 @@ type sectionItem {
 }
 input SectionItemCreateInput {
   name: String!
-  contractor: String!
-  location: String!
+  units: [UnitCreateInput!]!
 }
 input SectionItemUpdateInput {
+  id: ID!
   name: String
-  contractor: String
 }
 type SectionQuery {
   """Retrieves a project by its ID."""
@@ -339,8 +366,7 @@ type SectionMutation {
 }
 input SectionCreateInput {
   name: String!
-  contractor: String!
-  location: String!
+  sectionItems: [SectionItemCreateInput!]!
 }
 input SectionUpdateInput {
   name: String
@@ -373,12 +399,18 @@ type Unit {
 }
 input UnitCreateInput {
   name: String!
-  contractor: String!
-  location: String!
+  quantity: Float!
+  rate: Float!
+  toDate: Float!
+  unit: String!
 }
 input UnitUpdateInput {
-  name: String
-  contractor: String
+  id: ID!
+  name: String!
+  quantity: Float!
+  rate: Float!
+  toDate: Float!
+  unit: String!
 }
 type ReportQuery {
   """Retrieves a report by its ID."""

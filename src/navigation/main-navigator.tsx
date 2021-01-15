@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import { Text } from 'react-native';
+import { withScreenLevelProviders } from '../app/configs/screen-level-providers';
 import { colors } from '../assets/styles/colors';
 import { textStyles } from '../assets/styles/text-styles';
 import CheckIns from '../screens/check-ins/check-ins';
@@ -23,7 +24,7 @@ const MainNavigator = () => {
     >
       <BottomTab.Screen
         name="Project"
-        component={ProjectDetail}
+        component={withScreenLevelProviders(ProjectDetail)}
         options={{
           tabBarIcon: ({ focused }) => (
             <Text
@@ -39,7 +40,7 @@ const MainNavigator = () => {
       />
       <BottomTab.Screen
         name="MyReports"
-        component={MyReports}
+        component={withScreenLevelProviders(MyReports)}
         options={{
           tabBarIcon: ({ focused }) => (
             <Text
@@ -55,7 +56,7 @@ const MainNavigator = () => {
       />
       <BottomTab.Screen
         name="CheckIns"
-        component={CheckIns}
+        component={withScreenLevelProviders(CheckIns)}
         options={{
           tabBarIcon: ({ focused }) => (
             <Text

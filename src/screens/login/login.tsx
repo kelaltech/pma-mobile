@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import { useLoginMutation } from '../../../gen/apollo-types';
-import { useAuth } from '../../app/contexts/auth-context';
+import { useAuth } from '../../app/states/auth/use-auth';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
 import Button from '../_shared/button/button';

@@ -1,0 +1,15 @@
+query MyProjectProvider($accountId: ID!) {
+  project {
+    getBySiteEngineer(id: $accountId) {
+      id
+
+      name
+
+      lot {
+        id
+
+        name
+      }
+    }
+  }
+}
