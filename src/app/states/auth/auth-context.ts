@@ -1,7 +1,6 @@
-import { createContext, useContext } from 'react';
-
-import { Scope } from '../configs/privilege-scopes';
-import { AccountLoginResponse } from '../../../gen/apollo-types';
+import { createContext } from 'react';
+import { AccountLoginResponse } from '../../../../gen/apollo-types';
+import { Scope } from '../../configs/privilege-scopes';
 
 export const authDefault = [
   {
@@ -29,5 +28,3 @@ export type AuthType = typeof authDefault;
 
 const AuthContext = createContext<AuthType>(authDefault);
 export default AuthContext;
-
-export const useAuth = () => useContext(AuthContext);

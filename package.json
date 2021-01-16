@@ -11,7 +11,7 @@
     "android": "run-s codegen \"react-native run-android\"",
     "ios": "run-s codegen \"react-native run-ios\"",
     "test": "jest",
-    "lint": "prettier --write src",
+    "lint": "prettier --write src && eslint . --fix",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch --preserveWatchOutput",
     "apk": "cd android && ./gradlew assembleRelease"

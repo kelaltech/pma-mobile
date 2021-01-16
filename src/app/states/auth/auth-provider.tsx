@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { Scope } from '../configs/privilege-scopes';
-import AuthContext, { authDefault, AuthType } from '../contexts/auth-context';
+import { Scope } from '../../configs/privilege-scopes';
+import AuthContext, { authDefault, AuthType } from './auth-context';
 
 type AuthProviderProps = React.PropsWithChildren<unknown>;
 

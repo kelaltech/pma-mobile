@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import { RouteProp, useRoute } from '@react-navigation/native';
 import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
 import { Alert, Image, Linking, Pressable, Text, View } from 'react-native';
@@ -8,14 +9,17 @@ import {
   useCreateCommentMutation,
   useReportDetailQuery,
 } from '../../../gen/apollo-types';
-import { useAuth } from '../../app/contexts/auth-context';
+import { useAuth } from '../../app/states/auth/use-auth';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
 import Button from '../_shared/button/button';
 import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 
-const ReportDetail = ({ route }: any) => {
+const ReportDetail = () => {
+  const route = useRoute<
+    RouteProp<{ ReportDetail: { reportId: string } }, 'ReportDetail'>
+  >();
   const { reportId } = route.params;
 
   const { loading, error, data, refetch } = useReportDetailQuery({

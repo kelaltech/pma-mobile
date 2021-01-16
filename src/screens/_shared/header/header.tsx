@@ -2,7 +2,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useAuth } from '../../../app/contexts/auth-context';
+import { useAuth } from '../../../app/states/auth/use-auth';
 import BackButton from '../../../assets/icons/back-button.svg';
 import { colors } from '../../../assets/styles/colors';
 import { textStyles } from '../../../assets/styles/text-styles';

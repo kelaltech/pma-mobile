@@ -1,34 +1,40 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
+import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useMyReportsQuery } from '../../../gen/apollo-types';
+import { useMyProject } from '../../app/states/my-project/use-my-project';
 import { colors } from '../../assets/styles/colors';
-import Header from '../_shared/header/header';
-import Handle from '../_shared/handle/handle';
 import { textStyles } from '../../assets/styles/text-styles';
-import dayjs from 'dayjs';
 import Button from '../_shared/button/button';
-
-const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; // TODO: get from global context
+import Handle from '../_shared/handle/handle';
+import Header from '../_shared/header/header';
 
 const MyReports = () => {
   const navigation = useNavigation();
 
+  const { myProject } = useMyProject();
+
   const { loading, error, data, refetch } = useMyReportsQuery({
-    variables: { projectId },
+    variables: { projectId: myProject.id || '' },
     fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
-    refetch({ projectId });
-  }, [refetch]);
+    refetch({ projectId: myProject.id || '' });
+  }, [myProject.id, refetch]);
 
   return (
     <>
       <Header title="PMA" />
 
       <Handle
-        {...{ loading, error, data, refetch: () => refetch({ projectId }) }}
+        {...{
+          loading,
+          error,
+          data,
+          refetch: () => refetch({ projectId: myProject.id || '' }),
+        }}
       >
         <View
           style={{

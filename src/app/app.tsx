@@ -8,8 +8,6 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import { colors } from '../assets/styles/colors';
 import AppNavigator from '../navigation/app-navigator';
-import ApolloClientProvider from './providers/apollo-client-provider';
-import AuthProvider from './providers/auth-provider';
 
 const App = () => {
   useEffect(() => {
@@ -48,11 +46,7 @@ const App = () => {
     <>
       <StatusBar backgroundColor={colors.statusBar} barStyle="light-content" />
 
-      <ApolloClientProvider>
-        <AuthProvider>
-          <AppNavigator />
-        </AuthProvider>
-      </ApolloClientProvider>
+      <AppNavigator />
     </>
   );
 };

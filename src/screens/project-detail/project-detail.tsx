@@ -1,26 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useProjectDetailQuery } from '../../../gen/apollo-types';
+import { useAuth } from '../../app/states/auth/use-auth';
+import { useMyProject } from '../../app/states/my-project/use-my-project';
 import { colors } from '../../assets/styles/colors';
-import Button from '../_shared/button/button';
 import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 import ProgressBar from '../_shared/progress-bar/progress-bar';
 import styles from './project-detail-style';
 
-const accountId = '613ba210-651a-469c-a690-ad6ecc76a6d5'; // TODO: load from global context
-const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe';
 const ProjectDetail = () => {
+  const { account } = useAuth()[0];
+
+  const { myProject } = useMyProject();
+
   const { loading, error, data, refetch } = useProjectDetailQuery({
-    variables: { accountId, projectId },
+    variables: { accountId: account?.id || '', projectId: myProject.id || '' },
     fetchPolicy: 'cache-and-network',
   });
 
   const project = data?.project.getBySiteEngineer;
   const report = data?.report.byProjectId;
-  const [sucks, setSucks] = useState<Number>();
+  const [sumPlanned, setSumPlanned] = useState<number>(1);
+  const [sumExecuted, setSumExecuted] = useState<number>(1);
+
   const TOTAL_AMOUNT_WITH_VAT =
     (project?.contractValueMainAgreement || 0) +
     (project?.variationOrder || 0) +
@@ -33,21 +38,39 @@ const ProjectDetail = () => {
     .add(project?.extensionTimeApproved || 0, 'days')
     .diff(dayjs(project?.intendedCommencementDate), 'month');
 
-  const sumOfLastPlanned = () => {
+  const sumOfLastPlanned = useCallback(() => {
     report?.map((rep) => {
-      console.log(rep.reportUnits);
+      // console.log(rep.reportUnits);
       const sum = rep.reportUnits?.reduce((p, c) => p + (c?.planned || 0), 0);
-      console.log(sum);
-      setSucks(sum);
+
+      setSumPlanned(sum || 1);
     });
-  };
+  }, [report]);
+
+  const sumOfLastExecuted = useCallback(() => {
+    report?.map((rep) => {
+      // console.log(rep.reportUnits);
+      const sum = rep.reportUnits?.reduce((p, c) => p + (c?.executed || 0), 0);
+      setSumExecuted(sum || 1);
+    });
+  }, [report]);
+
+  useEffect(() => {
+    sumOfLastPlanned();
+    sumOfLastExecuted();
+  }, [sumOfLastExecuted, sumOfLastPlanned]);
 
   return (
     <>
       <Header title="PMA" />
 
       <Handle
-        {...{ loading, error, data, refetch: () => refetch({ accountId }) }}
+        {...{
+          loading,
+          error,
+          data,
+          refetch: () => refetch({ accountId: account?.id || '' }),
+        }}
       >
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{project?.name}</Text>
@@ -231,7 +254,7 @@ const ProjectDetail = () => {
               </Text>
               <Text style={styles.value}>
                 {' '}
-                {` ETB `}
+                {' ETB '}
                 {(TOTAL_AMOUNT_WITH_VAT / PROJECT_LENGTH_MONTH).toFixed(2)}
               </Text>
             </View>
@@ -241,18 +264,21 @@ const ProjectDetail = () => {
               </Text>
               <Text style={styles.value}>
                 {' '}
-                {(
-                  (1 / PROJECT_LENGTH_MONTH / TOTAL_AMOUNT_WITH_VAT) *
-                  100
-                ).toFixed(2)}{' '}
-                %
+                {((sumPlanned / TOTAL_AMOUNT_WITH_VAT) * 100).toFixed(2)} %
               </Text>
             </View>
             <View style={[styles.displayRow, { marginBottom: 24 }]}>
               <Text style={[styles.name]}>
                 Percentage of Work Planned To-date:
               </Text>
-              <Text style={[styles.value, { color: colors.warn }]}>TO DO</Text>
+              <Text style={[styles.value]}>
+                {' '}
+                {(
+                  ((project?.planned || 0) / TOTAL_AMOUNT_WITH_VAT) *
+                  100
+                ).toFixed(2)}{' '}
+                %
+              </Text>
             </View>
           </View>
 
@@ -267,15 +293,18 @@ const ProjectDetail = () => {
           <View style={{ marginBottom: 12 }}>
             <View style={[styles.displayRow, { marginBottom: 24 }]}>
               <Text style={[styles.name]}>
-                Amount of Work Executed This Month:{' '}
+                Amount of Work Executed on Last report{' '}
               </Text>
-              <Text style={styles.value}> Cal</Text>
+              <Text style={styles.value}> {` ETB ${sumExecuted}`} </Text>
             </View>
             <View style={[styles.displayRow, { marginBottom: 24 }]}>
               <Text style={[styles.name]}>
-                Percentage of Work Done This Month:{' '}
+                Percentage of Work Executed on Last report:{' '}
               </Text>
-              <Text style={styles.value}> Cal</Text>
+              <Text style={styles.value}>
+                {' '}
+                {((sumExecuted / TOTAL_AMOUNT_WITH_VAT) * 100).toFixed(2)} %
+              </Text>
             </View>
           </View>
 

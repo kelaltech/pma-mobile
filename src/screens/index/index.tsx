@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { useAuth } from '../../app/contexts/auth-context';
+import { useAuth } from '../../app/states/auth/use-auth';
 import Loading from '../_shared/loading/loading';
 
 const Index = () => {

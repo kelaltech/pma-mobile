@@ -7,6 +7,7 @@ import {
   useCheckInAddMutation,
   useCheckInsQuery,
 } from '../../../gen/apollo-types';
+import { useAuth } from '../../app/states/auth/use-auth';
 import MapPin from '../../assets/icons/map-pin.svg';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
@@ -14,11 +15,11 @@ import Handle from '../_shared/handle/handle';
 import Header from '../_shared/header/header';
 import styles from './check-ins-style';
 
-const siteEngineerId = '613ba210-651a-469c-a690-ad6ecc76a6d5'; // TODO: ...
-
 const CheckIns = () => {
+  const { account } = useAuth()[0];
+
   const { loading, data, error, refetch } = useCheckInsQuery({
-    variables: { siteEngineerId },
+    variables: { siteEngineerId: account?.id || '' },
     fetchPolicy: 'cache-and-network',
   });
   const checkins = data?.checkin.getCheckins || [];
@@ -40,7 +41,7 @@ const CheckIns = () => {
                 checkInAdd({
                   variables: {
                     input: {
-                      userId: siteEngineerId,
+                      userId: account?.id || '',
                       location: {
                         latitude: position.coords.latitude.toString(),
                         longitude: position.coords.longitude.toString(),
@@ -50,11 +51,11 @@ const CheckIns = () => {
                 })
                   .then(() => {
                     Alert.alert('Success!', 'Your check-in has been saved.');
-                    refetch({ siteEngineerId });
+                    refetch({ siteEngineerId: account?.id || '' });
                   })
                   .catch((e) => {
                     Alert.alert('Error :(', e?.message || 'Unknown error');
-                    refetch({ siteEngineerId });
+                    refetch({ siteEngineerId: account?.id || '' });
                   });
               },
               (e) => {
@@ -76,7 +77,7 @@ const CheckIns = () => {
           loading,
           error,
           data,
-          refetch: () => refetch({ siteEngineerId }),
+          refetch: () => refetch({ siteEngineerId: account?.id || '' }),
         }}
       >
         <View style={styles.titleContainer}>

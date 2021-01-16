@@ -13,6 +13,7 @@ import {
   useReportAddMutation,
   useReportGetQuery,
 } from '../../../gen/apollo-types';
+import { useMyProject } from '../../app/states/my-project/use-my-project';
 import { colors } from '../../assets/styles/colors';
 import { textStyles } from '../../assets/styles/text-styles';
 import Button from '../_shared/button/button';
@@ -22,11 +23,11 @@ import FileUploader from './components/file-uploader/file-uploader';
 import PhotoUploader from './components/photo-uploader/photo-uploader';
 import { styles } from './report-add-style';
 
-const projectId = '7330da71-8e87-40a4-aba1-6a1fa0403abe'; // TODO: GET PROJECT ID FROM GLOBAL STATE
-
 const ReportAdd = () => {
+  const { myProject } = useMyProject();
+
   const { error, loading, data, refetch } = useReportGetQuery({
-    variables: { projectId },
+    variables: { projectId: myProject.id || '' },
     fetchPolicy: 'cache-and-network',
   });
   const sections = useMemo(() => data?.project.getProject?.sections || [], [
@@ -166,7 +167,7 @@ const ReportAdd = () => {
   const [addReport] = useReportAddMutation();
   const handleSubmit = useCallback(() => {
     const input: ReportCreateInput = {
-      project_id: projectId,
+      project_id: myProject.id || '',
       files: allFile,
       photos: allImg,
       reportUnits: reportUnits,
@@ -208,6 +209,7 @@ const ReportAdd = () => {
     clearDraft,
     currentWorkActivity,
     majorProblems,
+    myProject.id,
     navigation,
     reportUnits,
   ]);
@@ -243,7 +245,12 @@ const ReportAdd = () => {
       <Header title="Add Report" to />
 
       <Handle
-        {...{ error, loading, data, refetch: () => refetch({ projectId }) }}
+        {...{
+          error,
+          loading,
+          data,
+          refetch: () => refetch({ projectId: myProject.id || '' }),
+        }}
       >
         <View style={styles.bg}>
           <Text style={styles.title}>
@@ -258,8 +265,7 @@ const ReportAdd = () => {
               { color: colors.dark1, marginBottom: 24 },
             ]}
           >
-            For “{data?.project.getProject?.name}” in “
-            {/* TODO: get lot info */ 'Lot 1: Bale, East Bale Robe'}”
+            For “{data?.project.getProject?.name}” in “{myProject.lot?.name}”
           </Text>
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
