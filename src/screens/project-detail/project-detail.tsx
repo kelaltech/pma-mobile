@@ -23,6 +23,7 @@ const ProjectDetail = () => {
 
   const project = data?.project.getBySiteEngineer;
   const report = data?.report.byProjectId;
+
   const [sumPlanned, setSumPlanned] = useState<number>(1);
   const [sumExecuted, setSumExecuted] = useState<number>(1);
 
@@ -346,25 +347,25 @@ const ProjectDetail = () => {
           />
 
           <View>
-            <View style={[styles.displayRow, { marginBottom: 24 }]}>
+            <View style={[{ marginBottom: 24 }]}>
               <Text style={[styles.name]}>Current Work Activity</Text>
-              <Text style={styles.value}> Cal</Text>
+              <View>
+                {report?.map((rep, key) => (
+                  <Text key={key} style={styles.value}>
+                    - {rep.current_work_problems}{' '}
+                  </Text>
+                ))}
+              </View>
             </View>
-            <View style={[styles.displayRow, { marginBottom: 24 }]}>
+            <View style={[{ marginBottom: 24 }]}>
               <Text style={[styles.name]}>Major Problem: </Text>
-              <Text style={styles.value}> Cal</Text>
-            </View>
-            <View style={[styles.displayRow, { marginBottom: 24 }]}>
-              <Text style={[styles.name]}>Site Adaptation:</Text>
-              <Text style={styles.value}> Cal</Text>
-            </View>
-            <View style={[styles.displayRow, { marginBottom: 24 }]}>
-              <Text style={[styles.name]}>Advance Payment:</Text>
-              <Text style={styles.value}> Cal</Text>
-            </View>
-            <View style={[styles.displayRow, { marginBottom: 24 }]}>
-              <Text style={[styles.name]}>Cement Payment: </Text>
-              <Text style={styles.value}> Cal</Text>
+              <View>
+                {report?.map((rep, key) => (
+                  <Text key={key} style={styles.value}>
+                    - {rep.major_problems}{' '}
+                  </Text>
+                ))}
+              </View>
             </View>
           </View>
         </View>

@@ -29,6 +29,8 @@ query ProjectDetail($accountId: ID!, $projectId: ID!) {
         planned
         id
       }
+      current_work_problems
+      major_problems
     }
   }
 }
