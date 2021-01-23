@@ -22,12 +22,15 @@ query ProjectDetail($accountId: ID!, $projectId: ID!) {
       executed
     }
   }
+
   report {
     byProjectId(id: $projectId, limit: 1) {
-      reportUnits {
-        executed
-        planned
-        id
+      reports {
+        reportUnits {
+          executed
+          planned
+          id
+        }
       }
     }
   }

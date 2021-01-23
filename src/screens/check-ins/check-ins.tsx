@@ -22,7 +22,7 @@ const CheckIns = () => {
     variables: { siteEngineerId: account?.id || '' },
     fetchPolicy: 'cache-and-network',
   });
-  const checkins = data?.checkin.getCheckins || [];
+  const checkins = data?.checkin.getCheckins.checkins || [];
 
   const [checkInAdd] = useCheckInAddMutation();
 
