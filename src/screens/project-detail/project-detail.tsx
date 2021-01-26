@@ -82,8 +82,8 @@ const ProjectDetail = () => {
           {/* Still not the proper value */}
           <View style={{ marginBottom: 24 }}>
             <ProgressBar
-              planned={project?.planned || 0}
-              executed={project?.executed || 0}
+              planned={(project?.planned || 0) / TOTAL_AMOUNT_WITH_VAT}
+              executed={(project?.executed || 0) / TOTAL_AMOUNT_WITH_VAT}
             />
           </View>
           <View style={{ marginBottom: 12 }}>
