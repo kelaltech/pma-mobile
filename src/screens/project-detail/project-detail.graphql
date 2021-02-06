@@ -34,7 +34,6 @@ query ProjectDetail($accountId: ID!, $projectId: ID!) {
         current_work_problems
         major_problems
       }
-      
     }
   }
 }
