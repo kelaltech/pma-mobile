@@ -87,8 +87,8 @@ const MyReports = () => {
               color: colors.dark1,
             }}
           >
-            {data?.report.myReports.length || 0} STATUS REPORT
-            {data?.report.myReports.length === 1 ? '' : 'S'} AVAILABLE
+            {data?.report.myReports?.reports.length || 0} STATUS REPORT
+            {data?.report.myReports?.reports.length === 1 ? '' : 'S'} AVAILABLE
           </Text>
 
           <View
@@ -99,7 +99,7 @@ const MyReports = () => {
             }}
           />
 
-          {(data?.report.myReports || []).map((report) => (
+          {(data?.report.myReports?.reports || []).map((report) => (
             <Pressable
               key={report.id}
               android_ripple={{ color: colors.accent }}

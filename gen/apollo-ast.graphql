@@ -202,7 +202,7 @@ type PrivilegeScopeResponse {
 }
 type CheckinsQuery {
   """Retrieves list of checkins for a user."""
-  getCheckins(userId: ID!, limit: Int = 10, offset: Int = 0): [Checkin]!
+  getCheckins(userId: ID!, limit: Int = 10, offset: Int = 0): CheckinListResponse!
   """Retrieves an Account by its ID."""
   getCheckin(id: ID!): Checkin
 }
@@ -224,17 +224,27 @@ input LocationInput {
   longitude: String!
   latitude: String!
 }
+type CheckinListResponse {
+  checkins: [Checkin!]!
+  size: Int!
+}
 type ProjectQuery {
   """Retrieves a project by its ID."""
   getProject(id: ID!): Project
   """Get project by siteEngineer account Id"""
   getBySiteEngineer(id: ID!): Project
+  """Get latest photos"""
+  getLatestPhotos(projectId: ID!, limit: Int = 10, offset: Int = 0): getLatestFiles!
+  """Get latest images"""
+  getLatestDocuments(projectId: ID!, limit: Int = 10, offset: Int = 0): getLatestFiles
+  """filter and return projects"""
+  projectSummery(lotId: ID, reportStartDate: Date!, reportEndDate: Date!): [Project]
 }
 type ProjectMutation {
   """Create a project for a user."""
   createProject(input: ProjectCreateInput!): Project
   """Update a Project."""
-  updateProject(input: ProjectUpdateInput): Project
+  updateProject(input: ProjectUpdateInput!): Project
 }
 type Project {
   id: ID!
@@ -253,6 +263,7 @@ type Project {
   extensionTimeApproved: Int!
   planned: Float
   executed: Float
+  executedToDate: Float
   sections: [Section]
   lot: Lot
   created_at: Date!
@@ -281,7 +292,7 @@ input ProjectUpdateInput {
   contractor: String!
   location: String!
   contract_signature_date: Date!
-  site_engineer: AccountInput
+  site_engineer: AccountInput!
   contractValueMainAgreement: Float!
   variationOrder: Float!
   contractTime: Int!
@@ -290,7 +301,12 @@ input ProjectUpdateInput {
   siteHandoverDate: Date!
   ActualCommencementDate: Date!
   extensionTimeApproved: Int!
+  sections: [SectionUpdateInput!]!
   lotId: ID!
+}
+type getLatestFiles {
+  files: [File]
+  size: Int
 }
 type LotQuery {
   """Retrieves a Lot by its ID."""
@@ -350,7 +366,8 @@ input SectionItemCreateInput {
 }
 input SectionItemUpdateInput {
   id: ID!
-  name: String
+  name: String!
+  units: [UnitUpdateInput!]!
 }
 type SectionQuery {
   """Retrieves a project by its ID."""
@@ -367,8 +384,9 @@ input SectionCreateInput {
   sectionItems: [SectionItemCreateInput!]!
 }
 input SectionUpdateInput {
-  name: String
-  contractor: String
+  id: ID!
+  name: String!
+  sectionItems: [SectionItemUpdateInput!]!
 }
 type Section {
   id: ID!
@@ -390,7 +408,7 @@ type Unit {
   name: String!
   quantity: Float!
   rate: Float!
-  toDate: Float!
+  toDate: Float
   unit: String
   created_at: Date!
   updated_at: Date!
@@ -414,13 +432,17 @@ type ReportQuery {
   """Retrieves a report by its ID."""
   getReport(id: ID!): Report
   """Get report by project id"""
-  byProjectId(id: ID!, limit: Int = 10, offset: Int = 0): [Report!]!
+  byProjectId(id: ID!, limit: Int = 10, offset: Int = 0): ReportResponse
+  """Get pending report by projectId"""
+  pendingReport(projectId: ID!): Report
 }
 type ReportMutation {
   """Create a report."""
   createReport(input: ReportCreateInput!): Report
   """Update a report."""
   updateReport(input: ReportUpdateInput): Report
+  """approve reports"""
+  approveReport(id: ID!, approverId: ID!): Report
 }
 type Report {
   id: ID!
@@ -440,6 +462,9 @@ type File {
   size: Float!
   url: String
   type: String
+  created_at: Date!
+  updated_at: Date!
+  location: String
 }
 input ReportCreateInput {
   project_id: ID!
@@ -459,6 +484,10 @@ input ReportUpdateInput {
   reportUnits: [ReportUnitCreateInput!]!
   major_problems: String
   current_work_problems: String
+}
+type ReportResponse {
+  reports: [Report!]!
+  size: Int
 }
 type ReportUnitQuery {
   """Retrieves a report by its ID."""

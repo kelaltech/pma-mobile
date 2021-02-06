@@ -22,15 +22,19 @@ query ProjectDetail($accountId: ID!, $projectId: ID!) {
       executed
     }
   }
+
   report {
     byProjectId(id: $projectId, limit: 1) {
-      reportUnits {
-        executed
-        planned
-        id
+      reports {
+        reportUnits {
+          executed
+          planned
+          id
+        }
+        current_work_problems
+        major_problems
       }
-      current_work_problems
-      major_problems
+      
     }
   }
 }

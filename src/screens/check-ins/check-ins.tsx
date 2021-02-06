@@ -22,7 +22,7 @@ const CheckIns = () => {
     variables: { siteEngineerId: account?.id || '' },
     fetchPolicy: 'cache-and-network',
   });
-  const checkins = data?.checkin.getCheckins || [];
+  const checkins = data?.checkin.getCheckins.checkins || [];
 
   const [checkInAdd] = useCheckInAddMutation();
 
@@ -102,7 +102,7 @@ const CheckIns = () => {
         </Pressable>
 
         <View style={styles.checkInsContainer}>
-          {checkins.map((checkIn, i) => (
+          {checkins.map((checkIn: any, i: any) => (
             <Pressable
               key={checkIn?.id}
               android_ripple={{ color: colors.accent }}

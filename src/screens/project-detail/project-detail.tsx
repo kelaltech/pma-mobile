@@ -22,8 +22,7 @@ const ProjectDetail = () => {
   });
 
   const project = data?.project.getBySiteEngineer;
-  const report = data?.report.byProjectId;
-
+  const report = data?.report.byProjectId?.reports;
   const [sumPlanned, setSumPlanned] = useState<number>(1);
   const [sumExecuted, setSumExecuted] = useState<number>(1);
 

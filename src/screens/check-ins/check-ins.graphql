@@ -1,10 +1,11 @@
 query CheckIns($siteEngineerId: ID!) {
   checkin {
     getCheckins(userId: $siteEngineerId) {
-      id
-
-      location
-      created_at
+      checkins {
+        id
+        location
+        created_at
+      }
     }
   }
 }
