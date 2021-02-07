@@ -7,7 +7,7 @@ import Login from '../screens/login/login';
 import ReportAdd from '../screens/report-add/report-add';
 import ReportDetail from '../screens/report-detail/report-detail';
 import MainNavigator from './main-navigator';
-
+import ReportEdit from '../screens/report-edit/report-edit';
 export const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -58,6 +58,10 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ReportDetail"
           component={withScreenLevelProviders(ReportDetail)}
+        />
+        <Stack.Screen
+          name="ReportEdit"
+          component={withScreenLevelProviders(ReportEdit)}
         />
       </Stack.Navigator>
     </NavigationContainer>

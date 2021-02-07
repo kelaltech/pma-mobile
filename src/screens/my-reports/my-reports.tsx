@@ -15,7 +15,6 @@ const MyReports = () => {
   const navigation = useNavigation();
 
   const { myProject } = useMyProject();
-
   const { loading, error, data, refetch } = useMyReportsQuery({
     variables: { projectId: myProject.id || '' },
     fetchPolicy: 'cache-and-network',
@@ -23,7 +22,7 @@ const MyReports = () => {
   useEffect(() => {
     refetch({ projectId: myProject.id || '' });
   }, [myProject.id, refetch]);
-
+  // console.log(data?.report?.pendingReport);
   return (
     <>
       <Header title="PMA" />
@@ -98,6 +97,49 @@ const MyReports = () => {
               borderBottomWidth: 1,
             }}
           />
+
+          {!data?.report.pendingReport ? null : (
+            <View>
+              <Pressable
+                android_ripple={{ color: colors.accent }}
+                onPress={() =>
+                  navigation.navigate('ReportEdit', {
+                    reportId: data?.report.pendingReport?.id,
+                  })
+                }
+                style={{ marginBottom: 24 }}
+              >
+                <Text
+                  style={{
+                    ...textStyles.h6,
+                    textTransform: 'uppercase',
+                    color: colors.primary,
+                    marginBottom: 8,
+                  }}
+                >
+                  {dayjs(data.report.pendingReport.created_at).format(
+                    'ddd, MMM DD, YYYY'
+                  )}
+                  <Text
+                    style={{
+                      ...textStyles.h6,
+                      textTransform: 'uppercase',
+                      color: colors.accent,
+                      marginBottom: 8,
+                    }}
+                  >
+                    {'  '} (Pending)
+                  </Text>
+                </Text>
+                <Text style={{ marginBottom: 8, color: colors.dark1 }}>
+                  Report for{' '}
+                  <Text style={{ color: colors.dark0 }}>
+                    “{myProject.name}”
+                  </Text>
+                </Text>
+              </Pressable>
+            </View>
+          )}
 
           {(data?.report.myReports?.reports || []).map((report) => (
             <Pressable

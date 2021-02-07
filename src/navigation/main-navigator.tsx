@@ -13,7 +13,7 @@ const BottomTab = createBottomTabNavigator();
 const MainNavigator = () => {
   return (
     <BottomTab.Navigator
-      initialRouteName="Project"
+      initialRouteName="MyReports"
       tabBarOptions={{
         showLabel: false,
         activeBackgroundColor: colors.accent,

@@ -20,5 +20,16 @@ query MyReports($projectId: ID!) {
         }
       }
     }
+    pendingReport: pendingReport(projectId: $projectId){
+      id
+      created_at
+
+       reportUnits {
+        id
+
+        executed
+        planned
+      }    
+    }
   }
 }
