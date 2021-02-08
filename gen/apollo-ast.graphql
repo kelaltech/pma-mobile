@@ -440,7 +440,7 @@ type ReportMutation {
   """Create a report."""
   createReport(input: ReportCreateInput!): Report
   """Update a report."""
-  updateReport(input: ReportUpdateInput): Report
+  updateReport(input: ReportUpdateInput!): Report
   """approve reports"""
   approveReport(id: ID!, approverId: ID!): Report
 }

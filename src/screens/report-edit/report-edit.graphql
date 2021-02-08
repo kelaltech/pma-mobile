@@ -1,0 +1,88 @@
+mutation ReportEdit($input: ReportUpdateInput!) {
+  report {
+    updateReport(input: $input) {
+      id
+    }
+  }
+}
+
+query GetReportEdit($reportId: ID!) {
+  report {
+    byId: getReport(id: $reportId) {
+      id
+
+      created_at
+
+      project {
+        id
+
+        sections {
+          id
+
+          name
+          sectionItems {
+            id
+
+            name
+            units {
+              id
+
+              name
+              unit
+              quantity
+              rate
+              toDate
+            }
+          }
+        }
+      }
+
+      reportUnits {
+        id
+
+        unit {
+          id
+        }
+        executed
+        planned
+      }
+
+      current_work_problems
+      major_problems
+
+      photos {
+        id
+
+        url
+      }
+
+      files {
+        id
+
+        name
+        url
+      }
+    }
+  }
+
+  comment {
+    byReportId(id: $reportId) {
+      id
+
+      created_at
+      content
+
+      user {
+        id
+
+        name
+
+        privilege {
+          id
+
+          name
+        }
+      }
+    }
+  }
+}
