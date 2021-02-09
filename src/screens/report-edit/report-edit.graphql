@@ -6,6 +6,14 @@ mutation ReportEdit($input: ReportUpdateInput!) {
   }
 }
 
+mutation createComment($input: CommentCreateInput!) {
+  comment {
+    createComment(input: $input) {
+      id
+    }
+  }
+}
+
 query GetReportEdit($reportId: ID!) {
   report {
     byId: getReport(id: $reportId) {

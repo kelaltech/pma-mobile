@@ -8,6 +8,8 @@ import {
   ReportUnitCreateInput,
   useGetReportEditQuery,
   useReportEditMutation,
+  useCreateCommentMutation,
+  CommentCreateInput,
 } from '../../../gen/apollo-types';
 import { useMyProject } from '../../app/states/my-project/use-my-project';
 import Handle from '../_shared/handle/handle';
@@ -22,6 +24,7 @@ import { ReactNativeFile } from 'apollo-upload-client';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import * as mime from 'react-native-mime-types';
 import Button from '../_shared/button/button';
+import { useAuth } from '../../app/states/auth/use-auth';
 
 const ReportEdit = () => {
   const { myProject } = useMyProject();
@@ -34,6 +37,9 @@ const ReportEdit = () => {
     variables: { reportId: reportId || '' },
     fetchPolicy: 'cache-and-network',
   });
+  const [commentVal, setCommentVal] = useState('');
+  const [addComment] = useCreateCommentMutation();
+  const comments = data?.comment.byReportId;
 
   const sections = useMemo(() => data?.report?.byId?.project?.sections || [], [
     data,
@@ -355,6 +361,26 @@ const ReportEdit = () => {
     },
     [removeFile]
   );
+
+  const { account } = useAuth()[0];
+  const handleComment = useCallback(() => {
+    const input: CommentCreateInput = {
+      content: commentVal || '',
+      reportId: reportId,
+      userId: account?.id!,
+    };
+
+    addComment({ variables: { input }, fetchPolicy: 'no-cache' })
+      .then(({ errors }) => {
+        if (errors?.length) {
+          Alert.alert('Error :(', errors[0]?.message || 'Unknown error');
+          return;
+        }
+        setCommentVal('');
+        refetch({ reportId });
+      })
+      .catch((err) => Alert.alert('Error :(', err?.message || 'Unknown error'));
+  }, [account, addComment, commentVal, refetch, reportId]);
   return (
     <>
       <Header title="Edit Report" to />
@@ -652,7 +678,91 @@ const ReportEdit = () => {
           />
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
+          <View>
+            <Text
+              style={{ ...textStyles.h2, paddingLeft: 24, paddingBottom: 24 }}
+            >
+              Comments
+            </Text>
+            <View>
+              {comments?.map((comment) => (
+                <View
+                  key={comment.id}
+                  style={{
+                    marginHorizontal: 24,
+                    marginBottom: 24,
+                    paddingTop: 32,
+                    paddingHorizontal: 24,
+                    paddingBottom: 8,
+                    borderRadius: 8,
+                    backgroundColor: colors.light0,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={{ ...textStyles.h6, paddingBottom: 12 }}>
+                      {comment.user.name}
+                    </Text>
+                    <View style={{ flex: 1 }} />
+                    <Text>
+                      {dayjs(comment.created_at)
+                        .format('MMM, DD, YYYY')
+                        .toString()}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      borderBottomColor: colors.light2,
+                      borderBottomWidth: 2,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      paddingTop: 12,
+                      ...textStyles.large,
+                      color: colors.dark1,
+                    }}
+                  >
+                    {comment.content}
+                  </Text>
+                </View>
+              ))}
+            </View>
 
+            <View
+              style={{
+                marginHorizontal: 24,
+                marginBottom: 24,
+                paddingTop: 32,
+                paddingHorizontal: 24,
+                paddingBottom: 8,
+                borderRadius: 8,
+                backgroundColor: colors.light0,
+              }}
+            >
+              <Text style={{ paddingBottom: 12, ...textStyles.small }}>
+                Add your comment:
+              </Text>
+              <TextInput
+                value={commentVal}
+                onChangeText={setCommentVal}
+                numberOfLines={4}
+                multiline={true}
+                style={{
+                  backgroundColor: colors.light2,
+                  borderRadius: 8,
+                  justifyContent: 'flex-start',
+                }}
+              />
+              <View style={{ margin: 24 }}>
+                <Button
+                  pressableProps={{ style: { alignSelf: 'flex-end' } }}
+                  onPress={handleComment}
+                >
+                  Comment
+                </Button>
+              </View>
+            </View>
+          </View>
           <Text
             style={[textStyles.h5, { marginBottom: 24, color: colors.dark0 }]}
           >
