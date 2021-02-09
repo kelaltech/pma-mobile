@@ -1,13 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, View, Alert, TextInput } from 'react-native';
+import { Text, View, Alert, TextInput, Image, Pressable } from 'react-native';
 import Header from '../_shared/header/header';
 import {
-  ReportCreateInput,
+  ReportUpdateInput,
   ReportUnitCreateInput,
   useGetReportEditQuery,
-  useReportAddMutation,
+  useReportEditMutation,
 } from '../../../gen/apollo-types';
 import { useMyProject } from '../../app/states/my-project/use-my-project';
 import Handle from '../_shared/handle/handle';
@@ -40,7 +40,8 @@ const ReportEdit = () => {
   ]);
   const [allImg, setAllImg] = useState<{ uri?: string }[]>([]);
   const [allFile, setAllFile] = useState<{ uri?: string }[]>([]);
-
+  const [removeImg, setRemoveImg] = useState<string[]>([]);
+  const [removeFile, setRemoveFile] = useState<string[]>([]);
   const [reportUnits, _setReportUnits] = useState<ReportUnitCreateInput[]>([]);
 
   const setReportUnits = useCallback(
@@ -112,6 +113,15 @@ const ReportEdit = () => {
           }
         }
         _setReportUnits(_reportUnits);
+        AsyncStorage.setItem(
+          'reportUnits',
+          JSON.stringify(_reportUnits)
+        ).catch((e) =>
+          Alert.alert(
+            'Error :(',
+            `Unable to save progress: ${e?.message || 'unknown error'}`
+          )
+        );
       })
       .catch((e) =>
         Alert.alert(
@@ -123,7 +133,39 @@ const ReportEdit = () => {
     AsyncStorage.getItem('currentWorkActivity')
       .then((_currentWorkActivity) => {
         if (_currentWorkActivity) {
-          _setCurrentWorkActivity(_currentWorkActivity);
+          if (_currentWorkActivity === '') {
+            _setCurrentWorkActivity(
+              data?.report.byId?.current_work_problems || ''
+            );
+            AsyncStorage.setItem(
+              'currentWorkActivity',
+              data?.report.byId?.current_work_problems || ''
+            ).catch((e) =>
+              Alert.alert(
+                'Error :(',
+                `Unable to save currentWorkActivity: ${
+                  e?.message || 'unknown error'
+                }`
+              )
+            );
+          } else {
+            _setCurrentWorkActivity(_currentWorkActivity);
+          }
+        } else {
+          _setCurrentWorkActivity(
+            data?.report.byId?.current_work_problems || ''
+          );
+          AsyncStorage.setItem(
+            'currentWorkActivity',
+            data?.report.byId?.current_work_problems || ''
+          ).catch((e) =>
+            Alert.alert(
+              'Error :(',
+              `Unable to save currentWorkActivity: ${
+                e?.message || 'unknown error'
+              }`
+            )
+          );
         }
       })
       .catch((e) =>
@@ -138,7 +180,31 @@ const ReportEdit = () => {
     AsyncStorage.getItem('majorProblems')
       .then((_majorProblems) => {
         if (_majorProblems) {
-          _setMajorProblems(_majorProblems);
+          if (_majorProblems === '') {
+            _setMajorProblems(data?.report.byId?.major_problems || '');
+            AsyncStorage.setItem(
+              'majorProblems',
+              data?.report.byId?.major_problems || ''
+            ).catch((e) =>
+              Alert.alert(
+                'Error :(',
+                `Unable to save majorProblems: ${e?.message || 'unknown error'}`
+              )
+            );
+          } else {
+            _setMajorProblems(_majorProblems);
+          }
+        } else {
+          _setMajorProblems(data?.report.byId?.major_problems || '');
+          AsyncStorage.setItem(
+            'majorProblems',
+            data?.report.byId?.major_problems || ''
+          ).catch((e) =>
+            Alert.alert(
+              'Error :(',
+              `Unable to save majorProblems: ${e?.message || 'unknown error'}`
+            )
+          );
         }
       })
       .catch((e) =>
@@ -147,7 +213,7 @@ const ReportEdit = () => {
           `Unable to fetch majorProblems: ${e?.message || 'unknown error'}`
         )
       );
-  }, [sections]);
+  }, [data, sections]);
 
   const clearDraft = useCallback(() => {
     AsyncStorage.multiRemove([
@@ -169,17 +235,20 @@ const ReportEdit = () => {
       : null;
   }, []);
   const navigation = useNavigation();
-  const [addReport] = useReportAddMutation();
+  const [addReport] = useReportEditMutation();
   const handleSubmit = useCallback(() => {
-    const input: ReportCreateInput = {
-      project_id: myProject.id || '',
-      files: allFile,
-      photos: allImg,
+    const input: ReportUpdateInput = {
+      reportId: reportId || '',
+      approved_by: '',
+      newFiles: allFile,
+      removedFiles: removeFile || [],
+      newPhotos: allImg,
+      removedPhotos: removeImg || [],
       reportUnits: reportUnits,
       current_work_problems: currentWorkActivity,
       major_problems: majorProblems,
     };
-
+    console.log(reportUnits);
     let isReady = true;
     for (const unit of input.reportUnits) {
       if (unit.executed === undefined || !unit.planned === undefined) {
@@ -197,7 +266,7 @@ const ReportEdit = () => {
 
     addReport({ variables: { input }, fetchPolicy: 'no-cache' })
       .then((response) => {
-        if (response.data?.report.createReport?.id) {
+        if (response.data?.report.updateReport?.id) {
           clearDraft();
           navigation.navigate('MyReports');
         } else {
@@ -214,9 +283,11 @@ const ReportEdit = () => {
     clearDraft,
     currentWorkActivity,
     majorProblems,
-    myProject.id,
     navigation,
+    removeImg,
+    reportId,
     reportUnits,
+    removeFile,
   ]);
 
   const photosOnChange = useCallback(
@@ -244,7 +315,46 @@ const ReportEdit = () => {
     },
     [getReactNativeFile]
   );
-
+  const removePhoto = useCallback(
+    (id: string) => {
+      Alert.alert(
+        'Remove Confirmation',
+        'Are you sure you want to remove this file?',
+        [
+          { text: 'No', style: 'cancel' },
+          {
+            text: 'Yes',
+            style: 'default',
+            onPress: () => {
+              const updatePhotos = [...removeImg, id];
+              setRemoveImg(updatePhotos);
+            },
+          },
+        ]
+      );
+    },
+    [removeImg]
+  );
+  const removeDoc = useCallback(
+    (id: string) => {
+      Alert.alert(
+        'Remove Confirmation',
+        'Are you sure you want to remove this file?',
+        [
+          { text: 'No', style: 'cancel' },
+          {
+            text: 'Yes',
+            style: 'default',
+            onPress: () => {
+              const updateFile = [...removeFile, id || ''];
+              setRemoveFile(updateFile);
+            },
+          },
+        ]
+      );
+    },
+    [removeFile]
+  );
   return (
     <>
       <Header title="Edit Report" to />
@@ -279,6 +389,64 @@ const ReportEdit = () => {
           >
             Photos
           </Text>
+
+          {data?.report.byId?.photos?.length ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                marginRight: -24,
+              }}
+            >
+              {data?.report.byId?.photos.map((photo, index) => (
+                <>
+                  {!removeImg.find((i) => i === photo?.id) ? (
+                    <View
+                      key={`${index}-${photo?.url}`}
+                      style={{
+                        flex: 1,
+                        minWidth: `${100 / 3}%`,
+                        maxWidth: `${100 / 3}%`,
+                      }}
+                    >
+                      <Image
+                        source={{ uri: `${photo?.url}` }}
+                        style={{
+                          height: 70,
+                          marginRight: 24,
+                        }}
+                      />
+                      <Pressable
+                        android_ripple={{ color: colors.accent }}
+                        onPressOut={() => removePhoto(photo?.id || '')}
+                        style={{
+                          marginBottom: 24,
+                          marginRight: 24,
+                          height: 21,
+                          backgroundColor: colors.warn,
+                        }}
+                      >
+                        <Text
+                          style={[
+                            textStyles.small,
+                            {
+                              alignSelf: 'center',
+                              ...textStyles.large,
+                              lineHeight: 24,
+                              color: colors.light0,
+                            },
+                          ]}
+                        >
+                          Delete
+                        </Text>
+                      </Pressable>
+                    </View>
+                  ) : null}
+                </>
+              ))}
+            </View>
+          ) : null}
           <PhotoUploader onChange={photosOnChange} />
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
@@ -288,7 +456,38 @@ const ReportEdit = () => {
           >
             Documents
           </Text>
-
+          {data?.report.byId?.files?.length
+            ? data?.report.byId?.files.map((document, index) => (
+                <>
+                  {!removeFile.find((i) => i === document?.id) ? (
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: 'row',
+                        marginBottom: index < allFile.length - 1 ? 12 : 24,
+                      }}
+                    >
+                      <Text
+                        style={[
+                          textStyles.medium,
+                          { flex: 1, flexWrap: 'wrap', color: colors.dark1 },
+                        ]}
+                      >
+                        {document?.name}
+                      </Text>
+                      <Pressable onPress={() => removeDoc(document?.id || '')}>
+                        <Text
+                          style={[textStyles.medium, { color: colors.dark1 }]}
+                        >
+                          {'  '}(
+                          <Text style={[{ color: colors.warn }]}>Remove</Text>)
+                        </Text>
+                      </Pressable>
+                    </View>
+                  ) : null}
+                </>
+              ))
+            : null}
           <FileUploader onChange={documentsOnChange} />
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
@@ -368,19 +567,20 @@ const ReportEdit = () => {
                             reportUnits.find((u) => u.unitId === unit?.id)
                               ?.planned || 0
                           ).toString()}
-                          onChangeText={(val) => {
-                            setReportUnits(
-                              reportUnits.map((u) => {
-                                if (u.unitId === unit?.id) {
-                                  return { ...u, planned: Number(val) };
-                                } else {
-                                  return { ...u };
-                                }
-                              })
-                            );
-                          }}
+                          // onChangeText={(val) => {
+                          //   setReportUnits(
+                          //     reportUnits.map((u) => {
+                          //       if (u.unitId === unit?.id) {
+                          //         return { ...u, planned: Number(val) };
+                          //       } else {
+                          //         return { ...u };
+                          //       }
+                          //     })
+                          //   );
+                          // }}
                           keyboardType="numeric"
                           placeholder="Planned *"
+                          editable={false}
                           style={[styles.input, { flex: 1 }]}
                         />
                       </View>
