@@ -6,7 +6,13 @@ import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Text, TextInput, View } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+} from 'accordion-collapse-react-native';
 import * as mime from 'react-native-mime-types';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {
   ReportCreateInput,
   ReportUnitCreateInput,
@@ -290,138 +296,150 @@ const ReportAdd = () => {
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
 
-          {(sections || []).map((section) => (
-            <View key={section?.id}>
-              <Text
-                style={[
-                  textStyles.h5,
-                  { marginBottom: 24, color: colors.dark0 },
-                ]}
-              >
-                {section?.name}
-              </Text>
-
-              {(section?.sectionItems || []).map((item, itemIndex) => (
-                <View key={item?.id}>
+          {(sections || []).map((section, sectionIndex) => (
+            <Collapse key={section?.id}>
+              <CollapseHeader>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
                   <Text
                     style={[
-                      textStyles.h6,
-                      {
-                        marginBottom: 24,
-                        textTransform: 'uppercase',
-                        color: colors.dark0,
-                      },
+                      textStyles.h5,
+                      { marginBottom: 24, color: colors.dark0, width: '80%' },
                     ]}
                   >
-                    {itemIndex + 1}. {item?.name}
+                    {sectionIndex + 1}. {section?.name}
                   </Text>
-
-                  {(item?.units || []).map((unit) => (
-                    <View key={unit?.id}>
-                      <Text
-                        style={[
-                          textStyles.small,
-                          { marginBottom: 4, color: colors.dark0 },
-                        ]}
-                      >
-                        {unit?.name} [{unit?.unit}]:
-                      </Text>
-
-                      <Text
-                        style={[
-                          textStyles.small,
-                          { marginBottom: 4, color: colors.dark1 },
-                        ]}
-                      >
-                        Amount: ETB {(unit?.quantity || 0) * (unit?.rate || 0)};{' '}
-                        To-Date: ETB {unit?.toDate}
-                      </Text>
-
-                      <View style={[styles.dualFields, { marginBottom: 24 }]}>
-                        <TextInput
-                          value={(
-                            reportUnits.find((u) => u.unitId === unit?.id)
-                              ?.executed || 0
-                          ).toString()}
-                          onChangeText={(val) => {
-                            setReportUnits(
-                              reportUnits.map((u) => {
-                                if (u.unitId === unit?.id) {
-                                  return { ...u, executed: Number(val) };
-                                } else {
-                                  return { ...u };
-                                }
-                              })
-                            );
-                          }}
-                          keyboardType="numeric"
-                          placeholder="Executed *"
-                          style={[styles.input, { flex: 1 }]}
-                        />
-
-                        <Text style={styles.dualFieldsSeparator}>/</Text>
-
-                        <TextInput
-                          value={(
-                            reportUnits.find((u) => u.unitId === unit?.id)
-                              ?.planned || 0
-                          ).toString()}
-                          onChangeText={(val) => {
-                            setReportUnits(
-                              reportUnits.map((u) => {
-                                if (u.unitId === unit?.id) {
-                                  return { ...u, planned: Number(val) };
-                                } else {
-                                  return { ...u };
-                                }
-                              })
-                            );
-                          }}
-                          keyboardType="numeric"
-                          placeholder="Planned *"
-                          style={[styles.input, { flex: 1 }]}
-                        />
-                      </View>
-                    </View>
-                  ))}
-
-                  <Text style={[textStyles.small, { color: colors.dark1 }]}>
-                    Total Executed:{' '}
-                    <Text style={{ color: colors.dark0 }}>
-                      ETB{' '}
-                      {(item?.units || []).reduce(
-                        (p, c) =>
-                          p +
-                          (reportUnits.find((u) => u.unitId === c?.id)
-                            ?.executed || 0),
-                        0
-                      )}
-                    </Text>
-                  </Text>
-
-                  <Text
-                    style={[
-                      textStyles.small,
-                      { color: colors.dark1, marginBottom: 24 },
-                    ]}
-                  >
-                    Total Planned:{' '}
-                    <Text style={{ color: colors.dark0 }}>
-                      ETB{' '}
-                      {(item?.units || []).reduce(
-                        (p, c) =>
-                          p +
-                          (reportUnits.find((u) => u.unitId === c?.id)
-                            ?.planned || 0),
-                        0
-                      )}
-                    </Text>
-                  </Text>
+                  <Icon name="down" size={15} />
                 </View>
-              ))}
+              </CollapseHeader>
+              <CollapseBody>
+                {(section?.sectionItems || []).map((item, itemIndex) => (
+                  <View key={item?.id}>
+                    <Text
+                      style={[
+                        textStyles.h6,
+                        {
+                          marginBottom: 24,
+                          textTransform: 'uppercase',
+                          color: colors.dark0,
+                        },
+                      ]}
+                    >
+                      {sectionIndex + 1}.{itemIndex + 1}. {item?.name}
+                    </Text>
 
+                    {(item?.units || []).map((unit, unitIndex) => (
+                      <View key={unit?.id}>
+                        <Text
+                          style={[
+                            textStyles.small,
+                            { marginBottom: 4, color: colors.dark0 },
+                          ]}
+                        >
+                          {sectionIndex + 1}.{itemIndex + 1}.{unitIndex + 1}{' '}
+                          {unit?.name} [{unit?.unit}]:
+                        </Text>
+
+                        <Text
+                          style={[
+                            textStyles.small,
+                            { marginBottom: 4, color: colors.dark1 },
+                          ]}
+                        >
+                          Amount: ETB{' '}
+                          {(unit?.quantity || 0) * (unit?.rate || 0)}; To-Date:
+                          ETB {unit?.toDate}
+                        </Text>
+
+                        <View style={[styles.dualFields, { marginBottom: 24 }]}>
+                          <TextInput
+                            value={(
+                              reportUnits.find((u) => u.unitId === unit?.id)
+                                ?.executed || 0
+                            ).toString()}
+                            onChangeText={(val) => {
+                              setReportUnits(
+                                reportUnits.map((u) => {
+                                  if (u.unitId === unit?.id) {
+                                    return { ...u, executed: Number(val) };
+                                  } else {
+                                    return { ...u };
+                                  }
+                                })
+                              );
+                            }}
+                            keyboardType="numeric"
+                            placeholder="Executed *"
+                            style={[styles.input, { flex: 1 }]}
+                          />
+
+                          <Text style={styles.dualFieldsSeparator}>/</Text>
+
+                          <TextInput
+                            value={(
+                              reportUnits.find((u) => u.unitId === unit?.id)
+                                ?.planned || 0
+                            ).toString()}
+                            onChangeText={(val) => {
+                              setReportUnits(
+                                reportUnits.map((u) => {
+                                  if (u.unitId === unit?.id) {
+                                    return { ...u, planned: Number(val) };
+                                  } else {
+                                    return { ...u };
+                                  }
+                                })
+                              );
+                            }}
+                            keyboardType="numeric"
+                            placeholder="Planned *"
+                            style={[styles.input, { flex: 1 }]}
+                          />
+                        </View>
+                      </View>
+                    ))}
+
+                    <Text style={[textStyles.small, { color: colors.dark1 }]}>
+                      Total Executed:{' '}
+                      <Text style={{ color: colors.dark0 }}>
+                        ETB{' '}
+                        {(item?.units || []).reduce(
+                          (p, c) =>
+                            p +
+                            (reportUnits.find((u) => u.unitId === c?.id)
+                              ?.executed || 0),
+                          0
+                        )}
+                      </Text>
+                    </Text>
+
+                    <Text
+                      style={[
+                        textStyles.small,
+                        { color: colors.dark1, marginBottom: 24 },
+                      ]}
+                    >
+                      Total Planned:{' '}
+                      <Text style={{ color: colors.dark0 }}>
+                        ETB{' '}
+                        {(item?.units || []).reduce(
+                          (p, c) =>
+                            p +
+                            (reportUnits.find((u) => u.unitId === c?.id)
+                              ?.planned || 0),
+                          0
+                        )}
+                      </Text>
+                    </Text>
+                  </View>
+                ))}
+              </CollapseBody>
               <View style={[styles.hr, { marginBottom: 24 }]} />
-            </View>
+            </Collapse>
           ))}
 
           <Text

@@ -11,6 +11,12 @@ import {
   useCreateCommentMutation,
   CommentCreateInput,
 } from '../../../gen/apollo-types';
+import Icon from 'react-native-vector-icons/AntDesign';
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+} from 'accordion-collapse-react-native';
 import { useMyProject } from '../../app/states/my-project/use-my-project';
 import Handle from '../_shared/handle/handle';
 import { styles } from './report-edit-style';
@@ -517,138 +523,154 @@ const ReportEdit = () => {
           <FileUploader onChange={documentsOnChange} />
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
-          {(data?.report.byId?.project.sections || []).map((section) => (
-            <View key={section?.id}>
-              <Text
-                style={[
-                  textStyles.h5,
-                  { marginBottom: 24, color: colors.dark0 },
-                ]}
-              >
-                {section?.name}
-              </Text>
-
-              {(section?.sectionItems || []).map((item, itemIndex) => (
-                <View key={item?.id}>
-                  <Text
-                    style={[
-                      textStyles.h6,
-                      {
-                        marginBottom: 24,
-                        textTransform: 'uppercase',
-                        color: colors.dark0,
-                      },
-                    ]}
+          {(data?.report.byId?.project.sections || []).map(
+            (section, sectionIndex) => (
+              <Collapse key={section?.id}>
+                <CollapseHeader>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}
                   >
-                    {itemIndex + 1}. {item?.name}
-                  </Text>
-
-                  {(item?.units || []).map((unit) => (
-                    <View key={unit?.id}>
+                    <Text
+                      style={[
+                        textStyles.h5,
+                        { marginBottom: 24, color: colors.dark0, width: '80%' },
+                      ]}
+                    >
+                      {sectionIndex + 1}. {section?.name}
+                    </Text>
+                    <Icon name="down" size={15} />
+                  </View>
+                </CollapseHeader>
+                <CollapseBody>
+                  {(section?.sectionItems || []).map((item, itemIndex) => (
+                    <View key={item?.id}>
                       <Text
                         style={[
-                          textStyles.small,
-                          { marginBottom: 4, color: colors.dark0 },
+                          textStyles.h6,
+                          {
+                            marginBottom: 24,
+                            textTransform: 'uppercase',
+                            color: colors.dark0,
+                          },
                         ]}
                       >
-                        {unit?.name} [{unit?.unit}]:
+                        {itemIndex + 1}. {item?.name}
+                      </Text>
+
+                      {(item?.units || []).map((unit) => (
+                        <View key={unit?.id}>
+                          <Text
+                            style={[
+                              textStyles.small,
+                              { marginBottom: 4, color: colors.dark0 },
+                            ]}
+                          >
+                            {unit?.name} [{unit?.unit}]:
+                          </Text>
+
+                          <Text
+                            style={[
+                              textStyles.small,
+                              { marginBottom: 4, color: colors.dark1 },
+                            ]}
+                          >
+                            Amount: ETB{' '}
+                            {(unit?.quantity || 0) * (unit?.rate || 0)};{' '}
+                            To-Date: ETB {unit?.toDate}
+                          </Text>
+
+                          <View
+                            style={[styles.dualFields, { marginBottom: 24 }]}
+                          >
+                            <TextInput
+                              value={(
+                                reportUnits.find((u) => u.unitId === unit?.id)
+                                  ?.executed || 0
+                              ).toString()}
+                              onChangeText={(val) => {
+                                setReportUnits(
+                                  reportUnits.map((u) => {
+                                    if (u.unitId === unit?.id) {
+                                      return { ...u, executed: Number(val) };
+                                    } else {
+                                      return { ...u };
+                                    }
+                                  })
+                                );
+                              }}
+                              keyboardType="numeric"
+                              placeholder="Executed *"
+                              style={[styles.input, { flex: 1 }]}
+                            />
+
+                            <Text style={styles.dualFieldsSeparator}>/</Text>
+
+                            <TextInput
+                              value={(
+                                reportUnits.find((u) => u.unitId === unit?.id)
+                                  ?.planned || 0
+                              ).toString()}
+                              // onChangeText={(val) => {
+                              //   setReportUnits(
+                              //     reportUnits.map((u) => {
+                              //       if (u.unitId === unit?.id) {
+                              //         return { ...u, planned: Number(val) };
+                              //       } else {
+                              //         return { ...u };
+                              //       }
+                              //     })
+                              //   );
+                              // }}
+                              keyboardType="numeric"
+                              placeholder="Planned *"
+                              editable={false}
+                              style={[styles.input, { flex: 1 }]}
+                            />
+                          </View>
+                        </View>
+                      ))}
+
+                      <Text style={[textStyles.small, { color: colors.dark1 }]}>
+                        Total Executed:{' '}
+                        <Text style={{ color: colors.dark0 }}>
+                          ETB{' '}
+                          {(item?.units || []).reduce(
+                            (p, c) =>
+                              p +
+                              (reportUnits.find((u) => u.unitId === c?.id)
+                                ?.executed || 0),
+                            0
+                          )}
+                        </Text>
                       </Text>
 
                       <Text
                         style={[
                           textStyles.small,
-                          { marginBottom: 4, color: colors.dark1 },
+                          { color: colors.dark1, marginBottom: 24 },
                         ]}
                       >
-                        Amount: ETB {(unit?.quantity || 0) * (unit?.rate || 0)};{' '}
-                        To-Date: ETB {unit?.toDate}
+                        Total Planned:{' '}
+                        <Text style={{ color: colors.dark0 }}>
+                          ETB{' '}
+                          {(item?.units || []).reduce(
+                            (p, c) =>
+                              p +
+                              (reportUnits.find((u) => u.unitId === c?.id)
+                                ?.planned || 0),
+                            0
+                          )}
+                        </Text>
                       </Text>
-
-                      <View style={[styles.dualFields, { marginBottom: 24 }]}>
-                        <TextInput
-                          value={(
-                            reportUnits.find((u) => u.unitId === unit?.id)
-                              ?.executed || 0
-                          ).toString()}
-                          onChangeText={(val) => {
-                            setReportUnits(
-                              reportUnits.map((u) => {
-                                if (u.unitId === unit?.id) {
-                                  return { ...u, executed: Number(val) };
-                                } else {
-                                  return { ...u };
-                                }
-                              })
-                            );
-                          }}
-                          keyboardType="numeric"
-                          placeholder="Executed *"
-                          style={[styles.input, { flex: 1 }]}
-                        />
-
-                        <Text style={styles.dualFieldsSeparator}>/</Text>
-
-                        <TextInput
-                          value={(
-                            reportUnits.find((u) => u.unitId === unit?.id)
-                              ?.planned || 0
-                          ).toString()}
-                          // onChangeText={(val) => {
-                          //   setReportUnits(
-                          //     reportUnits.map((u) => {
-                          //       if (u.unitId === unit?.id) {
-                          //         return { ...u, planned: Number(val) };
-                          //       } else {
-                          //         return { ...u };
-                          //       }
-                          //     })
-                          //   );
-                          // }}
-                          keyboardType="numeric"
-                          placeholder="Planned *"
-                          editable={false}
-                          style={[styles.input, { flex: 1 }]}
-                        />
-                      </View>
                     </View>
                   ))}
-
-                  <Text style={[textStyles.small, { color: colors.dark1 }]}>
-                    Total Executed:{' '}
-                    <Text style={{ color: colors.dark0 }}>
-                      ETB{' '}
-                      {(item?.units || []).reduce(
-                        (p, c) =>
-                          p +
-                          (reportUnits.find((u) => u.unitId === c?.id)
-                            ?.executed || 0),
-                        0
-                      )}
-                    </Text>
-                  </Text>
-
-                  <Text
-                    style={[
-                      textStyles.small,
-                      { color: colors.dark1, marginBottom: 24 },
-                    ]}
-                  >
-                    Total Planned:{' '}
-                    <Text style={{ color: colors.dark0 }}>
-                      ETB{' '}
-                      {(item?.units || []).reduce(
-                        (p, c) =>
-                          p +
-                          (reportUnits.find((u) => u.unitId === c?.id)
-                            ?.planned || 0),
-                        0
-                      )}
-                    </Text>
-                  </Text>
-                </View>
-              ))}
-            </View>
-          ))}
+                </CollapseBody>
+              </Collapse>
+            )
+          )}
           <Text
             style={[textStyles.small, { marginBottom: 4, color: colors.dark0 }]}
           >
@@ -679,9 +701,7 @@ const ReportEdit = () => {
 
           <View style={[styles.hr, { marginBottom: 24 }]} />
           <View>
-            <Text
-              style={{ ...textStyles.h2, paddingLeft: 24, paddingBottom: 24 }}
-            >
+            <Text style={{ ...textStyles.h5, paddingBottom: 24 }}>
               Comments
             </Text>
             <View>
@@ -730,10 +750,8 @@ const ReportEdit = () => {
 
             <View
               style={{
-                marginHorizontal: 24,
                 marginBottom: 24,
                 paddingTop: 32,
-                paddingHorizontal: 24,
                 paddingBottom: 8,
                 borderRadius: 8,
                 backgroundColor: colors.light0,
